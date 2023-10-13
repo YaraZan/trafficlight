@@ -10,7 +10,7 @@ import Logo from '@/Components/Logo.vue';
 </script>
 
 <template>
-    <div class="min-w-screen min-h-screen bg-white font-montserrat">
+    <div class="min-w-screen min-h-screen bg-white font-montserrat overflow-x-hidden">
         
         <!-- Page Heading -->
         <nav class=" bg-white dark:bg-gray-800 w-screen border-b border-gray-200" v-if="$slots.nav">

@@ -17,22 +17,11 @@ use Inertia\Inertia;
 |
 */
 
-
-// Home route
-Route::get('/', function () {
-    return Inertia::render('Home', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('home');
-
 /**
  * [->] Redirects
  */
+Route::redirect('/', '/traffic-light/matrix')->name('home');
 Route::redirect('/traffic-light', '/traffic-light/matrix');
-
 
 /**
  * Matrix routes

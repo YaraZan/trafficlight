@@ -73,8 +73,12 @@ class MatrixController extends Controller
         ])
         ->get();
     
+        $ngdu_data = DB::table('Ngdu')->select('*')->get();
 
-
-        return Inertia::render('Matrix/Matrix', ['matrix_data' => json_decode($matrix_data)]);
+        return Inertia::render('Matrix/Matrix', ['data' => [
+            'matrix_data' => json_decode($matrix_data),
+            'ngdu_data' => json_decode($ngdu_data),
+            ]
+        ]);
     }
 }

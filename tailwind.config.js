@@ -18,6 +18,9 @@ export default {
                 'montserrat': ['Montserrat'],
             },
         },
+        colors: {
+            'primary': 'green',
+        }
     },
 
     plugins: [
