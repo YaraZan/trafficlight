@@ -1,4 +1,5 @@
 <script setup>
+import { Link } from '@inertiajs/vue3';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import TrafficLightLayout from '@/Layouts/TrafficLightLayout.vue';
 import { Head } from '@inertiajs/vue3';
@@ -9,10 +10,11 @@ import { Head } from '@inertiajs/vue3';
 
     <TrafficLightLayout>
         <template #nav>
-            <BreadCrumb
-            :to="'analytics'"
-            :name="'Аналитика'"
-            ></BreadCrumb>
+            <Link :href="route('analytics')">
+                <BreadCrumb
+                :name="'Аналитика'"
+                ></BreadCrumb>
+            </Link>
         </template>
 
         <div class="py-12">

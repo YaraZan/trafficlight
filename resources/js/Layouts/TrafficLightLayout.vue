@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import NavLink from '@/Components/NavLink.vue';
 import MatrixIcon from '@/Components/Icons/MatrixIcon.vue';
@@ -22,16 +21,17 @@ import Logo from '@/Components/Logo.vue';
         <aside class="fixed top-0 left-0 z-40 w-[50px] bg-white h-screen border-r border-gray-200">
             <div class="w-full h-[51px] flex items-center justify-center border-b border-gray-200">
                 <Link
-                :href="route('home')">
+                :href="route('matrix')">
                     <Logo></Logo>
                 </Link>
             </div>
             <div class="py-[10px] px-[5px] flex flex-col gap-[10px] w-full h-full">
-                <NavLink :to="'matrix'"><MatrixIcon></MatrixIcon></NavLink>
-                <NavLink :to="'alarms'"><AlarmIcon></AlarmIcon></NavLink>
-                <NavLink :to="'operations'"><OperatingIcon></OperatingIcon></NavLink>
-                <NavLink :to="'analytics'"><AnalyticsIcon></AnalyticsIcon></NavLink>
+                <NavLink :pageName="'Матрица'" :to="'matrix'"><MatrixIcon></MatrixIcon></NavLink>
+                <NavLink :pageName="'Тревоги'" :to="'alarms'"><AlarmIcon></AlarmIcon></NavLink>
+                <NavLink :pageName="'Наработки'" :to="'operations'"><OperatingIcon></OperatingIcon></NavLink>
+                <NavLink :pageName="'Аналитика'" :to="'analytics'"><AnalyticsIcon></AnalyticsIcon></NavLink>
             </div>
+            
         </aside>
 
         <!-- Page Content -->
