@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MatrixController;
+use App\Http\Controllers\OperationsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -20,13 +21,13 @@ use Inertia\Inertia;
 /**
  * [->] Redirects
  */
-Route::redirect('/', '/traffic-light/matrix')->name('home');
 Route::redirect('/traffic-light', '/traffic-light/matrix');
+Route::redirect('/traffic-light/operations/{public_id}', '/traffic-light/operations/{public_id}/general');
 
 /**
  * Matrix routes
  */
-Route::get('/traffic-light/matrix', [MatrixController::class, 'matrix'])->name('matrix');
+Route::get('/traffic-light/matrix', [MatrixController::class, 'index'])->name('matrix');
 
 /**
  * Alarms routes
@@ -38,9 +39,8 @@ Route::get('/traffic-light/alarms', function () {
 /**
  * Operations routes
  */
-Route::get('/traffic-light/operations', function () {
-    return Inertia::render('Operations/Operations');
-})->name('operations');
+Route::get('/traffic-light/operations', [OperationsController::class, 'index'])->name('operations');
+Route::get('/traffic-light/operations/{public_id}/general', [OperationsController::class, 'general'])->name('operations.general');
 
 /**
  * Analytics routes
@@ -48,9 +48,6 @@ Route::get('/traffic-light/operations', function () {
 Route::get('/traffic-light/analytics', function () {
     return Inertia::render('Analytics/Analytics');
 })->name('analytics');
-
-
-
 
 
 Route::get('/dashboard', function () {

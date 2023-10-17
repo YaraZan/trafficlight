@@ -9,7 +9,7 @@ use Inertia\Inertia;
 
 class MatrixController extends Controller
 {
-    public function matrix()
+    public function index()
     {
         $matrix_data = DB::table('WellAlarm as wa')
         ->join('Well as well', 'wa.Well_Id', '=', 'well.Id')
@@ -75,7 +75,7 @@ class MatrixController extends Controller
     
         $ngdu_data = DB::table('Ngdu')->select('*')->get();
 
-        return Inertia::render('Matrix/Matrix', ['data' => [
+        return Inertia::render('Matrix/Index', ['data' => [
             'matrix_data' => json_decode($matrix_data),
             'ngdu_data' => json_decode($ngdu_data),
             ]
