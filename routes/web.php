@@ -21,8 +21,8 @@ use Inertia\Inertia;
 /**
  * [->] Redirects
  */
+Route::redirect('/', '/traffic-light/matrix');
 Route::redirect('/traffic-light', '/traffic-light/matrix');
-Route::redirect('/traffic-light/operations/{public_id}', '/traffic-light/operations/{public_id}/general');
 
 /**
  * Matrix routes
@@ -40,7 +40,12 @@ Route::get('/traffic-light/alarms', function () {
  * Operations routes
  */
 Route::get('/traffic-light/operations', [OperationsController::class, 'index'])->name('operations');
-Route::get('/traffic-light/operations/{public_id}/general', [OperationsController::class, 'general'])->name('operations.general');
+
+Route::get('/traffic-light/operations/{operation_uuid}', [OperationsController::class, 'detail'])->name('operations.detail'); 
+Route::get('/traffic-light/operations/{operation_uuid}/hourarch', [OperationsController::class, 'hourArch'])->name('operations.hourarch');
+Route::get('/traffic-light/operations/{operation_uuid}/hourarch/{head_hour_uuid}', [OperationsController::class, 'hourArchDetail'])->name('operations.hourarch.detail');
+
+Route::get('/traffic-light/operations/{operation_uuid}/askstats', [OperationsController::class, 'askStats'])->name('operations.askstats');
 
 /**
  * Analytics routes
