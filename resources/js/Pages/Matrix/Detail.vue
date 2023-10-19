@@ -20,12 +20,12 @@ const props = defineProps({
 
     <TrafficLightLayout>
         <template #nav>
-            <Link :href="route('operations')">
+            <Link :href="route('matrix')">
                 <BreadCrumb
-                :name="'Наработки'"
+                :name="'Матрица'"
                 ></BreadCrumb>
             </Link>
-            <Link :href="route('operations.detail', item.public_id)">
+            <Link :href="route('matrix.detail', item.public_id)">
                 <BreadCrumb
                 :name="item.Name"
                 ></BreadCrumb>
@@ -58,7 +58,7 @@ const props = defineProps({
                 </div>
             </div>
             <div class="grid grid-cols-5 gap-5 p-4">
-                <Link :href="route('operations.hourarch', item.public_id)">
+                <Link :href="route('matrix.hourarch', item.public_id)">
                     <div class="p-6 flex flex-col gap-5 bg-white rounded-lg shadow border border-gray-200 min-h-[160px] hover:bg-gray-100 cursor-pointer">
                         <HourArchIcon />
                         <div class="flex flex-col gap-2">
@@ -67,7 +67,7 @@ const props = defineProps({
                         </div>
                     </div>
                 </Link>
-                <Link :href="route('operations.askstats', item.public_id)">
+                <Link :href="route('matrix.askstats', item.public_id)">
                     <div class="p-6 flex flex-col gap-5 bg-white rounded-lg shadow border border-gray-200 min-h-[160px] hover:bg-gray-100 cursor-pointer">
                         <AskStatsIcon />
                         <div class="flex flex-col gap-2">

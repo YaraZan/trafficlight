@@ -11,6 +11,9 @@ import MatrixTable from './Partials/MatrixTable.vue';
 import DateRadio from '@/Components/DateRadio.vue';
 import NgduDropdown from '@/Components/NgduDropdown.vue';
 import ActionsButton from '@/Components/ActionsButton.vue';
+import GridIcon from '@/Components/Icons/GridIcon.vue';
+import TableIcon from '@/Components/Icons/TableIcon.vue';
+import OperationsGrid from './Partials/OperationsGrid.vue';
 
 const props = defineProps({
     matrix_data: {
@@ -31,7 +34,10 @@ const radioFilter = ref('');
 const ngduFilters = ref([]);
 
 const currentPage = ref(1);
-const perPage = ref(10);
+const perPage = ref(20);
+
+const showViewTypeDropdown = ref(false);
+const viewType = ref('grid');
 
 const perPageOptions = [10, 20, 30];
 
@@ -67,21 +73,17 @@ const filteredData = computed(() => {
     let data = props.matrix_data;
 
     switch (radioFilter.value) {
-        case 'today':
+        case 'available':
             data = data.filter(item => {
-                const itemDate = new Date(item.Date);
-                return (
-                    itemDate.getDate() === new Date().getDate() &&
-                    itemDate.getMonth() === new Date().getMonth() &&
-                    itemDate.getFullYear() === new Date().getFullYear()
-                );
+                return item.Connect;
             });
+            break;
 
-        case 'earlier':
+        case 'lost':
             data = data.filter(item => {
-                const itemDate = new Date(item.Date);
-                return itemDate < new Date();
+                return !item.Connect;
             });
+            break;
     }
 
     if (ngduFilters.value.length) {
@@ -133,9 +135,13 @@ const handleCheckboxFilter = (filter) => {
     ngduFilters.value.push(filter);
 };
 
-watch(() => props.matrix_data, () => {
+const changeView = (value) => {
+    viewType.value = value;
+}
+
+watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.value], () => {
   currentPage.value = 1;
-});
+}, { deep: true });
 
 </script>
 
@@ -153,10 +159,38 @@ watch(() => props.matrix_data, () => {
 
         <div class="bg-white dark:bg-gray-800 relative w-full">
             <div class="flex items-center p-4 w-full justify-between">
-                <InputSearch @search="handleSearch"/>
-                <div class="flex items-center gap-3 ml-auto">
-                    <div class="flex items-center gap-3 ml-auto px-[20px]">
-                        <DateRadio @filter="handleFilter"/>
+
+                <div class="flex items-center gap-3">
+                    <InputSearch @search="handleSearch"/>
+                    <DateRadio @filter="handleFilter"/>
+                </div>
+                
+                <div class="flex items-center gap-3 ">
+                    <div class="relative flex items-center flex-col">
+                        <Button :class="showViewTypeDropdown ? 'border-green-600 text-green-600' : ''" size="md" color="light" @click="showViewTypeDropdown = !showViewTypeDropdown;">
+                            <div v-if="viewType === 'grid'" class="flex items-center gap-3">
+                                <GridIcon />
+                                <span class="text-gray-800 font-semibold">Карта</span>
+                            </div>
+                            <div v-else class="flex items-center gap-3">
+                                <TableIcon />
+                                <span class="text-gray-800 font-semibold">Таблица</span>
+                            </div>
+                        </Button>
+
+                        <div :class="showViewTypeDropdown ? 'visible' : 'invisible'" class="absolute top-12 p-5 right-0 z-10 bg-white rounded-lg shadow min-w-[300px]">
+                            <h6 class="font-medium text-sm text-gray-400">Отображение данных</h6>
+                            <ul class="mt-[10px] gap-2 w-full flex flex-col">
+                                <li :class="viewType === 'grid' ? 'bg-gray-100' : ''" class="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg" v-on:click="changeView('grid')">
+                                    <GridIcon />
+                                    <span class="text-gray-800 font-semibold">Карта объектов</span>
+                                </li>
+                                <li :class="viewType === 'table' ? 'bg-gray-100' : ''" class="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg" v-on:click="changeView('table')">
+                                    <TableIcon />
+                                    <span class="text-gray-800 font-semibold">Таблица объектов</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <NgduDropdown @filter="handleCheckboxFilter" :data="ngdu_data"/>
                     <ActionsButton :data="matrix_data"/>
@@ -196,7 +230,10 @@ watch(() => props.matrix_data, () => {
                         </li>
                 </ul>
             </div>
-            <div class="w-full h-full overflow-x-auto">
+            <div v-if="viewType === 'grid'" class="w-full h-full overflow-x-auto p-4">
+                <OperationsGrid :data="paginatedData" :params="params"/>
+            </div>
+            <div v-else class="w-full h-full overflow-x-auto">
                 <MatrixTable :data="paginatedData" :params="params"/>
             </div>
         </div>

@@ -28,6 +28,11 @@ Route::redirect('/traffic-light', '/traffic-light/matrix');
  * Matrix routes
  */
 Route::get('/traffic-light/matrix', [MatrixController::class, 'index'])->name('matrix');
+Route::get('/traffic-light/matrix/{operation_uuid}', [MatrixController::class, 'detail'])->name('matrix.detail'); 
+Route::get('/traffic-light/matrix/{operation_uuid}/hourarch', [MatrixController::class, 'hourArch'])->name('matrix.hourarch');
+Route::get('/traffic-light/matrix/{operation_uuid}/hourarch/{head_hour_uuid}', [MatrixController::class, 'hourArchDetail'])->name('matrix.hourarch.detail');
+
+Route::get('/traffic-light/matrix/{operation_uuid}/askstats', [MatrixController::class, 'askStats'])->name('matrix.askstats');
 
 /**
  * Alarms routes
@@ -35,17 +40,6 @@ Route::get('/traffic-light/matrix', [MatrixController::class, 'index'])->name('m
 Route::get('/traffic-light/alarms', function () {
     return Inertia::render('Alarms/Alarms');
 })->name('alarms');
-
-/**
- * Operations routes
- */
-Route::get('/traffic-light/operations', [OperationsController::class, 'index'])->name('operations');
-
-Route::get('/traffic-light/operations/{operation_uuid}', [OperationsController::class, 'detail'])->name('operations.detail'); 
-Route::get('/traffic-light/operations/{operation_uuid}/hourarch', [OperationsController::class, 'hourArch'])->name('operations.hourarch');
-Route::get('/traffic-light/operations/{operation_uuid}/hourarch/{head_hour_uuid}', [OperationsController::class, 'hourArchDetail'])->name('operations.hourarch.detail');
-
-Route::get('/traffic-light/operations/{operation_uuid}/askstats', [OperationsController::class, 'askStats'])->name('operations.askstats');
 
 /**
  * Analytics routes
