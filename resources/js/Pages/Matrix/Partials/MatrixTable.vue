@@ -12,6 +12,21 @@ const props = defineProps({
         required: true
     }
 });
+
+const extractWellNumber = (string) => {
+  const elements = string.split('-');
+  return elements[elements.length - 1];
+};
+
+const extractNgdu = (string) => {
+  const elements = string.split('-');
+  return elements[elements.length - 3];
+};
+
+function extractNumericPart(data) {
+  const match = data.match(/\d+/);
+  return match ? match[0] : null;
+}
 </script>
 
 <template>
@@ -22,18 +37,21 @@ const props = defineProps({
                 </table-head-cell>
             </table-head>
             <table-body>
-                <table-row v-for="row in data" :key="row.id" class="border-b border-gray-200">
-                    <table-cell class="font-bold">{{ row.WellName }}</table-cell>
+                <table-row v-for="(row, index) in data" :key="index" class="border-b border-gray-200">
+                    <table-cell>
+                        <div :class="row.Connect ? 'bg-green-100' : 'bg-gray-200'" class="w-5 h-5 rounded-full z-1 flex items-center justify-center cursor-pointer" data-tooltip-target="operation-connect-tooltip" data-tooltip-placement="bottom">
+                            <div :class="row.Connect ? 'bg-green-300' : 'bg-gray-400'" class="w-1/2 h-1/2 rounded-full z-2"></div>
+                        </div >
+                    </table-cell>
+                    <table-cell class="font-bold">{{ extractNgdu(row.WellName) }}</table-cell>
+                    <table-cell>{{ extractNumericPart(row.ShopName) }}</table-cell>
+                    <table-cell>{{ extractWellNumber(row.WellName) }}</table-cell>
                     <table-cell>{{ row.WellState }}</table-cell>
                     <table-cell>{{ row.Date }}</table-cell>
                     <table-cell>{{ row.SumErr }}</table-cell>
                     <table-cell>
-                        <span v-if="row.Ask" class="py-1 px-2 bg-green-100 text-green-600 rounded-3xl border border-green-600">Выполнен</span>
-                        <span v-else class="py-1 px-2 bg-red-100 text-red-600 rounded-3xl border border-red-600">Нет</span>
-                    </table-cell>
-                    <table-cell>
-                        <span v-if="row.Connect" class="py-1 px-2 bg-green-100 text-green-600 rounded-3xl border border-green-600">Установлена</span>
-                        <span v-else class="py-1 px-2 bg-red-100 text-red-600 rounded-3xl border border-red-600">Потеряна</span>
+                        <span v-if="row.Ask" class="py-1 px-2 bg-green-100 text-green-600 rounded-3xl">Выполнен</span>
+                        <span v-else class="py-1 px-2 bg-red-100 text-red-600 rounded-3xl">Нет</span>
                     </table-cell>
                     <ARDCell :alarm="row.Alarm1" :setting="row.Ref1" :diff="row.Dif1" :stat="row.Stat1"></ARDCell>
                     <ARDCell :alarm="row.Alarm2" :setting="row.Ref2" :diff="row.Dif2" :stat="row.Stat2"></ARDCell>

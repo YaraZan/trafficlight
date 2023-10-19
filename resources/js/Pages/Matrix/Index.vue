@@ -7,18 +7,21 @@ import { Head } from '@inertiajs/vue3';
 import { ref, computed, watch } from 'vue';
 
 import InputSearch from '@/Components/InputSearch.vue';
-import MatrixTable from '@/Components/MatrixTable.vue';
+import MatrixTable from './Partials/MatrixTable.vue';
 import DateRadio from '@/Components/DateRadio.vue';
 import NgduDropdown from '@/Components/NgduDropdown.vue';
 import ActionsButton from '@/Components/ActionsButton.vue';
 
 const props = defineProps({
-    data: {
+    matrix_data: {
+        type: Array
+    },
+    ngdu_data: {
         type: Array
     },
 });
 
-const params = ['Скважина', 'Состояние', 'Дата', 'Штраф', 'Опрос', 'Связь',
+const params = ['Связь','НГДУ', 'Цех', 'Скважина', 'Состояние', 'Дата', 'Штраф', 'Опрос',
  'Число качаний, об/мин', 'Нагрузка максимальная, кг',
  'Нагрузка минимальная, кг', 'Температура масла в ГБ, °С', 'Давление в ГН , МПа',
  'Давление в ГЦ , МПа', 'Давление в ПГА, МПа', 'Ток, А', 'Напряжение, В'];
@@ -60,12 +63,8 @@ const nextPage = () => {
   }
 };
 
-watch(() => props.data, () => {
-  currentPage.value = 1;
-});
-
 const filteredData = computed(() => {
-    let data = props.data.matrix_data;
+    let data = props.matrix_data;
 
     switch (radioFilter.value) {
         case 'today':
@@ -84,8 +83,6 @@ const filteredData = computed(() => {
                 return itemDate < new Date();
             });
     }
-
-
 
     if (ngduFilters.value.length) {
         data = data.filter(item => ngduFilters.value.includes(item.Ngdu_Id.toString()));   
@@ -135,6 +132,11 @@ const handleCheckboxFilter = (filter) => {
     }
     ngduFilters.value.push(filter);
 };
+
+watch(() => props.matrix_data, () => {
+  currentPage.value = 1;
+});
+
 </script>
 
 <template>
@@ -156,8 +158,8 @@ const handleCheckboxFilter = (filter) => {
                     <div class="flex items-center gap-3 ml-auto px-[20px]">
                         <DateRadio @filter="handleFilter"/>
                     </div>
-                    <NgduDropdown @filter="handleCheckboxFilter" :data="data.ngdu_data"/>
-                    <ActionsButton :data="data.matrix_data"/>
+                    <NgduDropdown @filter="handleCheckboxFilter" :data="ngdu_data"/>
+                    <ActionsButton :data="matrix_data"/>
                 </div>
             </div>
             <div class="flex items-center gap-3 p-4 pt-0 w-full">
@@ -169,7 +171,7 @@ const handleCheckboxFilter = (filter) => {
                 <ul class="flex items-center -space-x-px h-9 text-sm">
                         <li>
                             <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                <span class="sr-only">Previous</span>
+                                <span class="sr-only">Пред.</span>
                                 <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
                                 </svg>
@@ -186,7 +188,7 @@ const handleCheckboxFilter = (filter) => {
                         </li>
                         <li>
                             <button @click="nextPage" :disabled="currentPage === totalPages" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                <span class="sr-only">Next</span>
+                                <span class="sr-only">След.</span>
                                 <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                                 </svg>

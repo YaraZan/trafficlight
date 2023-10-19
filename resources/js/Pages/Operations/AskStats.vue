@@ -1,31 +1,23 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { ref, computed, watch } from 'vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import TrafficLightLayout from '@/Layouts/TrafficLightLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { ref, watch, computed } from 'vue';
-
-import InputSearch from '@/Components/InputSearch.vue';
-import OperationsGrid from './Partials/OperationsGrid.vue';
-import NgduDropdown from '@/Components/NgduDropdown.vue';
-import ActionsButton from '@/Components/ActionsButton.vue';
+import { Link, Head } from '@inertiajs/vue3';
+import AskStatsTable from './Partials/AskStatsTable.vue';
 
 const props = defineProps({
-    operations_data: {
+    data: {
         type: Array,
-        required: true
+        required: true,
     },
-    ngdu_data: {
-        type: Array,
-        required: true
+    item: {
+        type: Object,
+        required: true,
     }
 });
 
-const searchFilter = ref('');
-const ngduFilters = ref([]);
-
 const currentPage = ref(1);
-const perPage = ref(20);
+const perPage = ref(10);
 
 const perPageOptions = [10, 20, 30];
 
@@ -38,7 +30,6 @@ const paginatedData = computed(() => {
 });
 
 const updateData = () => {
-    console.log('Меняем на 1');
   currentPage.value = 1;
 };
 
@@ -58,20 +49,12 @@ const nextPage = () => {
   }
 };
 
-watch(() => [searchFilter.value, perPage.value, ngduFilters.value], () => {
+watch(() => props.data, () => {
   currentPage.value = 1;
-}, { deep: true });
+});
 
 const filteredData = computed(() => {
-    let data = props.operations_data;
-
-    if (ngduFilters.value.length) {
-        data = data.filter(item => ngduFilters.value.includes(item.Ngdu_Id.toString()));   
-    }
-
-    if (searchFilter.value !== '') {
-        data = data.filter(item => item.Name.toLowerCase().includes(searchFilter.value.toLowerCase()));
-    }
+    let data = props.data;
 
     return data;
 });
@@ -98,22 +81,10 @@ const visiblePages = computed(() => {
 
   return pages;
 });
-
-const handleSearch = (search) => {
-    searchFilter.value = search;
-};
-
-const handleCheckboxFilter = (filter) => {
-    if (ngduFilters.value.includes(filter)) {
-        return ngduFilters.value.splice(ngduFilters.value.indexOf(filter), 1);
-    }
-    ngduFilters.value.push(filter);
-};
-
 </script>
 
 <template>
-    <Head title="Наработки" />
+    <Head title="Часовые архивы" />
 
     <TrafficLightLayout>
         <template #nav>
@@ -122,17 +93,21 @@ const handleCheckboxFilter = (filter) => {
                 :name="'Наработки'"
                 ></BreadCrumb>
             </Link>
+            <Link :href="route('operations.detail', item.public_id)">
+                <BreadCrumb
+                :name="item.Name"
+                ></BreadCrumb>
+            </Link>
+            <Link :href="route('operations.askstats', item.public_id)">
+                <BreadCrumb
+                :name="'Статистика опроса'"
+                ></BreadCrumb>
+            </Link>
         </template>
 
         <div class="bg-white dark:bg-gray-800 relative w-full">
-            <div class="flex items-center p-4 w-full justify-between">
-                <InputSearch @search="handleSearch"/>
-                <div class="flex items-center gap-3 ml-auto">
-                    <NgduDropdown @filter="handleCheckboxFilter" :data="ngdu_data"/>
-                    <ActionsButton :data="operations_data"/>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 p-4 pt-0 w-full">
+
+            <div class="flex items-center gap-3 p-4 w-full">
                 <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
                     <option v-for="option in perPageOptions" :key="option" :value="option">
                         {{ `${option} записей` }}
@@ -166,8 +141,9 @@ const handleCheckboxFilter = (filter) => {
                     </li>
                 </ul>
             </div>
-            <div class="w-full h-full overflow-x-auto p-4">
-                <OperationsGrid :data="paginatedData"></OperationsGrid>
+
+            <div class="w-full h-full overflow-x-auto">
+                <AskStatsTable :data="paginatedData" :item="item"></AskStatsTable>
             </div>
         </div>
     </TrafficLightLayout>

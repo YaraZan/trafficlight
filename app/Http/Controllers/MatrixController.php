@@ -16,13 +16,13 @@ class MatrixController extends Controller
         ->join('Ngdu as ngdu', 'wa.Ngdu_Id', '=', 'ngdu.Id')
         ->join('Shop as sh', 'wa.Shop_Id', '=', 'sh.Id')
         ->join('WellState as st', 'wa.WState_Id', '=', 'st.Id')
-        ->orderBy('wa.Ngdu_Id')
-        ->orderBy('wa.Well_Id')
         ->select([
             'wa.Ngdu_Id',
             'wa.Well_Id',
             'wa.Shop_Id',
             'wa.WState_Id',
+            'sh.ShopName',
+            'ngdu.NgduName as NgduName',
             'well.Name as WellName',
             'st.Name as WellState',
             "wa.Date",
@@ -71,14 +71,16 @@ class MatrixController extends Controller
             'wa.Ref12',
             'well.Web',
         ])
+        ->orderBy('wa.Stat1', 'desc')
+        ->orderBy('wa.Stat2', 'desc')
+        ->orderBy('wa.Stat3', 'desc')
         ->get();
     
         $ngdu_data = DB::table('Ngdu')->select('*')->get();
 
-        return Inertia::render('Matrix/Index', ['data' => [
+        return Inertia::render('Matrix/Index', [
             'matrix_data' => json_decode($matrix_data),
             'ngdu_data' => json_decode($ngdu_data),
-            ]
         ]);
     }
 }
