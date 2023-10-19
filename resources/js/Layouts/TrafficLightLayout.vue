@@ -28,7 +28,6 @@ import Logo from '@/Components/Logo.vue';
             <div class="py-[10px] px-[5px] flex flex-col gap-[10px] w-full h-full">
                 <NavLink :pageName="'Матрица'" :to="'matrix'"><MatrixIcon></MatrixIcon></NavLink>
                 <NavLink :pageName="'Тревоги'" :to="'alarms'"><AlarmIcon></AlarmIcon></NavLink>
-                <NavLink :pageName="'Наработки'" :to="'operations'"><OperatingIcon></OperatingIcon></NavLink>
                 <NavLink :pageName="'Аналитика'" :to="'analytics'"><AnalyticsIcon></AnalyticsIcon></NavLink>
             </div>
             

@@ -36,7 +36,7 @@ const props = defineProps({
                 <table-cell>{{ row.SumErr }}</table-cell>
                 <table-cell>{{ row.Debit }}</table-cell>
                 <table-cell>
-                    <Link :href="route('operations.hourarch.detail', { operation_uuid: item.public_id, head_hour_uuid: row.public_id})">
+                    <Link :href="route('matrix.hourarch.detail', { operation_uuid: item.public_id, head_hour_uuid: row.public_id})">
                         <span class="text font-semibold text-green-500">Просмотр</span>
                     </Link>
                 </table-cell>

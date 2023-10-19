@@ -93,22 +93,22 @@ const visiblePages = computed(() => {
 
     <TrafficLightLayout>
         <template #nav>
-            <Link :href="route('operations')">
+            <Link :href="route('matrix')">
                 <BreadCrumb
-                :name="'Наработки'"
+                :name="'Матрица'"
                 ></BreadCrumb>
             </Link>
-            <Link :href="route('operations.detail', well_item.public_id)">
+            <Link :href="route('matrix.detail', well_item.public_id)">
                 <BreadCrumb
                 :name="well_item.Name"
                 ></BreadCrumb>
             </Link>
-            <Link :href="route('operations.hourarch', well_item.public_id)">
+            <Link :href="route('matrix.hourarch', well_item.public_id)">
                 <BreadCrumb
                 :name="'Часовые архивы'"
                 ></BreadCrumb>
             </Link>
-            <Link :href="route('operations.hourarch.detail', { operation_uuid: well_item.public_id, head_hour_uuid: head_hour_item.public_id})">
+            <Link :href="route('matrix.hourarch.detail', { operation_uuid: well_item.public_id, head_hour_uuid: head_hour_item.public_id})">
                 <BreadCrumb
                 :name="head_hour_item.Date"
                 ></BreadCrumb>

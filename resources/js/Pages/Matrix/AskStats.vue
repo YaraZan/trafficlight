@@ -88,17 +88,17 @@ const visiblePages = computed(() => {
 
     <TrafficLightLayout>
         <template #nav>
-            <Link :href="route('operations')">
+            <Link :href="route('matrix')">
                 <BreadCrumb
-                :name="'Наработки'"
+                :name="'Матрица'"
                 ></BreadCrumb>
             </Link>
-            <Link :href="route('operations.detail', item.public_id)">
+            <Link :href="route('matrix.detail', item.public_id)">
                 <BreadCrumb
                 :name="item.Name"
                 ></BreadCrumb>
             </Link>
-            <Link :href="route('operations.askstats', item.public_id)">
+            <Link :href="route('matrix.askstats', item.public_id)">
                 <BreadCrumb
                 :name="'Статистика опроса'"
                 ></BreadCrumb>

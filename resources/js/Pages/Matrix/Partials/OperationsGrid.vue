@@ -40,7 +40,7 @@ function getColorClass(value) {
 
 <template>
     <div class="grid grid-cols-5 gap-5">
-        <Link v-for="(row, index) in data" :key="index" :href="route('operations.detail', row.public_id)">
+        <Link v-for="(row, index) in data" :key="index" :href="route('matrix.detail', row.public_id)">
             <div class="group p-4 flex justify-between bg-white rounded-lg shadow border border-gray-200 min-h-[160px] hover:bg-gray-100 cursor-pointer">
                 <div class="flex flex-col">
                     <span :class="row.Connect ? 'text-gray-800' : 'text-gray-300'" class="text-lg font-semibold">{{ row.Name }}</span>
