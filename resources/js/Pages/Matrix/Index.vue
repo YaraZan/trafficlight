@@ -4,9 +4,10 @@ import { Button } from 'flowbite-vue';
 import TrafficLightLayout from '@/Layouts/TrafficLightLayout.vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import { Head } from '@inertiajs/vue3';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
 import InputSearch from '@/Components/InputSearch.vue';
+import { Input } from 'flowbite-vue';
 import MatrixTable from './Partials/MatrixTable.vue';
 import DateRadio from '@/Components/DateRadio.vue';
 import NgduDropdown from '@/Components/NgduDropdown.vue';
@@ -14,12 +15,17 @@ import ActionsButton from '@/Components/ActionsButton.vue';
 import GridIcon from '@/Components/Icons/GridIcon.vue';
 import TableIcon from '@/Components/Icons/TableIcon.vue';
 import OperationsGrid from './Partials/OperationsGrid.vue';
+import ClickOutside from 'vue-click-outside';
+
 
 const props = defineProps({
     matrix_data: {
         type: Array
     },
     ngdu_data: {
+        type: Array
+    },
+    shop_data: {
         type: Array
     },
 });
@@ -30,13 +36,16 @@ const params = ['Связь','НГДУ', 'Цех', 'Скважина', 'Сост
  'Давление в ГЦ , МПа', 'Давление в ПГА, МПа', 'Ток, А', 'Напряжение, В'];
 
 const searchFilter = ref('');
-const radioFilter = ref('');
+const radioFilter = ref('available');
 const ngduFilters = ref([]);
+const shopFilters = ref([]);
 
 const currentPage = ref(1);
 const perPage = ref(20);
 
 const showViewTypeDropdown = ref(false);
+const showNgduDropdown = ref(false);
+const showShopDropdown = ref(false);
 const viewType = ref('grid');
 
 const perPageOptions = [10, 20, 30];
@@ -120,20 +129,29 @@ const visiblePages = computed(() => {
   return pages;
 });
 
-const handleSearch = (search) => {
-    searchFilter.value = search;
-};
+const handleNgduCheckboxFilter = (e) => {
+    const val = e.target.value;
 
-const handleFilter = (filter) => {
-    radioFilter.value = filter;
-};
-
-const handleCheckboxFilter = (filter) => {
-    if (ngduFilters.value.includes(filter)) {
-        return ngduFilters.value.splice(ngduFilters.value.indexOf(filter), 1);
+    if (ngduFilters.value.includes(val)) {
+        return ngduFilters.value.splice(ngduFilters.value.indexOf(val), 1);
     }
-    ngduFilters.value.push(filter);
+    ngduFilters.value.push(val);
 };
+
+const handleShopCheckboxFilter = (e) => {
+    const val = e.target.value;
+
+    if (shopFilters.value.includes(val)) {
+        return shopFilters.value.splice(shopFilters.value.indexOf(val), 1);
+    }
+    ngduFilters.value.push(val);
+};
+
+const getShopsForNgdu = (id) => {
+    let data = props.shop_data;
+
+    return data = data.filter(item => item.Ngdu_Id === id);
+}
 
 const changeView = (value) => {
     viewType.value = value;
@@ -142,6 +160,7 @@ const changeView = (value) => {
 watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.value], () => {
   currentPage.value = 1;
 }, { deep: true });
+
 
 </script>
 
@@ -161,8 +180,18 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
             <div class="flex items-center p-4 w-full justify-between">
 
                 <div class="flex items-center gap-3">
-                    <InputSearch @search="handleSearch"/>
-                    <DateRadio @filter="handleFilter"/>
+                    <Input v-model="searchFilter" size="sm" class="focus:ring-green-500 focus:border-green-500 w-56 ring-green-600 " type="text"  placeholder="Поиск" required="">
+                    </Input>
+                    <div class="flex items-center gap-3 ml-auto px-[20px]">
+                        <input v-model="radioFilter" id="today-radio" type="radio" name="filter" value="available" checked class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
+                        <label for="today-radio" class="font-semibold text-sm">Доступные</label>
+
+                        <input v-model="radioFilter" id="earlier-radio" type="radio" name="filter" value="lost" class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
+                        <label for="earlier-radio" class="font-semibold text-sm">Недоступные</label>
+
+                        <input v-model="radioFilter" id="all-radio" type="radio" name="filter" value="all" class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
+                        <label for="all-radio" class="font-semibold text-sm">Все</label>
+                    </div>
                 </div>
                 
                 <div class="flex items-center gap-3 ">
@@ -192,7 +221,21 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                             </ul>
                         </div>
                     </div>
-                    <NgduDropdown @filter="handleCheckboxFilter" :data="ngdu_data"/>
+                    <div class="relative flex items-center flex-col">
+                        <Button :class="showNgduDropdown ? 'border-green-600 text-green-600' : ''" size="md" color="light" @click="showNgduDropdown = !showNgduDropdown;">
+                            <span class="font-semibold">НГДУ</span>
+                        </Button>
+
+                        <div v-show="showNgduDropdown" class="absolute top-12 p-5 right-0 z-10 bg-white rounded-lg shadow min-w-[300px]">
+                            <h6 class="font-medium text-sm text-gray-400">Выберите НГДУ</h6>
+                            <ul class="mt-[10px] w-full flex flex-col">
+                                <li v-for="(ngdu, index) in ngdu_data" :key="index" class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
+                                    <input @change="handleNgduCheckboxFilter" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" :id="`filter_option_${index}`" type="checkbox" :value="ngdu.Id">
+                                    <label class="cursor-pointer" :for="`filter_option_${index}`">{{ ngdu.NgduName }}</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     <ActionsButton :data="matrix_data"/>
                 </div>
             </div>

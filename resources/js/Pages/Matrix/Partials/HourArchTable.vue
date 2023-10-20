@@ -1,5 +1,4 @@
 <script setup>
-import { Table, TableHead, TableBody, TableHeadCell, TableRow, TableCell } from 'flowbite-vue';
 import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -15,32 +14,32 @@ const props = defineProps({
 </script>
 
 <template>
-     <Table striped>
-        <table-head>
-            <table-head-cell class="bg-gray-50 text-left">
+     <table class="w-full" striped>
+        <tr>
+            <th scope="col" class="bg-gray-50 px-6 py-4 text-left">
                 <span class="text font-semibold text-gray-800">Дата</span>
-            </table-head-cell>
-            <table-head-cell class="bg-gray-50 text-left">
+            </th>
+            <th scope="col" class="bg-gray-50 px-6 py-4 text-left">
                 <span class="text font-semibold text-gray-800">Ранг</span>
-            </table-head-cell>
-            <table-head-cell class="bg-gray-50 text-left">
+            </th>
+            <th scope="col" class="bg-gray-50 px-6 py-4 text-left">
                 <span class="text font-semibold text-gray-800">Дебит</span>
-            </table-head-cell>
-            <table-head-cell class="bg-gray-50 text-left">
+            </th>
+            <th scope="col" class="bg-gray-50 px-6 py-4 text-left">
                 <span class="text font-semibold text-gray-800">Действие</span>
-            </table-head-cell>
-        </table-head>
-        <table-body>
-            <table-row v-for="(row, index) in data" :key="index" class="border-b border-gray-200">
-                <table-cell class="font-bold">{{ row.Date }}</table-cell>
-                <table-cell>{{ row.SumErr }}</table-cell>
-                <table-cell>{{ row.Debit }}</table-cell>
-                <table-cell>
+            </th>
+        </tr> 
+        <tbody>
+            <tr v-for="(row, index) in data" :key="index" class="border-b border-gray-200">
+                <th scope="row" class="font-bold px-6 py-4 text-left text-gray-400">{{ row.Date }}</th>
+                <td class="px-6 py-4 text-left">{{ row.SumErr }}</td>
+                <td class="px-6 py-4 text-left">{{ row.Debit }}</td>
+                <td class="px-6 py-4 text-left">
                     <Link :href="route('matrix.hourarch.detail', { operation_uuid: item.public_id, head_hour_uuid: row.public_id})">
                         <span class="text font-semibold text-green-500">Просмотр</span>
                     </Link>
-                </table-cell>
-            </table-row>
-        </table-body>
-    </Table>   
+                </td>
+            </tr>
+        </tbody>
+    </table>   
 </template>

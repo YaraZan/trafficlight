@@ -9,6 +9,7 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
         "./node_modules/flowbite/**/*.js",
+        "./node_modules/primevue/**/*.{vue,js,ts,jsx,tsx}",
     ],
 
     theme: {

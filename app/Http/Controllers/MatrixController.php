@@ -78,16 +78,19 @@ class MatrixController extends Controller
             'wa.Ref12',
             'we.Web',
         ])
-        ->orderBy('wa.Stat1', 'desc')
-        ->orderBy('wa.Stat2', 'desc')
-        ->orderBy('wa.Stat3', 'desc')
+        ->orderBy('wa.Dif1', 'desc')
+        ->orderBy('wa.Dif2', 'desc')
+        ->orderBy('wa.Dif3', 'desc')
         ->get();
     
         $ngdu_data = DB::table('Ngdu')->select('*')->get();
 
+        $shop_data = DB::table('Shop')->select('*')->get();
+
         return Inertia::render('Matrix/Index', [
             'matrix_data' => json_decode($matrix_data),
             'ngdu_data' => json_decode($ngdu_data),
+            'shop_data' => json_decode($shop_data),
         ]);
     }
 
