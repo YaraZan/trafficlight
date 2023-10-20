@@ -21,6 +21,10 @@
         "crypto-js": "^4.1.1",
         "flowbite": "^1.8.1",
         "flowbite-vue": "^0.0.17",
-        "tailwind-scrollbar": "^3.0.5"
+        "primevue": "^3.37.0",
+        "tailwind-scrollbar": "^3.0.5",
+        "v-click-outside": "^3.2.0",
+        "vue-click-outside": "^1.1.0",
+        "vue-datepicker-next": "^1.0.3"
     }
 }
