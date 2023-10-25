@@ -15,7 +15,7 @@ const show = ref(false);
 
 <template>
     <div class="relative flex items-center flex-col">
-        <Button :class="show ? 'border-green-600 text-green-600' : ''" class="bg-green-600 ml-auto focus:ring-green-200" size="md" color="green" @click="show = !show;">
+        <Button :class="show ? 'border-green-600 text-green-600' : ''" class="bg-green-600 ml-auto focus:ring-green-100" size="md" color="green" @click="show = !show;">
             Действия
             <template #suffix>
                 <ActionsIcon class="stroke-white"></ActionsIcon>

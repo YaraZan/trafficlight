@@ -1,6 +1,6 @@
 <script setup>
 import BreadCrumb from '@/Components/BreadCrumb.vue';
-import TrafficLightLayout from '@/Layouts/TrafficLightLayout.vue';
+import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import HourArchIcon from '@/Components/Icons/HourArchIcon.vue';
 import AskStatsIcon from '@/Components/Icons/AskStatsIcon.vue';
 import AlarmIcon from '@/Components/Icons/AlarmIcon.vue';
@@ -18,7 +18,7 @@ const props = defineProps({
 <template>
     <Head :title="item.Name" />
 
-    <TrafficLightLayout>
+    <AuthorizedLayout>
         <template #nav>
             <Link :href="route('matrix')">
                 <BreadCrumb
@@ -92,5 +92,5 @@ const props = defineProps({
                 </div>
             </div>
         </div>
-    </TrafficLightLayout>
+    </AuthorizedLayout>
 </template>

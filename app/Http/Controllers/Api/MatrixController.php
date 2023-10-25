@@ -1,49 +1,100 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Models\WellAlarm;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
-class OperationsController extends Controller
+class MatrixController extends Controller
 {
     public function index()
     {
-        $operations_data = DB::table('WellAlarm as wa')
+        $matrix_data = DB::table('WellAlarm as wa')
         ->join('Well as we', 'wa.Well_Id', '=', 'we.Id')
         ->join('Ngdu as ngdu', 'wa.Ngdu_Id', '=', 'ngdu.Id')
         ->join('Shop as sh', 'wa.Shop_Id', '=', 'sh.Id')
-        ->join('Plc as pl', 'we.Plc_Id', '=', 'pl.Id')
         ->join('WellState as st', 'wa.WState_Id', '=', 'st.Id')
+        ->join('Plc as pl', 'we.Plc_Id', '=', 'pl.Id')
         ->join('Hd as h', 'we.Hd_Id', '=', 'h.Id')
         ->select([
             'we.public_id',
             'wa.Ngdu_Id',
+            'wa.Well_Id',
+            'wa.Shop_Id',
+            'wa.WState_Id',
+            'sh.ShopName',
             'ngdu.NgduName as NgduName',
+            'we.Name',
+            'we.Name as WellName',
+            'st.Name as WellState',
             'pl.Name as PlcName',
             'sh.ShopName as ShopName',
             'h.Hdname as HdName',
-            'we.Name',
+            "wa.Date",
+            'wa.SumErr',
             'we.Ask',
-            'wa.Connect',
-            'we.Web',
+            "wa.Connect",
+            'wa.Alarm1',
+            'wa.Alarm2',
+            'wa.Alarm3',
+            'wa.Alarm4',
+            'wa.Alarm6',
+            'wa.Alarm7',
+            'wa.Alarm8',
+            'wa.Alarm9',
+            'wa.Alarm11',
+            'wa.Alarm12',
             'wa.Dif1',
             'wa.Dif2',
             'wa.Dif3',
+            'wa.Dif4',
+            'wa.Dif6',
+            'wa.Dif7',
+            'wa.Dif8',
+            'wa.Dif9',
+            'wa.Dif11',
+            'wa.Dif12',
+            'wa.Stat1',
+            'wa.Stat2',
+            'wa.Stat3',
+            'wa.Stat4',
+            'wa.Stat6',
+            'wa.Stat7',
+            'wa.Stat8',
+            'wa.Stat9',
+            'wa.Stat11',
+            'wa.Stat12',
+            'wa.Ref1',
+            'wa.Ref2',
+            'wa.Ref3',
+            'wa.Ref4',
+            'wa.Ref6',
+            'wa.Ref7',
+            'wa.Ref8',
+            'wa.Ref9',
+            'wa.Ref11',
+            'wa.Ref12',
+            'we.Web',
         ])
-        ->orderBy('wa.Stat1', 'desc')
-        ->orderBy('wa.Stat2', 'desc')
-        ->orderBy('wa.Stat3', 'desc')
+        ->orderBy('wa.Dif1', 'desc')
+        ->orderBy('wa.Dif2', 'desc')
+        ->orderBy('wa.Dif3', 'desc')
         ->get();
-
+    
         $ngdu_data = DB::table('Ngdu')->select('*')->get();
 
-        return Inertia::render('Operations/Index', [
-            'operations_data' => json_decode($operations_data),
-            'ngdu_data' => json_decode($ngdu_data)
-        ]);
+        $shop_data = DB::table('Shop')->select('*')->get();
+
+        $data = [
+            'matrix_data' => $matrix_data,
+            'ngdu_data' => $ngdu_data,
+            'shop_data' => $shop_data,
+        ];
+
+        return response()->json($data);
     }
 
     public function detail($operation_uuid)
@@ -74,7 +125,7 @@ class OperationsController extends Controller
         ->where('we.public_id', '=', $operation_uuid)
         ->first();
 
-        return Inertia::render('Operations/Detail', ['item' => $operation_data]);
+        return response()->json($operation_data);
     }
 
     public function hourArch($operation_uuid) 
@@ -95,10 +146,12 @@ class OperationsController extends Controller
         ->orderBy('hh.Date', 'desc')
         ->get();
 
-        return Inertia::render('Operations/HourArch', [
-            'data' => $head_hour_data,
-            'item' => $well_item
-        ]);
+        $data = [
+            'head_hour_data' => $head_hour_data,
+            'well_item' => $well_item
+        ];
+
+        return response()->json($data);
     }
 
     public function hourArchDetail($operation_uuid, $head_hour_uuid) 
@@ -140,11 +193,13 @@ class OperationsController extends Controller
         ->orderBy('ha.Date', 'desc')
         ->get();
 
-        return Inertia::render('Operations/HourArchDetail', [
-            'data' => $hour_arch_data,
+        $data = [
+            'hour_arch_data' => $hour_arch_data,
             'well_item' => $well_item,
             'head_hour_item' => $head_hour_item,
-        ]);
+        ];
+
+        return response()->json($data);
     }
 
 
@@ -165,9 +220,11 @@ class OperationsController extends Controller
         ->orderBy('pl.Date', 'desc')
         ->get();
 
-        return Inertia::render('Operations/AskStats', [
-            'data' => $stat_data,
-            'item' => $well_item
-        ]);
+        $data = [
+            'stat_data' => $stat_data,
+            'well_item' => $well_item
+        ];
+
+        return response()->json($data);
     }
 }

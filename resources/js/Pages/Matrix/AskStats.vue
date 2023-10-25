@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
-import TrafficLightLayout from '@/Layouts/TrafficLightLayout.vue';
+import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import { Link, Head } from '@inertiajs/vue3';
 import AskStatsTable from './Partials/AskStatsTable.vue';
 
@@ -105,7 +105,7 @@ const visiblePages = computed(() => {
 <template>
     <Head title="Часовые архивы" />
 
-    <TrafficLightLayout>
+    <AuthorizedLayout>
         <template #nav>
             <Link :href="route('matrix')">
                 <BreadCrumb
@@ -175,5 +175,5 @@ const visiblePages = computed(() => {
                 <AskStatsTable :data="paginatedData" :item="item"></AskStatsTable>
             </div>
         </div>
-    </TrafficLightLayout>
+    </AuthorizedLayout>
 </template>

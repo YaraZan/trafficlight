@@ -1,14 +1,14 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
-import TrafficLightLayout from '@/Layouts/TrafficLightLayout.vue';
+import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
     <Head title="Аналитика" />
 
-    <TrafficLightLayout>
+    <AuthorizedLayout>
         <template #nav>
             <Link :href="route('analytics')">
                 <BreadCrumb
@@ -24,5 +24,5 @@ import { Head } from '@inertiajs/vue3';
                 </div>
             </div>
         </div>
-    </TrafficLightLayout>
+    </AuthorizedLayout>
 </template>

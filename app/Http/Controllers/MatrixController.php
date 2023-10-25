@@ -87,11 +87,11 @@ class MatrixController extends Controller
 
         $shop_data = DB::table('Shop')->select('*')->get();
 
-        return Inertia::render('Matrix/Index', [
+        return Inertia::render('Matrix/Index', ['data' => [
             'matrix_data' => json_decode($matrix_data),
             'ngdu_data' => json_decode($ngdu_data),
             'shop_data' => json_decode($shop_data),
-        ]);
+        ]]);
     }
 
     public function detail($operation_uuid)
@@ -141,6 +141,7 @@ class MatrixController extends Controller
             'hh.Debit'])
         ->where('hh.Well_Id', '=', $well_item->Id)
         ->orderBy('hh.Date', 'desc')
+        ->take(1500)
         ->get();
 
         return Inertia::render('Matrix/HourArch', [
@@ -186,6 +187,7 @@ class MatrixController extends Controller
         ])
         ->where('ha.HeadHour_Id', '=', $head_hour_item->Id)
         ->orderBy('ha.Date', 'desc')
+        ->take(1500)
         ->get();
 
         return Inertia::render('Matrix/HourArchDetail', [
@@ -211,6 +213,7 @@ class MatrixController extends Controller
         ])
         ->where('pl.Well_Id', '=', $well_item->Id)
         ->orderBy('pl.Date', 'desc')
+        ->take(1500)
         ->get();
 
         return Inertia::render('Matrix/AskStats', [

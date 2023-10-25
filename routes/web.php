@@ -1,8 +1,13 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AlarmsController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\MatrixController;
 use App\Http\Controllers\OperationsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -37,9 +42,7 @@ Route::get('/traffic-light/matrix/{operation_uuid}/askstats', [MatrixController:
 /**
  * Alarms routes
  */
-Route::get('/traffic-light/alarms', function () {
-    return Inertia::render('Alarms/Alarms');
-})->name('alarms');
+Route::get('/traffic-light/alarms', [AlarmsController::class, 'index'])->name('alarms');
 
 /**
  * Analytics routes
@@ -49,14 +52,21 @@ Route::get('/traffic-light/analytics', function () {
 })->name('analytics');
 
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+/**
+ * !!! Admin routes !!!
+ */
+Route::get('/traffic-light/logs', [LogController::class, 'index'])->name('logs');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+Route::get('/traffic-light/users', [UserController::class, 'index'])->name('users');
+Route::post('/traffic-light/users', [UserController::class, 'store'])->name('users.store');
+Route::patch('/traffic-light/users', [UserController::class, 'update'])->name('users.update');
+Route::delete('/traffic-light/users', [UserController::class, 'destroy'])->name('users.destroy');
+
+Route::get('/traffic-light/roles', [RoleController::class, 'index'])->name('roles');
+Route::post('/traffic-light/roles', [RoleController::class, 'store'])->name('roles.store');
+Route::patch('/traffic-light/roles', [RoleController::class, 'update'])->name('roles.update');
+Route::delete('/traffic-light/roles', [RoleController::class, 'destroy'])->name('roles.destroy');
+
+
 
 require __DIR__.'/auth.php';

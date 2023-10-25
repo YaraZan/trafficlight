@@ -12,8 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('Well', function (Blueprint $table) {
-            $table->uuid('public_id')->after('id')->unique()->default(Str::uuid());
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('public_id')->unique();
+            $table->string('name');
+            $table->boolean('canEdit');
+            $table->boolean('canViewAll');
+            $table->timestamps();
         });
     }
 
@@ -22,8 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('Well', function (Blueprint $table) {
-            $table->dropColumn('public_id');
-        });
+        Schema::dropIfExists('roles');
     }
 };
