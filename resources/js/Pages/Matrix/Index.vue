@@ -1,34 +1,27 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import { Button } from 'flowbite-vue';
-import TrafficLightLayout from '@/Layouts/TrafficLightLayout.vue';
+import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
-import InputSearch from '@/Components/InputSearch.vue';
 import { Input } from 'flowbite-vue';
 import MatrixTable from './Partials/MatrixTable.vue';
-import DateRadio from '@/Components/DateRadio.vue';
-import NgduDropdown from '@/Components/NgduDropdown.vue';
 import ActionsButton from '@/Components/ActionsButton.vue';
 import GridIcon from '@/Components/Icons/GridIcon.vue';
 import TableIcon from '@/Components/Icons/TableIcon.vue';
 import OperationsGrid from './Partials/OperationsGrid.vue';
-import ClickOutside from 'vue-click-outside';
+import axios from 'axios';
 
 
 const props = defineProps({
-    matrix_data: {
-        type: Array
-    },
-    ngdu_data: {
-        type: Array
-    },
-    shop_data: {
-        type: Array
-    },
+    data: {
+        type: Object
+    }
 });
+
+
 
 const params = ['Связь','НГДУ', 'Цех', 'Скважина', 'Состояние', 'Дата', 'Штраф', 'Опрос',
  'Число качаний, об/мин', 'Нагрузка максимальная, кг',
@@ -38,14 +31,12 @@ const params = ['Связь','НГДУ', 'Цех', 'Скважина', 'Сост
 const searchFilter = ref('');
 const radioFilter = ref('available');
 const ngduFilters = ref([]);
-const shopFilters = ref([]);
 
 const currentPage = ref(1);
 const perPage = ref(20);
 
 const showViewTypeDropdown = ref(false);
 const showNgduDropdown = ref(false);
-const showShopDropdown = ref(false);
 const viewType = ref('grid');
 
 const perPageOptions = [10, 20, 30];
@@ -79,7 +70,7 @@ const nextPage = () => {
 };
 
 const filteredData = computed(() => {
-    let data = props.matrix_data;
+    let data = props.data.matrix_data;
 
     switch (radioFilter.value) {
         case 'available':
@@ -138,21 +129,6 @@ const handleNgduCheckboxFilter = (e) => {
     ngduFilters.value.push(val);
 };
 
-const handleShopCheckboxFilter = (e) => {
-    const val = e.target.value;
-
-    if (shopFilters.value.includes(val)) {
-        return shopFilters.value.splice(shopFilters.value.indexOf(val), 1);
-    }
-    ngduFilters.value.push(val);
-};
-
-const getShopsForNgdu = (id) => {
-    let data = props.shop_data;
-
-    return data = data.filter(item => item.Ngdu_Id === id);
-}
-
 const changeView = (value) => {
     viewType.value = value;
 }
@@ -161,13 +137,12 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
   currentPage.value = 1;
 }, { deep: true });
 
-
 </script>
 
 <template>
     <Head title="Матрица" />
 
-    <TrafficLightLayout>
+    <AuthorizedLayout>
         <template #nav>
             <Link :href="route('matrix')">
                 <BreadCrumb
@@ -229,14 +204,14 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                         <div v-show="showNgduDropdown" class="absolute top-12 p-5 right-0 z-10 bg-white rounded-lg shadow min-w-[300px]">
                             <h6 class="font-medium text-sm text-gray-400">Выберите НГДУ</h6>
                             <ul class="mt-[10px] w-full flex flex-col">
-                                <li v-for="(ngdu, index) in ngdu_data" :key="index" class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
+                                <li v-for="(ngdu, index) in data.ngdu_data" :key="index" class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
                                     <input @change="handleNgduCheckboxFilter" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" :id="`filter_option_${index}`" type="checkbox" :value="ngdu.Id">
                                     <label class="cursor-pointer" :for="`filter_option_${index}`">{{ ngdu.NgduName }}</label>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <ActionsButton :data="matrix_data"/>
+                    <ActionsButton :data="data.matrix_data"/>
                 </div>
             </div>
             <div class="flex items-center gap-3 p-4 pt-0 w-full">
@@ -280,5 +255,5 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                 <MatrixTable :data="paginatedData" :params="params"/>
             </div>
         </div>
-    </TrafficLightLayout>
+    </AuthorizedLayout>
 </template>

@@ -30,28 +30,28 @@ function extractNumericPart(data) {
 </script>
 
 <template>
-    <table striped>
+    <table class="w-full" striped>
             <thead>
-                <tr>
-                    <th scope="col" class="bg-gray-50 items-start px-6 py-4 text-left" v-for="param in params">
+                <tr class="border-y border-gray-200">
+                    <th scope="col" class="bg-gray-50 items-center px-6 py-4 text-left border-gray-200 border-l" v-for="param in params">
                         <span class="text font-semibold text-gray-800">{{ param }}</span>
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(row, index) in data" :key="index"  class="hover:bg-gray-50 border-b border-gray-200 cursor-pointer">
-                    <td scope="row" class="px-6 py-4 text-left">
+                    <td scope="row" class="px-6 py-4 text-center items-center">
                         <div :class="row.Connect ? 'bg-green-100' : 'bg-gray-200'" class="w-5 h-5 rounded-full z-1 flex items-center justify-center cursor-pointer" data-tooltip-target="operation-connect-tooltip" data-tooltip-placement="bottom">
                             <div :class="row.Connect ? 'bg-green-300' : 'bg-gray-400'" class="w-1/2 h-1/2 rounded-full z-2"></div>
                         </div >
                     </td>
-                    <td class="font-bold px-6 py-4 text-left">{{ extractNgdu(row.WellName) }}</td>
-                    <td class="px-6 py-4 text-left">{{ extractNumericPart(row.ShopName) }}</td>
-                    <td class="px-6 py-4 text-left">{{ extractWellNumber(row.WellName) }}</td>
-                    <td class="px-6 py-4 text-left">{{ row.WellState }}</td>
-                    <td class="px-6 py-4 text-left">{{ row.Date }}</td>
-                    <td class="px-6 py-4 text-left">{{ row.SumErr }}</td>
-                    <td class="px-6 py-4 text-left">
+                    <td class="font-bold px-6 py-4 text-left border-l border-gray-200">{{ extractNgdu(row.WellName) }}</td>
+                    <td class="px-6 py-4 text-left border-l border-gray-200">{{ extractNumericPart(row.ShopName) }}</td>
+                    <td class="px-6 py-4 text-left border-l border-gray-200">{{ extractWellNumber(row.WellName) }}</td>
+                    <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.WellState }}</td>
+                    <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.Date }}</td>
+                    <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.SumErr }}</td>
+                    <td class="px-6 py-4 text-left border-l border-gray-200">
                         <span v-if="row.Ask" class="py-1 px-2 bg-green-100 text-green-600 rounded-3xl">Выполнен</span>
                         <span v-else class="py-1 px-2 bg-red-100 text-red-600 rounded-3xl">Нет</span>
                     </td>

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
-import TrafficLightLayout from '@/Layouts/TrafficLightLayout.vue';
+import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import { Link, Head } from '@inertiajs/vue3';
 import HourArchTable from './Partials/HourArchTable.vue';
 
@@ -110,7 +110,7 @@ watch(() => [dateFilters.value], () => {
 <template>
     <Head title="Часовые архивы" />
 
-    <TrafficLightLayout>
+    <AuthorizedLayout>
         <template #nav>
             <Link :href="route('matrix')">
                 <BreadCrumb
@@ -180,5 +180,5 @@ watch(() => [dateFilters.value], () => {
                 <HourArchTable :data="paginatedData" :item="item"></HourArchTable>
             </div>
         </div>
-    </TrafficLightLayout>
+    </AuthorizedLayout>
 </template>

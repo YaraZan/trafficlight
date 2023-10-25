@@ -55,7 +55,7 @@ const getFontColor = (val) => {
 </script>
 
 <template>
-    <td class="px-6 py-4 text-left">
+    <td class="px-6 py-4 text-left border-l border-gray-200">
         <div class="flex items-center gap-2">
             <div :class="getBgColor(stat)" class="flex gap-2 h-[30px] rounded-lg p-2">
                 <div class="flex items-center gap-1">
