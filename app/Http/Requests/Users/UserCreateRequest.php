@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Users;
 
-use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,9 +16,11 @@ class UserCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique(Role::class)],
-            'can_edit' => 'required',
-            'can_view_all' => 'required',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255', Rule::unique(User::class)],
+            'role_id' => 'required',
+            'ngdu_id' => 'required',
+            'password' => 'required',
         ];
     }
 }

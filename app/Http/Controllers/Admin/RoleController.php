@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Roles\RoleCreateRequest;
 use App\Http\Requests\Roles\RoleUpdateRequest;
 use App\Models\Role;
@@ -38,9 +39,9 @@ class RoleController extends Controller
 
     public function update(RoleUpdateRequest $request): RedirectResponse
     {
-        $id = $request->input('id');
+        $public_id = $request->input('public_id');
 
-        $role = Role::find($id);
+        $role = Role::where('public_id', '=', $public_id)->first();
 
         $role->update([
             'name' => $request->input('name'),
@@ -53,8 +54,14 @@ class RoleController extends Controller
 
     public function destroy(Request $request): RedirectResponse
     {
+        $request->validate([
+            'confirm_password' => ['required', 'current_password'],
+        ]);
+
+        $public_id = $request->input('public_id');
+        
         // Delete the role
-        $role = Role::find($request->input('id'));
+        $role = Role::where('public_id', '=', $public_id)->first();
 
         $role->delete();
 

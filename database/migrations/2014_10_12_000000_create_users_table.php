@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('role_id')->nullable();
             $table->string('name');
             $table->string('email')->unique();
-            $table->integer('ngdu_id')->nullable();
+            $table->foreignId('ngdu_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

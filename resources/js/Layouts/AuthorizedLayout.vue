@@ -3,10 +3,13 @@ import { Link } from '@inertiajs/vue3';
 import NavLink from '@/Components/NavLink.vue';
 import MatrixIcon from '@/Components/Icons/MatrixIcon.vue';
 import AlarmIcon from '@/Components/Icons/AlarmIcon.vue';
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
 import OperatingIcon from '@/Components/Icons/OperatingIcon.vue';
 import AnalyticsIcon from '@/Components/Icons/AnalyticsIcon.vue';
 import Logo from '@/Components/Logo.vue';
 import AdminPanelIcon from '@/Components/Icons/AdminPanelIcon.vue';
+import ProfileIcon from '@/Components/Icons/ProfileIcon.vue';
 </script>
 
 <template>
@@ -27,10 +30,22 @@ import AdminPanelIcon from '@/Components/Icons/AdminPanelIcon.vue';
                 </Link>
             </div>
             <div class="py-[10px] px-[5px] flex flex-col gap-[10px] w-full h-full">
-                <!-- <NavLink v-if="$page.props.auth.user.isAdmin()" :pageName="'Админ панель'" :to="'admin'"><AdminPanelIcon></AdminPanelIcon></NavLink> -->
                 <NavLink :inc="'matrix'" :to="'matrix'"><MatrixIcon></MatrixIcon></NavLink>
                 <NavLink :inc="'alarms'" :to="'alarms'"><AlarmIcon></AlarmIcon></NavLink>
                 <NavLink :inc="'analytics'" :to="'analytics'"><AnalyticsIcon></AnalyticsIcon></NavLink>
+                <Dropdown align="left" width="48">
+                    <template #trigger>
+                        <div class="flex items-center justify-center p-[10px] hover:bg-gray-100 rounded-[10px] cursor-pointer">
+                            <ProfileIcon />
+                        </div>
+                    </template>
+
+                    <template #content>
+                        <DropdownLink :href="route('logout')" method="post" as="button">
+                            Выйти
+                        </DropdownLink>
+                    </template>
+                </Dropdown>
             </div>
             
         </aside>
