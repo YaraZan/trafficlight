@@ -45,12 +45,27 @@ class User extends Authenticatable
 
     public function isAdmin(): bool 
     {
-        return optional($this->role)->title == 'admin';
+        return optional($this->role)->name == 'admin';
     }
 
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function ngdu()
+    {
+        return $this->belongsTo(Ngdu::class);
+    }
+
+    public function viewAllNgdu(): bool 
+    {
+        return optional($this->role)->canViewAll;
+    }
+
+    public function canEdit(): bool 
+    {
+        return optional($this->role)->canEdit;
     }
 
 }

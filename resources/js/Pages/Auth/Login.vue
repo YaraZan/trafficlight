@@ -1,11 +1,7 @@
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Input, Spinner } from 'flowbite-vue';
+import Logo from '@/Components/Logo.vue';
 
 defineProps({
     canResetPassword: {
@@ -30,65 +26,31 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Log in" />
+    <Head title="Вход" />
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
+    <div class="w-screen h-screen flex items-center justify-center font-montserrat bg-white">
+        
+        <div class="flex flex-col items-center justify-center gap-6">
+
+            <div class="p-4 flex items-center justify-center border border-gray-200 rounded-lg bg-white">
+                <Logo />
+            </div>
+
+            <div class="flex flex-col gap-2 text-center">
+                <h2 class="font-semibold text-[24px] text-gray-800">Вход</h2>
+                <span class="text-[16px] text-gray-300">Войдите в свой аккаунт</span>
+            </div>
+
+            <div class="flex flex-col gap-5 pb-40">
+                <Input v-model="form.email" label="Почта" size="sm" class="focus:ring-green-500 focus:border-green-500 min-w-[300px] ring-green-600 " type="text"  />
+                <Input v-model="form.password" label="Пароль" size="sm" class="focus:ring-green-500 focus:border-green-500 min-w-[300px] ring-green-600 " type="password"  />
+                <button @click.prevent="submit" :disabled="form.processing" class="px-4 py-2 bg-green-600 flex items-center justify-center gap-2 font-semibold text-white rounded-lg hover:opacity-80">
+                    <Spinner color="green" v-show="form.processing" />
+                    Войти
+                </button>
+            </div>
+
         </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="current-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Remember me</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-                >
-                    Forgot your password?
-                </Link>
-
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
+    </div>
 </template>

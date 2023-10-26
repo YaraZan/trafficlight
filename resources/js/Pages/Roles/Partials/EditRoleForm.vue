@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, nextTick } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { Input } from 'flowbite-vue';
 import EditIcon from '@/Components/Icons/EditIcon.vue';
 import DeleteIcon from '@/Components/Icons/DeleteIcon.vue';
 import { Spinner } from 'flowbite-vue';
+import Modal from '@/Components/Modal.vue';
 
 const props = defineProps({
     role: {
@@ -14,21 +15,28 @@ const props = defineProps({
 
 const editing = ref(false);
 
+const confirmingRoleDeletion = ref(false);
+const passwordInput = ref(null);
+
 const nameInput = ref(null);
 const canEditOption = ref(false);
 const canViewAllOption = ref(false);
 
 const form = useForm({
-    id: props.role.id,
+    public_id: props.role.public_id,
     name: props.role.name,
     can_edit: props.role.canEdit,
     can_view_all: props.role.canViewAll,
+    confirm_password: ''
 });
 
 const deleteRole = () => {
     form.delete(route('roles.destroy'), {
         preserveScroll: true,
-        onSuccess: () => {editing.value = false; form.reset()},
+        onSuccess: () => {
+            editing.value = false; 
+            closeModal();
+        },
         onError: () => {
         // Handle validation errors here
         },
@@ -38,12 +46,19 @@ const deleteRole = () => {
 const updateRole = () => {
     form.patch(route('roles.update'), {
         preserveScroll: true,
-        onSuccess: () => {editing.value = false; form.reset()},
+        onSuccess: () => {editing.value = false;},
         onError: () => {
         // Handle validation errors here
-        console.log(form.errors);
         },
     });
+};
+
+const confirmRoleDeletion = () => {
+    confirmingRoleDeletion.value = true;
+};
+
+const closeModal = () => {
+    confirmingRoleDeletion.value = false;
 };
 </script>
 
@@ -95,10 +110,43 @@ const updateRole = () => {
                 <EditIcon />
                 Изменить
             </button>
-            <button @click.prevent="deleteRole" :disabled="form.processing" class="text-red-600 text-sm font-semibold flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
+            <button @click.prevent="confirmRoleDeletion" :disabled="form.processing" class="text-red-600 text-sm font-semibold flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
                 <DeleteIcon />
                 Удалить
             </button>
         </td>
     </tr>
+
+    <Modal :show="confirmingRoleDeletion" @close="closeModal">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Вы точно хотите удалить роль?
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-600">
+                    После того как вы это сделаете, роль будет удалена навсегда. Все пользователи, причастные к этой роли, получат роль с наименьшим доступом.
+                </p>
+
+                <div class="mt-6">
+                    <Input v-model="form.confirm_password" ref="passwordInput" size="sm" type="password" class="focus:ring-green-500 focus:border-green-500 w-1/2 ring-green-600 " placeholder="Пароль">
+                    </Input>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button 
+                        @click="closeModal"
+                        class="flex gap-2 bg-transparent px-4 py-2 border border-gray-200 rounded-lg text-gray-800 text-sm font-semibold hover:bg-gray-100"
+                    > Отмена </button>
+
+                    <button
+                        class="ml-3 flex bg-red-600 px-4 py-2 rounded-lg text-white text-sm font-semibold hover:opacity-80"
+                        :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing"
+                        @click="deleteRole"
+                    >
+                        Удалить
+                    </button>
+                </div>
+            </div>
+        </Modal>
 </template>

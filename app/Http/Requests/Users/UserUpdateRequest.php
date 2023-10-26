@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Users;
 
-use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,10 +16,12 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required',
-            'name' => ['required', 'string', 'max:255', Rule::unique(Role::class)->ignore(Role::find($this->id))],
-            'can_edit' => 'required',
-            'can_view_all' => 'required',
+            'public_id' => 'required',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255', Rule::unique(User::class)->ignore(User::where('public_id', '=', $this->public_id)->first())],
+            'role_id' => ['required', 'integer'],
+            'ngdu_id' => ['required', 'integer'],
+            'password' => 'required',
         ];
     }
 }
