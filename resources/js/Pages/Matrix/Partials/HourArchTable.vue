@@ -35,7 +35,7 @@ const props = defineProps({
                 <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.SumErr }}</td>
                 <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.Debit }}</td>
                 <td class="px-6 py-4 text-left border-l border-gray-200">
-                    <Link :href="route('matrix.hourarch.detail', { operation_uuid: item.public_id, head_hour_uuid: row.public_id})">
+                    <Link :href="route('matrix.hourarch.detail', { well_uuid: item.public_id, head_hour_uuid: row.public_id})">
                         <span class="text font-semibold text-green-500">Просмотр</span>
                     </Link>
                 </td>

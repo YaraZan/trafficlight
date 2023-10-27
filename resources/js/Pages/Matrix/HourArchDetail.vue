@@ -42,7 +42,7 @@ const props = defineProps({
                 :name="'Часовые архивы'"
                 ></BreadCrumb>
             </Link>
-            <Link :href="route('matrix.hourarch.detail', { operation_uuid: well_item.public_id, head_hour_uuid: head_hour_item.public_id})">
+            <Link :href="route('matrix.hourarch.detail', { well_uuid: well_item.public_id, head_hour_uuid: head_hour_item.public_id})">
                 <BreadCrumb
                 :name="head_hour_item.Date"
                 ></BreadCrumb>

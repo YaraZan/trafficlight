@@ -21,7 +21,7 @@ const isAdmin = computed(() => page.props.auth.isAdmin);
 </script>
 
 <template>
-    <div class="min-w-screen min-h-screen bg-white font-montserrat overflow-x-hidden">
+    <div class="min-w-screen min-h-screen font-montserrat overflow-x-hidden">
         
         <!-- Page Heading -->
         <nav class=" bg-white dark:bg-gray-800 w-screen border-b border-gray-200" v-if="$slots.nav">
