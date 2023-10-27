@@ -85,8 +85,10 @@ class MatrixController extends Controller
                 ->orderBy('wa.Dif2', 'desc')
                 ->orderBy('wa.Dif3', 'desc')
                 ->get();
+
+                $ngdu_data = DB::table('Ngdu')->select('*')->get();
         } else {
-            $user = auth()->user(); // Get the currently authenticated user
+            $user = auth()->user();
             $matrix_data = DB::table('WellAlarm as wa')
                 ->join('Well as we', 'wa.Well_Id', '=', 'we.Id')
                 ->join('Ngdu as ngdu', 'wa.Ngdu_Id', '=', 'ngdu.Id')
@@ -159,9 +161,10 @@ class MatrixController extends Controller
                 ->orderBy('wa.Dif3', 'desc')
                 ->where('wa.Ngdu_Id', '=', $user->ngdu_id)
                 ->get();
+
+                $ngdu_data = null;
         }
-    
-        $ngdu_data = DB::table('Ngdu')->select('*')->get();
+
 
         $shop_data = DB::table('Shop')->select('*')->get();
 

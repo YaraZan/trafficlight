@@ -197,7 +197,7 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                         </div>
                     </div>
                     <div class="relative flex items-center flex-col">
-                        <Button :class="showNgduDropdown ? 'border-green-600 text-green-600' : ''" size="md" color="light" @click="showNgduDropdown = !showNgduDropdown;">
+                        <Button v-if="data.ngdu_data" :class="showNgduDropdown ? 'border-green-600 text-green-600' : ''" size="md" color="light" @click="showNgduDropdown = !showNgduDropdown;">
                             <span class="font-semibold">НГДУ</span>
                         </Button>
 
