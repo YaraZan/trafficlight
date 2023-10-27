@@ -49,10 +49,11 @@ const deleteUser = () => {
         preserveScroll: true,
         onSuccess: () => {
             editing.value = false; 
+            passwordInput.value = null;
             closeModal();
         },
         onError: () => {
-        // Handle validation errors here
+            passwordInput.value = null;
         },
     });
 };
@@ -62,9 +63,11 @@ const updateUser = () => {
         preserveScroll: true,
         onSuccess: () => {
             editing.value = false;
+            passwordInput.value = null;
             closeModal();
         },
         onError: () => {
+            passwordInput.value = '';
         },
     });
 };

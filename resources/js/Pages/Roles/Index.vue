@@ -1,7 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
-import AdminLayout from '@/Layouts/AdminLayout.vue';
+import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import NoDataIcon from '@/Components/Icons/NoDataIcon.vue'
 import { Head } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
@@ -22,7 +22,7 @@ const props = defineProps({
 <template>
     <Head title="Роли" />
 
-    <AdminLayout>
+    <AuthorizedLayout>
         <template #nav>
             <Link :href="route('roles')">
                 <BreadCrumb
@@ -61,5 +61,5 @@ const props = defineProps({
         
         </div>
 
-    </AdminLayout>
+    </AuthorizedLayout>
 </template>

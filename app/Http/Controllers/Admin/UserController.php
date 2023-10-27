@@ -86,8 +86,6 @@ class UserController extends Controller
         $user->role_id = $new_role->id;
         $user->ngdu_id = $new_ngdu->Id;
 
-        Auth::logout($user);
-
         $user->save();
     
         return Redirect::route('users');
@@ -102,8 +100,6 @@ class UserController extends Controller
         $public_id = $request->input('public_id');
 
         $user = User::where('public_id', '=', $public_id)->first();
-
-        Auth::logout($user);
 
         $user->delete();
 

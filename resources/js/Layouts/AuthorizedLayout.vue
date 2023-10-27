@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import NavLink from '@/Components/NavLink.vue';
 import MatrixIcon from '@/Components/Icons/MatrixIcon.vue';
 import AlarmIcon from '@/Components/Icons/AlarmIcon.vue';
@@ -10,6 +10,14 @@ import AnalyticsIcon from '@/Components/Icons/AnalyticsIcon.vue';
 import Logo from '@/Components/Logo.vue';
 import AdminPanelIcon from '@/Components/Icons/AdminPanelIcon.vue';
 import ProfileIcon from '@/Components/Icons/ProfileIcon.vue';
+import UsersIcon from '@/Components/Icons/UsersIcon.vue';
+import RolesIcon from '@/Components/Icons/RolesIcon.vue';
+import { computed } from 'vue';
+
+const page = usePage();
+
+const isAdmin = computed(() => page.props.auth.isAdmin);
+
 </script>
 
 <template>
@@ -30,6 +38,10 @@ import ProfileIcon from '@/Components/Icons/ProfileIcon.vue';
                 </Link>
             </div>
             <div class="py-[10px] px-[5px] flex flex-col gap-[10px] w-full h-full">
+                <NavLink v-if="isAdmin" :inc="'users'" :to="'users'"><UsersIcon></UsersIcon></NavLink>
+                <NavLink v-if="isAdmin" :inc="'roles'" :to="'roles'"><RolesIcon></RolesIcon></NavLink>
+                <div v-if="isAdmin" class="border-b border-gray-200 w-full"></div>
+
                 <NavLink :inc="'matrix'" :to="'matrix'"><MatrixIcon></MatrixIcon></NavLink>
                 <NavLink :inc="'alarms'" :to="'alarms'"><AlarmIcon></AlarmIcon></NavLink>
                 <NavLink :inc="'analytics'" :to="'analytics'"><AnalyticsIcon></AnalyticsIcon></NavLink>
