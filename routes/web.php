@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Matrix\DnmhController;
 use App\Http\Controllers\AlarmsController;
 use App\Http\Controllers\Matrix\AskStatsController;
 use App\Http\Controllers\Matrix\WellController;
@@ -43,7 +44,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/alarms', [AlarmsController::class, 'index'])->name('alarms');
 });
 
-
+Route::middleware('auth')->group(function () {
+    Route::prefix('/api')->group(function () {
+        Route::get('/dnmh/{public_id}', [DnmhController::class, 'index']);
+        Route::get('/dnm/{public_id}', [DnmhController::class, 'show']);
+    });
+});
 
 /**
  * Analytics routes

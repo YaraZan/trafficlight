@@ -1,24 +1,29 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Matrix;
 
+use App\Http\Controllers\Controller;
+use App\Models\Well;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
 class DnmhController extends Controller
 {
-    public function index($well_id)
+    public function index($public_id)
     {
-        $dnmh = DB::table('Dnmh')->where('Well_Id', '=', $well_id)->get();
+        $well = Well::where('public_id', '=', $public_id)->first();
 
-        return response()->json(['dnmh' => $dnmh]);
+        $dnmh = DB::table('Dnmh')->where('Well_Id', '=', $well->Id)->orderBy('Dat', 'desc')->get();
+
+        return response()->json($dnmh);
     }
 
-    public function show($dnmh_id)
+    public function show($public_id)
     {
-        $dnm = DB::table('Dnm')->where('Dnmh_Id', '=', $dnmh_id)->get();
+        $dnmh = DB::table('Dnmh')->where('public_id', '=', $public_id)->first();
+        $dnm = DB::table('Dnm')->where('Dnmh_Id', '=', $dnmh->Id)->get();
 
-        return response()->json(['dnm' => $dnm]);
+        return response()->json($dnm);
     }
 }
