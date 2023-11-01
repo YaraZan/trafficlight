@@ -1,7 +1,7 @@
 <template>
   <div class="w-[60%] flex items-start">
     <svg ref="dinamogram" class="min-h-full w-full"></svg>
-    <div id="tooltip" class="flex-col absolute hidden p-2 bg-white border border-gray-200 rounded-lg gap-1"></div>
+    <div id="tooltip" class="flex-col absolute hidden p-2 bg-gray-900 text-white border border-gray-200 rounded-lg gap-1"></div>
   </div>
 </template>
 
@@ -42,39 +42,30 @@ const drawChart = (data) => {
   // Sort the data based on a meaningful attribute, for example, a timestamp or another identifier
   data.sort((a, b) => a.Timestamp - b.Timestamp); // Adjust the property to sort by
 
-  const width = 1000;
-  const height = 350;
+  const margin = { top: 10, right: 30, bottom: 30, left: 60 };
+  const width = 900 - margin.left - margin.right;
+  const height = 400 - margin.top - margin.bottom;
 
   d3.select(dinamogram.value).selectAll('*').remove();
 
   const svg = d3.select(dinamogram.value)
     .append('g')
-    .attr('width', 900)
-    .attr('height', 400)
-    .attr('transform', 'translate(40, 10)');
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
   const xScale = d3.scaleLinear()
     .domain([0, d3.max(data, (d) => d.X)])
-    .range([0, 900]);
+    .range([0, width]);
+  svg.append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(d3.axisBottom(xScale));
 
   const yScale = d3.scaleLinear()
     .domain([0, d3.max(data, (d) => d.Y)])
-    .range([400, 0]);
-
-  const xAxis = d3.axisBottom(xScale)
-    .tickFormat(d3.format('.0f'))
-    .ticks(4);
-
-  const yAxis = d3.axisLeft(yScale)
-    .tickFormat(d3.format('.0f'))
-    .ticks(6);
-
-  svg.append('g')
-    .attr('transform', `translate(0, ${height})`)
-    .call(xAxis);
-
-  svg.append('g')
-    .call(yAxis);
+    .range([height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(yScale));
 
   const tooltip = d3.select('#tooltip');
 
@@ -89,7 +80,7 @@ const drawChart = (data) => {
     .style('cursor', 'pointer')
     .on('mouseover', (event, d) => {
       tooltip.style('display', 'block');
-      tooltip.html(`Нагрузка, кг: ${d.Y}, Длина: ${d.X}`)
+      tooltip.html(`Нагрузка, кг: <b>${d.Y}</b>, Длина: <b>${d.X}</b>`)
         .style('left', event.pageX + 10 + 'px')
         .style('top', event.pageY - 25 + 'px')
         .style('border-radius', 10 + 'px');
@@ -110,3 +101,4 @@ const drawChart = (data) => {
 
 
 </script>
+

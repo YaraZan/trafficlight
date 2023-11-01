@@ -4,6 +4,7 @@ import BreadCrumb from '@/Components/BreadCrumb.vue';
 import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import AlarmsTable from '@/Pages/Alarms/Partials/AlarmsTable.vue';
+import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
@@ -127,7 +128,11 @@ const visiblePages = computed(() => {
             </div>
 
             <div class="w-full h-full overflow-x-auto">
-                <AlarmsTable :data="paginatedData"></AlarmsTable>
+                <AlarmsTable v-if="paginatedData.length > 0" :data="paginatedData"></AlarmsTable>
+                <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
+                    <NoDataIcon />
+                    <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
+                </div>
             </div>
 
         </div>

@@ -11,6 +11,7 @@ import axios from 'axios';
 import DnmhTable from './Partials/DnmhTable.vue';
 import SkeletonDnmhTable from './Partials/SkeletonDnmhTable.vue';
 import DnmChart from './Partials/DnmChart.vue';
+import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
 import { watch } from 'vue';
 import Dinamogram from '@/Components/Icons/Dinamogram.vue';
 
@@ -146,7 +147,7 @@ watch(() => dnmhData.value, () => {
         <div class="bg-white dark:bg-gray-800 relative w-full">
 
             <!-- Flex [-] -->
-            <div class="flex flex-col p-10 gap-5">
+            <div class="flex flex-col p-8 gap-5">
 
                 <!-- Flex [ | ] -->
                 <div class="flex w-full items-stretch gap-10">
@@ -154,14 +155,14 @@ watch(() => dnmhData.value, () => {
 
                     <div class="flex flex-col gap-5 w-[40%]">
 
-                        <div class="flex gap-5 items-center">
+                        <div class="flex gap-5 items-center mt-2">
                             <div :class="item.Connect ? 'bg-green-100' : 'bg-gray-200'" class="w-5 h-5 rounded-full z-1 flex items-center justify-center cursor-pointer" data-tooltip-target="operation-connect-tooltip" data-tooltip-placement="bottom">
                                 <div :class="item.Connect ? 'bg-green-300' : 'bg-gray-400'" class="w-1/2 h-1/2 rounded-full z-2"></div>
                             </div >
                             <span class="font-bold text-gray-800 text-lg">{{ item.Name }}</span>
                         </div>
 
-                        <div class="flex flex-col border border-gray-200 rounded-xl">
+                        <div class="flex flex-col border border-gray-200 rounded-xl mt-2">
                             <div class="flex gap-2 p-3 items-center border-b border-gray-200">
                                 <span class="text-sm text-gray-500 w-1/3">Название</span>
                                 <span class="text-lg font-semibold text-gray-800">{{ item.Name }}</span>
@@ -214,7 +215,7 @@ watch(() => dnmhData.value, () => {
                 </div>
 
                 <div class="w-full overflow-x-auto overflow-y-auto border border-gray-200 rounded-xl">
-                      <table v-if="paginatedData.length > 0" class="w-full border-b border-gray-200" striped>
+                      <table v-if="paginatedData.length" class="w-full border-b border-gray-200" striped>
                         <thead>
                             <tr class="border-b border-gray-200">
                                 <th scope="col" class="bg-gray-50 px-6 py-4 text-left">
@@ -232,7 +233,7 @@ watch(() => dnmhData.value, () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(row, index) in paginatedData" :class="selectedDnm == row.public_id ? 'bg-gray-50' : ''" class="border-b border-gray-200" :key="index">
+                            <tr v-for="(row, index) in paginatedData" :class="selectedDnm == row.public_id ? 'border-y-2 border-green-300 bg-green-50' : 'border-b border-gray-200'" :key="index">
                                 <th scope="row" class="font-bold text-gray-400 px-6 py-4 text-left">{{ row.Dat }}</th>
                                 <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.AskLong }}</td>
                                 <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.DnmAdress }}</td>
@@ -241,7 +242,7 @@ watch(() => dnmhData.value, () => {
                                     <button v-else
                                         :value="row.public_id"
                                         @click="handleSelect"
-                                        class="w-full flex bg-gray-50 border border-gray-200 px-4 py-2 rounded-lg text-gray-800 text-sm font-semibold hover:bg-gray-100"
+                                        class="w-full flex bg-gray-50 border items-center justify-center border-gray-200 px-4 py-2 rounded-lg text-gray-800 text-sm font-semibold hover:bg-gray-100"
                                     >
                                         Загрузить
                                     </button>

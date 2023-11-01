@@ -41,7 +41,7 @@ const props = defineProps({
 
         <div class="bg-white dark:bg-gray-800 relative w-full">   
             <div class="w-full h-full overflow-x-auto">
-                <table class="w-full" striped>
+                <table v-if="props.users.length" class="w-full" striped>
                     <thead>
                         <tr class="border-b border-gray-200">
                             <th scope="col" class="bg-gray-50 px-6 py-3 text-left">
@@ -65,12 +65,12 @@ const props = defineProps({
                     <tbody>
                         <CreateUserForm :roles="roles" :ngdus="ngdus" />
                         <EditUserForm v-if="props.users.length" v-for="user in users" :key="user.id" :user="user" :roles="roles" :ngdus="ngdus" />
+                        <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-full p-20">
+                            <NoDataIcon />
+                            <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
+                        </div>
                     </tbody>
                 </table>  
-                <div v-if="!props.users.length" class="flex flex-col gap-4 items-center justify-center w-full pt-20">
-                    <NoDataIcon />
-                    <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
-                </div>
             </div>
         
         </div>

@@ -5,15 +5,17 @@ import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import Dropdown from '@/Components/Dropdown.vue';
+import ActionsIcon from '@/Components/Icons/ActionsIcon.vue';
 
 import { Input } from 'flowbite-vue';
 import MatrixTable from './Partials/MatrixTable.vue';
 import ActionsButton from '@/Components/ActionsButton.vue';
 import GridIcon from '@/Components/Icons/GridIcon.vue';
 import TableIcon from '@/Components/Icons/TableIcon.vue';
+import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
 import OperationsGrid from './Partials/OperationsGrid.vue';
 import axios from 'axios';
-
 
 const props = defineProps({
     data: {
@@ -21,7 +23,36 @@ const props = defineProps({
     }
 });
 
+onMounted(() => {
+    if (props.data.ngdu_data) {
+        selectAllNgduCheckboxes();   
+    }
+});
 
+const arrayToCsv = (data) => {
+    const array = [Object.keys(data[0])].concat(data)
+
+    return array.map(it => {
+        return Object.values(it).toString()
+    }).join('\n');
+};
+
+const downloadBlob = (content, filename, contentType) => {
+    // Create a blob
+    var blob = new Blob([content], { type: contentType });
+    var url = URL.createObjectURL(blob);
+
+    // Create a link to download it
+    var pom = document.createElement('a');
+    pom.href = url;
+    pom.setAttribute('download', filename);
+    pom.click();
+};
+
+const exportToExcel = () => { 
+    const myLogs = arrayToCsv(props.data.matrix_data);
+    downloadBlob(myLogs, './Светофор.csv', 'text/csv;charset=utf-8;');
+}
 
 const params = ['Связь','НГДУ', 'Цех', 'Скважина', 'Состояние', 'Дата', 'Штраф', 'Опрос',
  'Число качаний, об/мин', 'Нагрузка максимальная, кг',
@@ -31,12 +62,11 @@ const params = ['Связь','НГДУ', 'Цех', 'Скважина', 'Сост
 const searchFilter = ref('');
 const radioFilter = ref('available');
 const ngduFilters = ref([]);
+const selectAllNgdus = ref(true);
 
 const currentPage = ref(1);
 const perPage = ref(20);
 
-const showViewTypeDropdown = ref(false);
-const showNgduDropdown = ref(false);
 const viewType = ref('grid');
 
 const perPageOptions = [10, 20, 30];
@@ -46,6 +76,11 @@ const totalPages = computed(() => Math.ceil(filteredData.value.length / perPage.
 const paginatedData = computed(() => {
     const start = (currentPage.value - 1) * perPage.value;
     const end = start + perPage.value;
+
+    if (!filteredData.value) {
+        return null;
+    }
+
     return filteredData.value.slice(start, end);
 });
 
@@ -86,9 +121,9 @@ const filteredData = computed(() => {
             break;
     }
 
-    if (ngduFilters.value.length) {
-        data = data.filter(item => ngduFilters.value.includes(item.Ngdu_Id.toString()));   
-    }
+    if (props.data.ngdu_data) {
+        data = data.filter(item => ngduFilters.value.includes(item.Ngdu_Id));     
+    } 
 
     if (searchFilter.value !== '') {
         data = data.filter(item => item.WellName.toLowerCase().includes(searchFilter.value.toLowerCase()));
@@ -120,8 +155,25 @@ const visiblePages = computed(() => {
   return pages;
 });
 
+const selectAllNgduCheckboxes = () => {
+
+    if (ngduFilters.value.length == props.data.ngdu_data.length) {
+        ngduFilters.value = [];
+        return;
+    }
+
+    props.data.ngdu_data.forEach(ngdu => {
+        if (!ngduFilters.value.includes(ngdu.Id)) {
+            ngduFilters.value.push(ngdu.Id);
+        }
+    });
+
+
+    selectAllNgdus.value = true;   
+};
+
 const handleNgduCheckboxFilter = (e) => {
-    const val = e.target.value;
+    const val = parseInt(e.target.value);
 
     if (ngduFilters.value.includes(val)) {
         return ngduFilters.value.splice(ngduFilters.value.indexOf(val), 1);
@@ -134,7 +186,14 @@ const changeView = (value) => {
 }
 
 watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.value], () => {
-  currentPage.value = 1;
+
+    if (ngduFilters.value.length !== props.data.ngdu_data.length) {
+        selectAllNgdus.value = false;
+    } else {
+        selectAllNgdus.value = true;
+    }
+
+    currentPage.value = 1;
 }, { deep: true });
 
 </script>
@@ -170,48 +229,80 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                 </div>
                 
                 <div class="flex items-center gap-3 ">
-                    <div class="relative flex items-center flex-col">
-                        <Button :class="showViewTypeDropdown ? 'border-green-600 text-green-600' : ''" size="md" color="light" @click="showViewTypeDropdown = !showViewTypeDropdown;">
-                            <div v-if="viewType === 'grid'" class="flex items-center gap-3">
-                                <GridIcon />
-                                <span class="text-gray-800 font-semibold">Карта</span>
-                            </div>
-                            <div v-else class="flex items-center gap-3">
-                                <TableIcon />
-                                <span class="text-gray-800 font-semibold">Таблица</span>
-                            </div>
-                        </Button>
-
-                        <div :class="showViewTypeDropdown ? 'visible' : 'invisible'" class="absolute top-12 p-5 right-0 z-10 bg-white rounded-lg shadow min-w-[300px]">
-                            <h6 class="font-medium text-sm text-gray-400">Отображение данных</h6>
-                            <ul class="mt-[10px] gap-2 w-full flex flex-col">
-                                <li :class="viewType === 'grid' ? 'bg-gray-100' : ''" class="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg" v-on:click="changeView('grid')">
+                    <Dropdown align="bottom" width="48">
+                        <template #trigger>
+                            <Button size="md" color="light">
+                                <div v-if="viewType === 'grid'" class="flex items-center gap-3">
                                     <GridIcon />
-                                    <span class="text-gray-800 font-semibold">Карта объектов</span>
-                                </li>
-                                <li :class="viewType === 'table' ? 'bg-gray-100' : ''" class="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg" v-on:click="changeView('table')">
+                                    <span class="text-gray-800 font-semibold">Карта</span>
+                                </div>
+                                <div v-else class="flex items-center gap-3">
                                     <TableIcon />
-                                    <span class="text-gray-800 font-semibold">Таблица объектов</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="relative flex items-center flex-col">
-                        <Button v-if="data.ngdu_data" :class="showNgduDropdown ? 'border-green-600 text-green-600' : ''" size="md" color="light" @click="showNgduDropdown = !showNgduDropdown;">
-                            <span class="font-semibold">НГДУ</span>
-                        </Button>
+                                    <span class="text-gray-800 font-semibold">Таблица</span>
+                                </div>
+                            </Button>
+                        </template>
 
-                        <div v-show="showNgduDropdown" class="absolute top-12 p-5 right-0 z-10 bg-white rounded-lg shadow min-w-[300px]">
-                            <h6 class="font-medium text-sm text-gray-400">Выберите НГДУ</h6>
-                            <ul class="mt-[10px] w-full flex flex-col">
-                                <li v-for="(ngdu, index) in data.ngdu_data" :key="index" class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
-                                    <input @change="handleNgduCheckboxFilter" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" :id="`filter_option_${index}`" type="checkbox" :value="ngdu.Id">
-                                    <label class="cursor-pointer" :for="`filter_option_${index}`">{{ ngdu.NgduName }}</label>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <ActionsButton :data="data.matrix_data"/>
+                        <template #content>
+                            <div class="absolute p-5 right-10 z-10 bg-white rounded-lg shadow min-w-[300px]">
+                                <h6 class="font-medium text-sm text-gray-400">Отображение данных</h6>
+                                <ul class="mt-[10px] gap-2 w-full flex flex-col">
+                                    <li :class="viewType === 'grid' ? 'bg-gray-100' : ''" class="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg" v-on:click="changeView('grid')">
+                                        <GridIcon />
+                                        <span class="text-gray-800 font-semibold">Карта объектов</span>
+                                    </li>
+                                    <li :class="viewType === 'table' ? 'bg-gray-100' : ''" class="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg" v-on:click="changeView('table')">
+                                        <TableIcon />
+                                        <span class="text-gray-800 font-semibold">Таблица объектов</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </template>
+                    </Dropdown>
+                    <Dropdown align="bottom" width="48">
+                        <template #trigger>
+                            <Button v-if="data.ngdu_data" :class="ngduFilters.length > 0 ? 'border-green-600 text-green-600' : ''" size="md" color="light">
+                                <span class="font-semibold">НГДУ</span>
+                            </Button>
+                        </template>
+
+                        <template #content>
+                            <div class="absolute p-5 right-0 z-10 bg-white rounded-lg shadow min-w-[300px]">
+                                <h6 class="font-medium text-sm text-gray-400">Выберите НГДУ</h6>
+                                <ul class="mt-[10px] w-full flex flex-col">
+                                    <li class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
+                                        <input @change="selectAllNgduCheckboxes" id="filter_option_all" v-model="selectAllNgdus" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" type="checkbox">
+                                        <label class="cursor-pointer" :for="`filter_option_all`">Все</label>
+                                    </li>
+                                    <li v-for="(ngdu, index) in data.ngdu_data" :key="index" class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
+                                        <input @change="handleNgduCheckboxFilter" :checked="ngduFilters.includes(ngdu.Id)" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" :id="`filter_option_${index}`" type="checkbox" :value="ngdu.Id">
+                                        <label class="cursor-pointer" :for="`filter_option_${index}`">{{ ngdu.NgduName }}</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </template>
+                    </Dropdown>
+                    <Dropdown align="bottom" width="48">
+                        <template #trigger>
+                            <Button class="bg-green-600 ml-auto focus:ring-green-100" size="md" color="green">
+                                Действия
+                                <template #suffix>
+                                    <ActionsIcon class="stroke-white"></ActionsIcon>
+                                </template>
+                            </Button>
+                        </template>
+                        <template #content>
+                            <div class="absolute p-3 right-20 z-10 bg-white rounded-lg shadow min-w-[300px]">
+                                <h6 class="font-medium text-sm text-gray-400">Выберите действие</h6>
+                                <ul class="mt-[10px] gap-2 w-full flex flex-col">
+                                    <li @click="exportToExcel" class="flex flex-col cursor-pointer p-4 hover:bg-gray-100 rounded-lg">
+                                        <span class="font-semibold text-gray-800 text-sm">Экспорт в Excel</span>
+                                        <span class="text-gray-400 text-sm">Экспортируйте данные матрицы в удобном формате excel</span>  
+                                    </li>
+                                </ul>
+                            </div>
+                        </template>
+                    </Dropdown>
                 </div>
             </div>
             <div class="flex items-center gap-3 p-4 pt-0 w-full">
@@ -249,10 +340,18 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                 </ul>
             </div>
             <div v-if="viewType === 'grid'" class="w-full h-full overflow-x-auto p-4">
-                <OperationsGrid :data="paginatedData" :params="params"/>
+                <OperationsGrid v-if="paginatedData.length" :data="paginatedData" :params="params"/>
+                <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
+                    <NoDataIcon />
+                    <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
+                </div>
             </div>
             <div v-else class="w-full h-full overflow-x-auto">
-                <MatrixTable :data="paginatedData" :params="params"/>
+                <MatrixTable v-if="paginatedData.length" :data="paginatedData" :params="params"/>
+                <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
+                    <NoDataIcon />
+                    <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
+                </div>
             </div>
         </div>
     </AuthorizedLayout>
