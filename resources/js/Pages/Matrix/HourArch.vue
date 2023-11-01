@@ -4,6 +4,7 @@ import BreadCrumb from '@/Components/BreadCrumb.vue';
 import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import { Link, Head } from '@inertiajs/vue3';
 import HourArchTable from './Partials/HourArchTable.vue';
+import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
 
 import DatePicker from 'vue-datepicker-next';
 import 'vue-datepicker-next/index.css';
@@ -177,7 +178,11 @@ watch(() => [dateFilters.value], () => {
             </div>
 
             <div class="w-full h-full overflow-x-auto">
-                <HourArchTable :data="paginatedData" :item="item"></HourArchTable>
+                <HourArchTable v-if="paginatedData.length" :data="paginatedData" :item="item"></HourArchTable>
+                <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
+                    <NoDataIcon />
+                    <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
+                </div>
             </div>
         </div>
     </AuthorizedLayout>

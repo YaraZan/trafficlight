@@ -1,12 +1,16 @@
 <template>
-  <div class="w-[60%]">
-    <canvas class="w-full max-h-[440px]" ref="dinamogram"></canvas>
+  <div class="w-[60%] flex items-start border border-gray-200 rounded-xl">
+    <svg ref="dinamogram" class="min-h-full w-full"></svg>
+    <div id="tooltip" class="flex-col absolute hidden p-2 bg-gray-900 text-white border border-gray-200 rounded-lg gap-1"></div>
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import Chart from 'chart.js/auto';
+import * as d3 from 'd3';
+
+const dinamogram = ref(null);
 
 const props = defineProps({
   data: {
@@ -14,81 +18,88 @@ const props = defineProps({
   },
 });
 
-const dinamogram = ref(null);
-const chartInstance = ref(null);
-
 onMounted(() => {
   const rawData = props.data;
   drawChart(rawData);
 });
 
 watch(() => props.data, (newData) => {
-    drawChart(newData);
+  drawChart(newData);
 }, { deep: true });
 
-
 const drawChart = (data) => {
-  if (!dinamogram.value || data.length === 0) {
-    return; 
+  data = data.map(d => {
+    return {
+      ...d,
+      X: parseFloat(d.X),
+      Y: parseFloat(d.Y),
+    };
+  });
+
+  if (data.length === 0) {
+    return;
   }
 
-  console.log('Рисую...');
+  // Sort the data based on a meaningful attribute, for example, a timestamp or another identifier
+  data.sort((a, b) => a.Timestamp - b.Timestamp); // Adjust the property to sort by
 
-  const ctx = dinamogram.value?.getContext('2d');
-  const points = data.map(d => ({ x: parseFloat(d.X), y: parseFloat(d.Y) })).filter(d => !isNaN(d.x) && !isNaN(d.y));
+  const margin = { top: 20, right: 30, bottom: 30, left: 60 };
+  const width = 1000 - margin.left - margin.right;
+  const height = 400 - margin.top - margin.bottom;
 
-  const chartData = {
-    datasets: [{
-      data: points,
-      label: 'Dinamogram',
-      showLine: false, 
-      borderColor: 'green',
-      backgroundColor: 'green',
-      pointRadius: 2,
-      pointBackgroundColor: 'green',
-      pointBorderColor: 'green',
-    }],
-  };
+  d3.select(dinamogram.value).selectAll('*').remove();
 
-  const chartOptions = {
-    scales: {
-      x: {
-        type: 'linear',
-        position: 'bottom',
-        title: {
-          display: true,
-          text: 'Длина, м',
-        },
-      },
-      y: {
-        type: 'linear',
-        position: 'left',
-        title: {
-          display: true,
-          text: 'Нагрузка, кг',
-        },
-      },
-    },
-    plugins: {
-      legend: {
-        display: false, 
-      },
-      tooltip: {
-        callbacks: {
-          label: (context) => {
-            const labelX = context.parsed.x;
-            const labelY = context.parsed.y;
-            return `Нагрузка: ${labelY}, Длина: ${labelX}`;
-          },
-        },
-      },
-    },
-  };
+  const svg = d3.select(dinamogram.value)
+    .append('g')
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-  chartInstance.value = new Chart(ctx, {
-    type: 'scatter',
-    data: chartData,
-    options: chartOptions,
-  });
+    const xMax = d3.max(data, (d) => d.X);
+    const xScale = d3.scaleLinear()
+      .domain([0, xMax]) // Start from 0
+      .range([0, width]);
+    svg.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(xScale));
+
+    const yMax = Math.ceil(d3.max(data, (d) => d.Y) / 500) * 500;
+    const yMin = Math.floor(d3.min(data, (d) => d.Y) / 500) * 500;
+    const yScale = d3.scaleLinear()
+      .domain([yMin, yMax])
+      .range([height, 0]);
+    svg.append("g")
+      .call(d3.axisLeft(yScale));
+
+  const tooltip = d3.select('#tooltip');
+
+  svg.selectAll('circle')
+    .data(data)
+    .enter()
+    .append('circle')
+    .attr('cx', (d) => xScale(d.X))
+    .attr('cy', (d) => yScale(d.Y))
+    .attr('r', 2)
+    .attr('fill', 'green')
+    .style('cursor', 'pointer')
+    .on('mouseover', (event, d) => {
+      tooltip.style('display', 'block');
+      tooltip.html(`Нагрузка, кг: <b>${d.Y}</b>, Длина: <b>${d.X}</b>`)
+        .style('left', event.pageX + 10 + 'px')
+        .style('top', event.pageY - 25 + 'px')
+        .style('border-radius', 10 + 'px');
+    })
+    .on('mouseout', () => {
+      tooltip.style('display', 'none');
+    });
+
+  svg.selectAll('path.domain')
+    .style('stroke', 'white');
+
+  svg.selectAll('g.tick line')
+    .style('stroke', '#9ca3af');
+
+  svg.selectAll('text')
+    .style('fill', '#9ca3af');
 };
 </script>
