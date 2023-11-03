@@ -30,7 +30,7 @@ const props = defineProps({
         </thead>
         <tbody>
             <tr v-for="(row, index) in data" :key="index" class="border-b border-gray-200">
-                <th scope="row" class="font-bold text-gray-400 px-6 py-4 text-left">{{ row.Date }}</th>
+                <th scope="row" class="font-normal text-gray-500 px-6 py-4 text-left">{{ row.Date }}</th>
                 <td>
                     <td class="px-6 py-4 text-left border-l border-gray-200">
                         <span v-if="row.Quality" class="py-1 px-2 bg-green-100 text-green-600 rounded-3xl">Установлена</span>

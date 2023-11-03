@@ -29,31 +29,6 @@ onMounted(() => {
     }
 });
 
-const arrayToCsv = (data) => {
-    const array = [Object.keys(data[0])].concat(data)
-
-    return array.map(it => {
-        return Object.values(it).toString()
-    }).join('\n');
-};
-
-const downloadBlob = (content, filename, contentType) => {
-    // Create a blob
-    var blob = new Blob([content], { type: contentType });
-    var url = URL.createObjectURL(blob);
-
-    // Create a link to download it
-    var pom = document.createElement('a');
-    pom.href = url;
-    pom.setAttribute('download', filename);
-    pom.click();
-};
-
-const exportToExcel = () => { 
-    const myLogs = arrayToCsv(props.data.matrix_data);
-    downloadBlob(myLogs, './Светофор.csv', 'text/csv;charset=utf-8;');
-}
-
 const params = ['Связь','НГДУ', 'Цех', 'Скважина', 'Состояние', 'Дата', 'Штраф', 'Опрос',
  'Число качаний, об/мин', 'Нагрузка максимальная, кг',
  'Нагрузка минимальная, кг', 'Температура масла в ГБ, °С', 'Давление в ГН , МПа',
@@ -210,55 +185,12 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
             </Link>
         </template>
 
-        <div class="bg-white dark:bg-gray-800 relative w-full">
+        <div v-if="data.matrix_data.length" class="bg-white dark:bg-gray-800 relative w-full">
             <div class="flex items-center p-4 w-full justify-between">
 
                 <div class="flex items-center gap-3">
                     <Input v-model="searchFilter" size="sm" class="focus:ring-green-500 focus:border-green-500 w-56 ring-green-600 " type="text"  placeholder="Поиск" required="">
                     </Input>
-                    <div class="flex items-center gap-3 ml-auto px-[20px]">
-                        <input v-model="radioFilter" id="today-radio" type="radio" name="filter" value="available" checked class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
-                        <label for="today-radio" class="font-semibold text-sm">Доступные</label>
-
-                        <input v-model="radioFilter" id="earlier-radio" type="radio" name="filter" value="lost" class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
-                        <label for="earlier-radio" class="font-semibold text-sm">Недоступные</label>
-
-                        <input v-model="radioFilter" id="all-radio" type="radio" name="filter" value="all" class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
-                        <label for="all-radio" class="font-semibold text-sm">Все</label>
-                    </div>
-                </div>
-                
-                <div class="flex items-center gap-3 ">
-                    <Dropdown align="bottom" width="48">
-                        <template #trigger>
-                            <Button size="md" color="light">
-                                <div v-if="viewType === 'grid'" class="flex items-center gap-3">
-                                    <GridIcon />
-                                    <span class="text-gray-800 font-semibold">Карта</span>
-                                </div>
-                                <div v-else class="flex items-center gap-3">
-                                    <TableIcon />
-                                    <span class="text-gray-800 font-semibold">Таблица</span>
-                                </div>
-                            </Button>
-                        </template>
-
-                        <template #content>
-                            <div class="absolute p-5 right-10 z-10 bg-white rounded-lg shadow min-w-[300px]">
-                                <h6 class="font-medium text-sm text-gray-400">Отображение данных</h6>
-                                <ul class="mt-[10px] gap-2 w-full flex flex-col">
-                                    <li :class="viewType === 'grid' ? 'bg-gray-100' : ''" class="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg" v-on:click="changeView('grid')">
-                                        <GridIcon />
-                                        <span class="text-gray-800 font-semibold">Карта объектов</span>
-                                    </li>
-                                    <li :class="viewType === 'table' ? 'bg-gray-100' : ''" class="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer rounded-lg" v-on:click="changeView('table')">
-                                        <TableIcon />
-                                        <span class="text-gray-800 font-semibold">Таблица объектов</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </template>
-                    </Dropdown>
                     <Dropdown align="bottom" width="48">
                         <template #trigger>
                             <Button v-if="data.ngdu_data" :class="ngduFilters.length > 0 ? 'border-green-600 text-green-600' : ''" size="md" color="light">
@@ -282,7 +214,47 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                             </div>
                         </template>
                     </Dropdown>
-                    <Dropdown align="bottom" width="48">
+                    <div class="flex items-center gap-3 ml-auto px-[20px]">
+                        <input v-model="radioFilter" id="today-radio" type="radio" name="filter" value="available" checked class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
+                        <label for="today-radio" class="font-medium text-sm">Доступные</label>
+
+                        <input v-model="radioFilter" id="earlier-radio" type="radio" name="filter" value="lost" class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
+                        <label for="earlier-radio" class="font-medium text-sm">Недоступные</label>
+
+                        <input v-model="radioFilter" id="all-radio" type="radio" name="filter" value="all" class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
+                        <label for="all-radio" class="font-medium text-sm">Все</label>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3 ">
+
+                    <ul class="grid grid-cols-2 items-center gap-2">
+
+                        <li>
+                            <button
+                            for="grid-wiew" 
+                            class="w-12 h-12 rounded-lg items-center justify-center flex hover:bg-gray-100" 
+                            :class="viewType === 'grid' ? 'bg-gray-100' : ''"
+                            v-on:click="changeView('grid')"
+                            >
+                                <GridIcon />
+                            </button>
+                        </li>
+
+                        <li>
+                            <button 
+                            for="grid-wiew" 
+                            class="w-12 h-12 rounded-lg items-center justify-center flex hover:bg-gray-100" 
+                            :class="viewType === 'table' ? 'bg-gray-100' : ''"
+                            v-on:click="changeView('table')"
+                            >
+                                <TableIcon />
+                            </button>
+                        </li>
+
+                    </ul>
+
+                    <!-- <Dropdown align="bottom" width="48">
                         <template #trigger>
                             <Button class="bg-green-600 ml-auto focus:ring-green-100" size="md" color="green">
                                 Действия
@@ -302,7 +274,8 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                                 </ul>
                             </div>
                         </template>
-                    </Dropdown>
+                    </Dropdown> -->
+                    
                 </div>
             </div>
             <div class="flex items-center gap-3 p-4 pt-0 w-full">
@@ -346,13 +319,23 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
                 </div>
             </div>
-            <div v-else class="w-full h-full overflow-x-auto">
+            <div v-else class="w-full h-full overflow-x-auto overflow-y-auto">
                 <MatrixTable v-if="paginatedData.length" :data="paginatedData" :params="params"/>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
                 </div>
             </div>
+        </div>
+
+        <div v-else class="bg-gray-50 dark:bg-gray-800 relative w-full h-screen flex justify-center">
+          <div class="flex flex-col items-center mt-52">
+            <div class="w-56 h-56 rounded-lg">
+                <img class="rounded-lg" src="/images/well.png" alt="">
+            </div>      
+            <h3 class="font-semibold text-gray-800 text-lg mt-5">Ой, здесь пусто!</h3>
+            <span class="text-gray-400 text-sm mt-2">Но скоро что-то будет</span>
+          </div>
         </div>
     </AuthorizedLayout>
 </template>

@@ -17,12 +17,20 @@ import { Head } from '@inertiajs/vue3';
             </Link>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 font-bold text-3xl text-gray-900 dark:text-gray-100">Это Аналитика!</div>
-                </div>
+        <div class="bg-gray-50 dark:bg-gray-800 relative w-full h-screen flex justify-center">
+
+
+            <div class="flex flex-col items-center mt-52">
+                <div class="w-56 h-56 rounded-lg">
+                    <img class="rounded-lg" src="/images/well.png" alt="">
+                </div>      
+                <h3 class="font-semibold text-gray-800 text-lg mt-5">Ой, здесь пусто!</h3>
+                <span class="text-gray-400 text-sm mt-2">Но скоро что-то будет</span>
             </div>
+
+            
+
         </div>
+        
     </AuthorizedLayout>
 </template>
