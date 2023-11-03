@@ -21,7 +21,7 @@ const props = defineProps({
 });
 
 const currentPage = ref(1);
-const perPage = ref(10);
+const perPage = ref(20);
 const dateFilters = ref();
 
 const perPageOptions = [10, 20, 30];

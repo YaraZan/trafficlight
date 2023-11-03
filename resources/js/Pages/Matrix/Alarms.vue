@@ -8,8 +8,12 @@ import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
-    alarms_data: {
-        type: Object
+    data: {
+        type: Array
+    },
+    item: {
+        type: Object,
+        required: true,
     }
 });
 
@@ -48,7 +52,7 @@ const nextPage = () => {
 };
 
 const filteredData = computed(() => {
-    let data = props.alarms_data;
+    let data = props.data;
 
     return data;
 });
@@ -83,14 +87,24 @@ const visiblePages = computed(() => {
 
     <AuthorizedLayout>
         <template #nav>
-            <Link :href="route('alarms')">
+            <Link :href="route('matrix')">
+                <BreadCrumb
+                :name="'Матрица'"
+                ></BreadCrumb>
+            </Link>
+            <Link :href="route('matrix.detail', item.public_id)">
+                <BreadCrumb
+                :name="item.Name"
+                ></BreadCrumb>
+            </Link>
+            <Link :href="route('matrix.alarms', item.public_id)">
                 <BreadCrumb
                 :name="'Аварии'"
                 ></BreadCrumb>
             </Link>
         </template>
 
-        <div v-if="paginatedData.length > 0" class="bg-white dark:bg-gray-800 relative w-full">
+        <div class="bg-white dark:bg-gray-800 relative w-full">
 
             <div class="flex items-center gap-3 p-4 w-full">
                 <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
@@ -128,19 +142,37 @@ const visiblePages = computed(() => {
             </div>
 
             <div class="w-full h-full overflow-x-auto">
-                <AlarmsTable :data="paginatedData"></AlarmsTable>
+                <table v-if="paginatedData.length > 0" class="w-full" striped>
+                    <thead>
+                        <tr class="border-y border-gray-200">
+                            <th scope="col" class="bg-gray-50 px-6 py-4 text-left">
+                                <span class="text font-semibold text-gray-800">Дата</span>
+                            </th>
+                            <th scope="col" class="bg-gray-50 px-6 py-4 text-left border-l border-gray-200">
+                                <span class="text font-semibold text-gray-800">Регистр</span>
+                            </th>
+                            <th scope="col" class="bg-gray-50 px-6 py-4 text-left border-l border-gray-200">
+                                <span class="text font-semibold text-gray-800">Значение</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(row, index) in paginatedData" :key="index" class="border-b border-gray-200">
+                            <th scope="row" class="font-normal text-gray-800 px-6 py-4 text-left">{{ row.Date }}</th>
+                            <td class="font-normal text-gray-800 px-6 py-4 text-left border-l border-gray-200">{{ row.RegDescript }}</td>
+                            <td class="px-6 py-4 text-left border-l border-gray-200">
+                                <span v-if="row.Value" class="py-1 px-2 bg-green-100 text-green-600 rounded-3xl">Да</span>
+                                <span v-else class="py-1 px-2 bg-red-100 text-red-600 rounded-3xl">Нет</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>   
+                <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
+                    <NoDataIcon />
+                    <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
+                </div>
             </div>
 
-        </div>
-
-        <div v-else class="bg-gray-50 dark:bg-gray-800 relative w-full h-screen flex justify-center">
-          <div class="flex flex-col items-center mt-52">
-            <div class="w-56 h-56 rounded-lg">
-                <img class="rounded-lg" src="/images/well.png" alt="">
-            </div>      
-            <h3 class="font-semibold text-gray-800 text-lg mt-5">Ой, здесь пусто!</h3>
-            <span class="text-gray-400 text-sm mt-2">Но скоро что-то будет</span>
-          </div>
         </div>
         
     </AuthorizedLayout>

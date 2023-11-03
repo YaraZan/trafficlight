@@ -56,7 +56,7 @@ const props = defineProps({
         </thead>
         <tbody>
             <tr v-for="(row, index) in data" :key="index" class="border-b border-gray-200">
-                <td class="px-4 py-3 font-bold">{{ row.CatName }}</td>
+                <td class="px-4 py-3 font-semibold text-gray-800">{{ row.CatName }}</td>
                 <td class="px-4 py-3 border-l border-gray-200">{{ row.Ref1 }}</td>
                 <td class="px-4 py-3 border-l border-gray-200">{{ row.Cur1 }}</td>
                 <td class="px-4 py-3 border-l border-gray-200">{{ row.Res1 }}</td>

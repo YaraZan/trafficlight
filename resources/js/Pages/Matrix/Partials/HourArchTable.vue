@@ -31,12 +31,12 @@ const props = defineProps({
         </tr> 
         <tbody>
             <tr v-for="(row, index) in data" :key="index" class="border-b border-gray-200">
-                <th scope="row" class="font-bold px-6 py-4 text-left text-gray-400">{{ row.Date }}</th>
+                <th scope="row" class="font-normal text-gray-800 px-6 py-4 text-left">{{ row.Date }}</th>
                 <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.SumErr }}</td>
                 <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.Debit }}</td>
-                <td class="px-6 py-4 text-left border-l border-gray-200">
+                <td class="px-4 py-2 text-left border-l border-gray-200">
                     <Link :href="route('matrix.hourarch.detail', { well_uuid: item.public_id, head_hour_uuid: row.public_id})">
-                        <span class="text font-semibold text-green-500">Просмотр</span>
+                        <span class="text font-semibold text-green-500 px-2 py-2 hover:bg-gray-100 rounded-lg">Просмотр</span>
                     </Link>
                 </td>
             </tr>

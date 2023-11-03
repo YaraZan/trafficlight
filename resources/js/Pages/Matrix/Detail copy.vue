@@ -26,9 +26,10 @@ const dnmData = ref([]);
 const paginatedData = ref([]); 
 
 const fetchDnmhData = () => {
-  return axios.get(`/api/dnmh/${props.item.public_id}`)
+  axios.get(`/api/dnmh/${props.item.public_id}`)
     .then((response) => {
-      return response.data;
+      dnmhData.value = response.data;
+      paginateData();
     })
     .catch((error) => {
       console.error('Error fetching Dnmh data', error);
@@ -36,23 +37,18 @@ const fetchDnmhData = () => {
 };
 
 const fetchDnmData = (publicId) => {
-  return axios.get(`/api/dnm/${publicId}`)
+  axios.get(`/api/dnm/${publicId}`)
     .then((response) => {
-      return response.data;
+      dnmData.value = response.data;
     })
     .catch((error) => {
       console.error('Error fetching Dnm data', error);
     });
 };
 
-
 onMounted(() => {
-  fetchDnmhData()
-  .then((data) => {
-    dnmhData.value = data;
-    paginateData();
-    selectDinamogram(dnmhData.value[0].public_id)
-  });
+  fetchDnmhData();
+  paginateData();
 });
 
 const extractWellNumber = (string) => {
@@ -60,58 +56,14 @@ const extractWellNumber = (string) => {
   return elements[elements.length - 1];
 };
 
-const selectDinamogram = (publicId) => {
-    const existingDinamogramIndex = dnmData.value.findIndex((item) => item.public_id === publicId);
-
-    if (existingDinamogramIndex !== -1) {
-        // If the dinamogram already exists, remove it
-        dnmData.value.splice(existingDinamogramIndex, 1);
-
-        // Reassign colors based on their order for the first three dinamograms
-        for (let i = 0; i < dnmData.value.length; i++) {
-            if (i === 0) {
-                dnmData.value[i].color = 'green';
-            } else if (i === 1) {
-                dnmData.value[i].color = 'orange';
-            } else {
-                dnmData.value[i].color = 'red';
-            }
-        }
-    } else {
-        if (dnmData.value.length >= 3) {
-            // If there are already 3 dinamograms, remove the oldest one
-            dnmData.value.shift();
-        }
-
-        fetchDnmData(publicId)
-            .then((data) => {
-                const selectedColor = 'green'; // Always set new dinamograms to green
-
-                const dinamogram = {
-                    public_id: publicId,
-                    color: selectedColor,
-                    data: data,
-                };
-
-                dnmData.value.push(dinamogram);
-
-                // Reassign colors based on their order for the first three dinamograms
-                for (let i = 0; i < dnmData.value.length; i++) {
-                    if (i === 0) {
-                        dnmData.value[i].color = 'green';
-                    } else if (i === 1) {
-                        dnmData.value[i].color = 'orange';
-                    } else {
-                        dnmData.value[i].color = 'red';
-                    }
-                }
-            });
-    }
+const handleSelect = (e) => {
+    fetchDnmData(e.target.value);
+    selectedDnm.value = e.target.value;
 };
 
-
-
 // Pagination
+
+const selectedDnm = ref(null);
 
 const currentPage = ref(1);
 const perPage = ref(4);
@@ -269,7 +221,7 @@ watch(() => dnmhData.value, () => {
                 </div>
 
                 <div class="w-full overflow-x-auto overflow-y-auto border border-gray-200 rounded-xl">
-                      <table v-if="paginatedData.length" class="w-full" striped>
+                      <table v-if="paginatedData.length" class="w-full border-b border-gray-200" striped>
                         <thead>
                             <tr class="border-b border-gray-200">
                                 <th scope="col" class="bg-gray-50 px-6 py-4 text-left w-[50px]">
@@ -284,23 +236,29 @@ watch(() => dnmhData.value, () => {
                                 <th scope="col" class="bg-gray-50 px-6 py-4 text-left border-l border-gray-200">
                                     <span class="text font-semibold text-gray-800">Наименование</span>
                                 </th>
+                                <th scope="col" class="bg-gray-50 px-6 py-4 text-center border-l border-gray-200 w-[100px]">
+                                    <span class="text font-semibold text-gray-800">Действие</span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(row, index) in paginatedData" :key="index" class="border-b border-gray-200">
-                                <th scope="row" class="font-normal text-gray-500 px-6 py-4 text-left border-b border-gray-200">
-                                    <input
-                                    @change="() => selectDinamogram(row.public_id)"
-                                    :value="row.public_id"
-                                    :checked="dnmData.some((item) => item.public_id === row.public_id)"
-                                    :style="{ color: dnmData.find((item) => item.public_id === row.public_id)?.color }"
-                                    class="bg-gray-100 text-gray-100 border-gray-300 rounded focus:ring-gray-300 cursor-pointer"
-                                    type="checkbox"
-                                />
+                            <tr v-for="(row, index) in paginatedData" :class="selectedDnm == row.public_id ? 'border-y-2 border-green-300 bg-green-50' : 'border-b border-gray-200'" :key="index">
+                                <th scope="row" class="font-normal text-gray-500 px-6 py-4 text-left">
+                                    <input class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" type="checkbox">
                                 </th>
                                 <td class="font-normal border-l border-gray-200 text-gray-500 px-6 py-4 text-left">{{ row.Dat }}</td>
                                 <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.AskLong }}</td>
                                 <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.DnmAdress }}</td>
+                                <td class="px-6 py-4 border-l border-gray-200">
+                                    <span class="text-green-600 font-semibold" v-if="selectedDnm == row.public_id">Просматривается</span>
+                                    <button v-else
+                                        :value="row.public_id"
+                                        @click="handleSelect"
+                                        class="w-full flex bg-gray-50 border items-center justify-center border-gray-200 px-4 py-2 rounded-lg text-gray-800 text-sm font-semibold hover:bg-gray-100"
+                                    >
+                                        Загрузить
+                                    </button>
+                                </td>
                             </tr>
                         </tbody>
                     </table> 

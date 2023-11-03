@@ -4,6 +4,7 @@ use App\Http\Controllers\Matrix\DnmhController;
 use App\Http\Controllers\AlarmsController;
 use App\Http\Controllers\Matrix\AskStatsController;
 use App\Http\Controllers\Matrix\WellController;
+use App\Http\Controllers\Matrix\WellAlarmsController;
 use App\Http\Controllers\Matrix\HeadHourController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
@@ -39,6 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/matrix/{well_uuid}/hourarch', [HeadHourController::class, 'index'])->name('matrix.hourarch');
     Route::get('/matrix/{well_uuid}/hourarch/{head_hour_uuid}', [HeadHourController::class, 'show'])->name('matrix.hourarch.detail');
     Route::get('/matrix/{well_uuid}/askstats', [AskStatsController::class, 'index'])->name('matrix.askstats');
+    Route::get('/matrix/{well_uuid}/alarms', [WellAlarmsController::class, 'index'])->name('matrix.alarms');
 
     
     Route::get('/alarms', [AlarmsController::class, 'index'])->name('alarms');
