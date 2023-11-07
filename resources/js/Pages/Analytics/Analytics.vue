@@ -17,7 +17,7 @@ import { Head } from '@inertiajs/vue3';
             </Link>
         </template>
 
-        <div class="bg-gray-50 dark:bg-gray-800 relative w-full h-screen flex justify-center">
+        <div class="bg-white dark:bg-gray-800 relative w-full h-screen flex justify-center">
 
 
             <div class="flex flex-col items-center mt-52">

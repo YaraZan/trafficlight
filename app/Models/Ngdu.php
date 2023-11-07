@@ -17,4 +17,9 @@ class Ngdu extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function shops()
+    {
+        return $this->hasMany(Shop::class, 'Ngdu_Id');
+    }
 }

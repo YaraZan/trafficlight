@@ -88,7 +88,7 @@ class WellController extends Controller
                 ->orderBy('wa.Dif3', 'desc')
                 ->get();
 
-                $ngdu_data = DB::table('Ngdu')->select('*')->get();
+                $ngdu_data = Ngdu::with('shops')->get();
         } else {
             $user = auth()->user();
             $matrix_data = DB::table('WellAlarm as wa')
@@ -167,13 +167,9 @@ class WellController extends Controller
                 $ngdu_data = null;
         }
 
-
-        $shop_data = DB::table('Shop')->select('*')->get();
-
         return Inertia::render('Matrix/Index', ['data' => [
             'matrix_data' => json_decode($matrix_data),
             'ngdu_data' => json_decode($ngdu_data),
-            'shop_data' => json_decode($shop_data),
         ]]);
     }
 

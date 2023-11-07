@@ -31,10 +31,14 @@ onMounted(() => {
     }
 });
 
+const params = ['Связь','НГДУ', 'Цех', 'Скважина', 'Состояние', 'Дата', 'Штраф', 'Опрос',
+ 'Число качаний, об/мин', 'Нагрузка максимальная, кг',
+ 'Нагрузка минимальная, кг', 'Температура масла в ГБ, °С', 'Давление в ГН , МПа',
+ 'Давление в ГЦ , МПа', 'Давление в ПГА, МПа', 'Ток, А', 'Напряжение, В'];
+
 const searchFilter = ref('');
 const radioFilter = ref('available');
 const ngduFilters = ref([]);
-const shopFilters = ref([]);
 const selectAllNgdus = ref(true);
 
 const currentPage = ref(1);
@@ -95,8 +99,7 @@ const filteredData = computed(() => {
     }
 
     if (props.data.ngdu_data) {
-        data = data.filter(item => ngduFilters.value.includes(item.Ngdu_Id));   
-        data = data.filter(item => shopFilters.value.includes(item.Shop_Id));  
+        data = data.filter(item => ngduFilters.value.includes(item.Ngdu_Id));     
     } 
 
     if (searchFilter.value !== '') {
@@ -133,15 +136,11 @@ const selectAllNgduCheckboxes = () => {
 
     if (ngduFilters.value.length == props.data.ngdu_data.length) {
         ngduFilters.value = [];
-        shopFilters.value = [];
         return;
     }
 
     props.data.ngdu_data.forEach(ngdu => {
         if (!ngduFilters.value.includes(ngdu.Id)) {
-            ngdu.shops.forEach(shop => {
-                shopFilters.value.push(shop.Id)
-            });
             ngduFilters.value.push(ngdu.Id);
         }
     });
@@ -150,36 +149,13 @@ const selectAllNgduCheckboxes = () => {
     selectAllNgdus.value = true;   
 };
 
-const handleNgduCheckboxFilter = (ngdu) => {
-    const val = parseInt(ngdu.Id);
+const handleNgduCheckboxFilter = (e) => {
+    const val = parseInt(e.target.value);
 
     if (ngduFilters.value.includes(val)) {
-
-        ngdu.shops.forEach(shop => {
-            shopFilters.value.splice(shopFilters.value.indexOf(shop.Id), 1);
-        })
-
         return ngduFilters.value.splice(ngduFilters.value.indexOf(val), 1);
     }
-
-    ngdu.shops.forEach(shop => {
-        shopFilters.value.push(shop.Id);
-    })
-
     ngduFilters.value.push(val);
-};
-
-const handleShopCheckboxFilter = (shop) => {
-    const val = parseInt(shop.Id);
-
-    if (shopFilters.value.includes(val)) {
-        return shopFilters.value.splice(shopFilters.value.indexOf(val), 1);
-    }
-
-    if (!ngduFilters.value.includes(shop.Ngdu_Id)) {
-        ngduFilters.value.push(shop.Ngdu_Id);
-    }
-    shopFilters.value.push(val);
 };
 
 const changeView = (value) => {
@@ -212,10 +188,10 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
         </template>
 
         <div v-if="data.matrix_data.length" class="bg-white dark:bg-gray-800 relative w-full">
-            <div class="flex flex-col items-start gap-3 p-4 w-full md:flex-row md:items-center md:gap-2">
+            <div class="flex items-center p-4 w-full justify-between">
 
                 <div class="flex items-center gap-3">
-                    <Input v-model="searchFilter" size="sm" class="focus:ring-green-600 focus:border-green-500 w-56 ring-green-600 " type="text"  placeholder="Поиск" required="">
+                    <Input v-model="searchFilter" size="sm" class="focus:ring-green-500 focus:border-green-500 w-56 ring-green-600 " type="text"  placeholder="Поиск" required="">
                     </Input>
                     <Dropdown align="bottom" width="48">
                         <template #trigger>
@@ -230,13 +206,13 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                                 <ul class="mt-[10px] w-full flex flex-col">
                                     <li class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
                                         <input @change="selectAllNgduCheckboxes" id="ngdu_option_all" v-model="selectAllNgdus" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" type="checkbox">
-                                        <label class="cursor-pointer text-gray-800" :for="`ngdu_option_all`">Все</label>
+                                        <label class="cursor-pointer" :for="`ngdu_option_all`">Все</label>
                                     </li>
                                     <li v-for="(ngdu, index) in data.ngdu_data" :key="index" class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
                                         <ShopDropdown>
                                             <template #ignore>
-                                                <input @change="handleNgduCheckboxFilter(ngdu)" :checked="ngduFilters.includes(ngdu.Id)" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" :id="`ngdu_option_${index}`" type="checkbox">
-                                                <label class="cursor-pointer text-gray-800" :for="`ngdu_option_${index}`">{{ ngdu.NgduName }}</label>
+                                                <input @change="handleNgduCheckboxFilter" :checked="ngduFilters.includes(ngdu.Id)" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" :id="`ngdu_option_${index}`" type="checkbox" :value="ngdu.Id">
+                                                <label class="cursor-pointer" :for="`ngdu_option_${index}`">{{ ngdu.NgduName }}</label>
                                             </template>
                                             <template #trigger>
                                                 <DropDownIcon />
@@ -244,8 +220,8 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                                             <template #content>
                                                 <ul v-if="ngdu.shops.length">
                                                     <li v-for="(shop, index) in ngdu.shops" :id="`shop_option_${index}`" class="flex items-center gap-2 py-1">
-                                                        <input @change="handleShopCheckboxFilter(shop)" :checked="shopFilters.includes(shop.Id)" :id="`shop_option_${index}`" type="checkbox" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" >
-                                                        <label class="cursor-pointer text-gray-500" :for="`shop_option_${index}`">{{ shop.ShopName }}</label>
+                                                        <input :id="`shop_option_${index}`" type="checkbox" :value="shop.Id" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" >
+                                                        <label class="cursor-pointer" :for="`shop_option_${index}`">{{ shop.ShopName }}</label>
                                                     </li>
                                                 </ul>
                                                 <span class="text-gray-400" v-else>Нет данных</span>
@@ -257,9 +233,7 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                             </div>
                         </template>
                     </Dropdown>
-                </div>
-
-                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-3 ml-auto px-[20px]">
                         <input v-model="radioFilter" id="today-radio" type="radio" name="filter" value="available" checked class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
                         <label for="today-radio" class="font-medium text-sm">Доступные</label>
 
@@ -268,9 +242,10 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
 
                         <input v-model="radioFilter" id="all-radio" type="radio" name="filter" value="all" class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
                         <label for="all-radio" class="font-medium text-sm">Все</label>
+                    </div>
                 </div>
                 
-                <div class="flex items-center gap-3 lg:ml-auto">
+                <div class="flex items-center gap-3 ">
 
                     <ul class="grid grid-cols-2 items-center gap-2">
 
@@ -322,7 +297,6 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                     
                 </div>
             </div>
-
             <div class="flex items-center gap-3 p-4 pt-0 w-full">
                 <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
                     <option v-for="option in perPageOptions" :key="option" :value="option">
@@ -357,16 +331,15 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                         </li>
                 </ul>
             </div>
-
             <div v-if="viewType === 'grid'" class="w-full h-full overflow-x-auto p-4">
-                <OperationsGrid v-if="paginatedData.length" :data="paginatedData"/>
+                <OperationsGrid v-if="paginatedData.length" :data="paginatedData" :params="params"/>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
                 </div>
             </div>
             <div v-else class="w-full h-full overflow-x-auto overflow-y-auto">
-                <MatrixTable v-if="paginatedData.length" :data="paginatedData"/>
+                <MatrixTable v-if="paginatedData.length" :data="paginatedData" :params="params"/>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
