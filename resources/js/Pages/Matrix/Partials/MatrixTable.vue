@@ -6,12 +6,13 @@ const props = defineProps({
     data: {
         type: Array,
         required: true
-    },
-    params: {
-        type: Array,
-        required: true
     }
 });
+
+const params = ['Связь','НГДУ', 'Цех', 'Скважина', 'Состояние', 'Дата', 'Штраф', 'Опрос',
+ 'Число качаний, об/мин', 'Нагрузка максимальная, кг',
+ 'Нагрузка минимальная, кг', 'Температура масла в ГБ, °С', 'Давление в ГН , МПа',
+ 'Давление в ГЦ , МПа', 'Давление в ПГА, МПа', 'Ток, А', 'Напряжение, В'];
 
 const extractWellNumber = (string) => {
   const elements = string.split('-');
@@ -33,8 +34,56 @@ function extractNumericPart(data) {
     <table class="w-full" striped>
         <thead>
             <tr class="border-y border-gray-200">
-                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l" v-for="param in params">
-                    <span class="text font-semibold text-gray-800">{{ param }}</span>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Связь</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">НГДУ</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Цех</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Скважина</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Состояние</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Дата</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-center border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Штраф</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-center border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Опрос</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Число качаний, об/мин</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Нагрузка максимальная, кг</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Нагрузка минимальная, кг</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Температура масла в ГБ, °С</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Давление в ГН , МПа</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Давление в ГЦ , МПа</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Давление в ПГА, МПа</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Ток, А</span>
+                </th>
+                <th scope="col" class="bg-gray-50 items-center px-4 py-3 text-left border-gray-200 border-l">
+                    <span class="text font-semibold text-gray-800">Напряжение, В</span>
                 </th>
             </tr>
         </thead>
@@ -52,8 +101,8 @@ function extractNumericPart(data) {
                 <td class="px-4 py-3 text-center border-l border-gray-200">{{ extractWellNumber(row.WellName) }}</td>
                 <td class="px-4 py-3 text-left border-l border-gray-200">{{ row.WellState }}</td>
                 <td class="px-4 py-3 text-left border-l border-gray-200">{{ row.Date }}</td>
-                <td class="px-4 py-3 text-left border-l border-gray-200">{{ row.SumErr ? row.SumErr : '-' }}</td>
-                <td class="px-4 py-3 text-left border-l border-gray-200">
+                <td class="px-4 py-3 text-center border-l border-gray-200">{{ row.SumErr ? row.SumErr : '-' }}</td>
+                <td class="px-4 py-3 text-center border-l border-gray-200">
                     <span v-if="row.Ask" class="py-1 px-2 bg-green-100 text-green-600 rounded-3xl">Выполнен</span>
                     <span v-else class="py-1 px-2 bg-red-100 text-red-600 rounded-3xl">Нет</span>
                 </td>

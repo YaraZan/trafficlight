@@ -42,8 +42,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/matrix/{well_uuid}/askstats', [AskStatsController::class, 'index'])->name('matrix.askstats');
     Route::get('/matrix/{well_uuid}/alarms', [WellAlarmsController::class, 'index'])->name('matrix.alarms');
 
-    
     Route::get('/alarms', [AlarmsController::class, 'index'])->name('alarms');
+
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 });
 
 Route::middleware('auth')->group(function () {

@@ -49,9 +49,11 @@ const fetchDnmData = (publicId) => {
 onMounted(() => {
   fetchDnmhData()
   .then((data) => {
-    dnmhData.value = data;
-    paginateData();
-    selectDinamogram(dnmhData.value[0].public_id)
+    if (data.length > 0) {
+        dnmhData.value = data;
+        paginateData();
+        selectDinamogram(dnmhData.value[0].public_id);
+    }
   });
 });
 
