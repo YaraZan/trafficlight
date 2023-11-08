@@ -13,39 +13,53 @@ import ProfileIcon from '@/Components/Icons/ProfileIcon.vue';
 import UsersIcon from '@/Components/Icons/UsersIcon.vue';
 import RolesIcon from '@/Components/Icons/RolesIcon.vue';
 import { computed } from 'vue';
+import { useDark, useToggle } from '@vueuse/core';
+import LightThemeIcon from '@/Components/Icons/LightThemeIcon.vue';
+import DarkThemeIcon from '@/Components/Icons/DarkThemeIcon.vue';
+import { onMounted } from 'vue';
 
 const page = usePage();
+const isDark = useDark();
+const toggleDark = useToggle(isDark);
 
 const isAdmin = computed(() => page.props.auth.isAdmin);
 
 </script>
 
 <template>
-    <div class="min-w-screen min-h-screen font-montserrat overflow-x-hidden">
+    <div class="bg-white dark:bg-gray-800 min-w-screen min-h-screen font-montserrat overflow-x-hidden">
         
         <!-- Page Heading -->
-        <nav class=" bg-white dark:bg-gray-800 w-screen border-b border-gray-200" v-if="$slots.nav">
+        <nav class="w-screen border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800" v-if="$slots.nav">
             <div class="ml-[50px] w-full h-[50px] px-[20px] flex items-center">
                 <slot name="nav" />
+
+                <button
+                @click="toggleDark()"
+                class="px-2 py-2 flex items-center justify-center hover:bg-gray-100 rounded-lg dark:hover:bg-gray-700 "
+                >
+                <LightThemeIcon v-if="isDark" />
+                <DarkThemeIcon v-else />
+                </button>
             </div>
         </nav>
 
-        <aside class="fixed top-0 left-0 z-40 w-[50px] bg-white h-screen border-r border-gray-200">
-            <div class="w-full h-[51px] flex items-center justify-center border-b border-gray-200">
+        <aside class="fixed top-0 left-0 z-40 w-[50px] h-screen border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <div class="w-full h-[51px] flex items-center justify-center border-b border-gray-200 dark:border-gray-700">
                 <Link
                 :href="route('matrix')">
                     <Logo></Logo>
                 </Link>
             </div>
             <div class="py-[10px] px-[5px] flex flex-col gap-[10px] w-full h-full">
-                <NavLink v-if="isAdmin" :inc="'users'" :to="'users'"><UsersIcon></UsersIcon></NavLink>
-                <NavLink v-if="isAdmin" :inc="'roles'" :to="'roles'"><RolesIcon></RolesIcon></NavLink>
-                <div v-if="isAdmin" class="border-b border-gray-200 w-full"></div>
+                <NavLink v-if="isAdmin" :href="route('users')" :active="$page.component.includes('Users')"><UsersIcon></UsersIcon></NavLink>
+                <NavLink v-if="isAdmin" :href="route('roles')" :active="$page.component.includes('Roles')"><RolesIcon></RolesIcon></NavLink>
+                <div v-if="isAdmin" class="border-b border-gray-200 dark:border-gray-700 w-full"></div>
 
-                <NavLink :inc="'matrix'" :to="'matrix'"><MatrixIcon></MatrixIcon></NavLink>
-                <NavLink :inc="'alarms'" :to="'alarms'"><AlarmIcon></AlarmIcon></NavLink>
-                <NavLink :inc="'analytics'" :to="'analytics'"><AnalyticsIcon></AnalyticsIcon></NavLink>
-                <NavLink :inc="'profile'" :to="'profile'"><ProfileIcon /></NavLink>
+                <NavLink :href="route('matrix')" :active="$page.component.includes('Matrix')"><MatrixIcon></MatrixIcon></NavLink>
+                <NavLink  :href="route('alarms')" :active="$page.component.includes('Alarms')"><AlarmIcon></AlarmIcon></NavLink>
+                <NavLink :href="route('analytics')" :active="$page.component.includes('Analytics')"><AnalyticsIcon></AnalyticsIcon></NavLink>
+                <NavLink :href="route('profile')" :active="$page.component.includes('Profile')"><ProfileIcon /></NavLink>
             </div>
             
         </aside>

@@ -19,6 +19,8 @@ const nameInput = ref(null);
 const emailInput = ref(null);
 const passwordInput = ref(null);
 
+const emit = defineEmits(['created', 'cancelled']);
+
 const form = useForm({
     name: '',
     email: '',
@@ -29,14 +31,16 @@ const form = useForm({
 
 const createUser = () => {
     form.post(route('users.store'), {
-        onSuccess: () => form.reset(),
-        onError: () => console.log(form.errors),
+        onSuccess: () => {
+            form.reset();
+            emit('created');
+        },
     });
 };
 </script>
 
 <template>
-    <tr class="border-b border-gray-200">
+    <tr class="border-l-2 border-l-green-400 bg-gray-50 border-b border-gray-200">
         <td class="px-6 py-3 text-left">
             <Input v-model="form.name" ref="nameInput" size="sm" class="focus:ring-green-500 focus:border-green-500 w-1/2 ring-green-600 " type="text"  placeholder="Название">
             </Input>
@@ -71,7 +75,8 @@ const createUser = () => {
         <td v-else class="px-6 py-3 text-left border-l border-gray-200">
             НГДУ нет
         </td>
-        <td class="px-6 py-3 text-left border-l border-gray-200">
+        <td class="flex items-center px-4 gap-3 py-3 text-left border-l border-gray-200">
+            <button @click="emit('cancelled')" class="text-gray-600 text-sm font-semibold p-2 hover:bg-gray-100 rounded-lg">Отмена</button>
             <button @click.prevent="createUser" :disabled="form.processing" class="flex gap-2 bg-green-600 px-4 py-2 border border-green-700 rounded-lg text-white text-sm font-semibold hover:opacity-80">
                 <Spinner color="green" v-show="form.processing" />
                 Сохранить

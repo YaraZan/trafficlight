@@ -6,6 +6,11 @@ import { Head } from '@inertiajs/vue3';
 import AlarmsTable from '@/Pages/Alarms/Partials/AlarmsTable.vue';
 import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { Input } from 'flowbite-vue';
+
+import DatePicker from 'vue-datepicker-next';
+import 'vue-datepicker-next/index.css';
+import 'vue-datepicker-next/locale/ru';
 
 const props = defineProps({
     alarms_data: {
@@ -13,9 +18,10 @@ const props = defineProps({
     }
 });
 
-
+const searchFilter = ref('');
 const currentPage = ref(1);
 const perPage = ref(20);
+const dateFilters = ref();
 
 const perPageOptions = [10, 20, 30];
 
@@ -47,8 +53,26 @@ const nextPage = () => {
   }
 };
 
+const clearDate = () => {
+  dateFilters.value = [];
+};
+
 const filteredData = computed(() => {
     let data = props.alarms_data;
+
+    if (searchFilter.value !== '') {
+        data = data.filter(item => item.WellName.toLowerCase().includes(searchFilter.value.toLowerCase()));
+    }
+
+    if (dateFilters.value && dateFilters.value.length === 2) {
+    const [startDate, endDate] = dateFilters.value;
+
+    data = data.filter(item => {
+      const itemDate = new Date(item.Date); // Replace 'date' with the actual property name in your data
+
+      return itemDate >= startDate && itemDate <= endDate;
+    });
+  }
 
     return data;
 });
@@ -76,6 +100,9 @@ const visiblePages = computed(() => {
   return pages;
 });
 
+watch(() => [dateFilters.value, searchFilter.value], () => {
+  currentPage.value = 1;
+}, { deep: true });
 </script>
 
 <template>
@@ -90,45 +117,67 @@ const visiblePages = computed(() => {
             </Link>
         </template>
 
-        <div v-if="paginatedData.length > 0" class="bg-white dark:bg-gray-800 relative w-full">
+        <div v-if="props.alarms_data" class="bg-white dark:bg-gray-800 relative w-full">
 
-            <div class="flex items-center gap-3 p-4 w-full">
-                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
+            <div class="flex flex-col gap-3 p-4 w-full">
+
+              <div class="flex items-center gap-3">
+                <Input v-model="searchFilter" size="sm" class="focus:ring-green-600 focus:border-green-500 w-56 ring-green-600 " type="text"  placeholder="Поиск" required="">
+                </Input>
+                <date-picker class="flex relative h-9 w-56"
+                :editable="false"
+                placeholder="Дата"
+                input-class="w-full h-full dark:text-green-400 dark:bg-gray-700 bg-gray-50 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-green-500 focus:border-green-500 w-56 ring-green-600"
+                popup-class="rounded-lg p-4 relative dark:bg-gray-900 dark:border-gray-600"
+                v-model:value="dateFilters" 
+                range
+                separator="-"
+                :onClear="clearDate"
+                 ></date-picker>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold text-gray-900 border dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
                     <option v-for="option in perPageOptions" :key="option" :value="option">
                         {{ `${option} записей` }}
                     </option>
                 </select>
                 <ul class="flex items-center -space-x-px h-9 text-sm">
-                        <li>
-                            <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                <span class="sr-only">Пред.</span>
-                                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                                </svg>
-                            </button>
-                        </li>
-                        <li v-for="page in visiblePages" :key="page">
-                            <button
-                                @click="setCurrentPage(page)"
-                                :class="{ 'font-bold text-green-600': currentPage === page }"
-                                class="flex items-center justify-center px-3 h-9 leading-tight text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                            >
-                                {{ page }}
-                            </button>
-                        </li>
-                        <li>
-                            <button @click="nextPage" :disabled="currentPage === totalPages" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                <span class="sr-only">След.</span>
-                                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                                </svg>
-                            </button>
-                        </li>
+                    <li>
+                        <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">Пред.</span>
+                            <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                            </svg>
+                        </button>
+                    </li>
+                    <li v-for="page in visiblePages" :key="page">
+                        <button
+                            @click="setCurrentPage(page)"
+                            :class="{ 'font-bold text-green-600': currentPage === page }"
+                            class="flex items-center justify-center px-3 h-9 leading-tight text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                            {{ page }}
+                        </button>
+                    </li>
+                    <li>
+                        <button @click="nextPage" :disabled="currentPage === totalPages" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">След.</span>
+                            <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                            </svg>
+                        </button>
+                    </li>
                 </ul>
+              </div>
             </div>
 
             <div class="w-full h-full overflow-x-auto">
-                <AlarmsTable :data="paginatedData"></AlarmsTable>
+                <AlarmsTable v-if="paginatedData.length > 0" :data="paginatedData"></AlarmsTable>
+                <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-full p-20">
+                    <NoDataIcon />
+                    <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
+                </div>
             </div>
 
         </div>
