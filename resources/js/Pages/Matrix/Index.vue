@@ -140,7 +140,9 @@ const selectAllNgduCheckboxes = () => {
     props.data.ngdu_data.forEach(ngdu => {
         if (!ngduFilters.value.includes(ngdu.Id)) {
             ngdu.shops.forEach(shop => {
-                shopFilters.value.push(shop.Id)
+                if (!shopFilters.value.includes(shop.Id)) {
+                    shopFilters.value.push(shop.Id)
+                }
             });
             ngduFilters.value.push(ngdu.Id);
         }
@@ -188,7 +190,7 @@ const changeView = (value) => {
 
 watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.value], () => {
 
-    if (ngduFilters.value.length !== props.data.ngdu_data.length) {
+    if (props.data.ngdu_data && ngduFilters.value.length !== props.data.ngdu_data.length) {
         selectAllNgdus.value = false;
     } else {
         selectAllNgdus.value = true;
@@ -212,31 +214,35 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
         </template>
 
         <div v-if="data.matrix_data.length" class="bg-white dark:bg-gray-800 relative w-full">
-            <div class="flex flex-col items-start gap-3 p-4 w-full md:flex-row md:items-center md:gap-2">
+            <div class="flex flex-col items-start gap-3 p-4 w-full md:flex-row md:items-center md:gap-3">
 
                 <div class="flex items-center gap-3">
                     <Input v-model="searchFilter" size="sm" class="focus:ring-green-600 focus:border-green-500 w-56 ring-green-600 " type="text"  placeholder="Поиск" required="">
                     </Input>
                     <Dropdown align="bottom" width="48">
                         <template #trigger>
-                            <Button v-if="data.ngdu_data" :class="ngduFilters.length > 0 ? 'border-green-600 text-green-600' : ''" size="md" color="light">
+                            <Button v-if="data.ngdu_data" 
+                            :class="ngduFilters.length > 0 ? 'border-green-600 text-green-600 dark:border-green-600 dark:text-green-600' : ''" 
+                            size="md" color="light"
+                            class="hover:bg-gray-100 dark:hover:bg-gray-900"
+                            >
                                 <span class="font-semibold">НГДУ</span>
                             </Button>
                         </template>
 
                         <template #content>
-                            <div class="absolute p-5 right-0 z-10 bg-white rounded-lg shadow min-w-[300px]">
+                            <div class="absolute p-5 right-0 z-10 bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 rounded-lg shadow min-w-[300px]">
                                 <h6 class="font-medium text-sm text-gray-400">Выберите НГДУ</h6>
                                 <ul class="mt-[10px] w-full flex flex-col">
-                                    <li class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
-                                        <input @change="selectAllNgduCheckboxes" id="ngdu_option_all" v-model="selectAllNgdus" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" type="checkbox">
-                                        <label class="cursor-pointer text-gray-800" :for="`ngdu_option_all`">Все</label>
+                                    <li class="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                                        <input @change="selectAllNgduCheckboxes" id="ngdu_option_all" v-model="selectAllNgdus" class="text-green-600 dark:bg-gray-800 dark:border-gray-700 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" type="checkbox">
+                                        <label class="cursor-pointer text-gray-800 dark:text-gray-400" :for="`ngdu_option_all`">Все</label>
                                     </li>
-                                    <li v-for="(ngdu, index) in data.ngdu_data" :key="index" class="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
+                                    <li v-for="(ngdu, index) in data.ngdu_data" :key="index" class="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                                         <ShopDropdown>
                                             <template #ignore>
-                                                <input @change="handleNgduCheckboxFilter(ngdu)" :checked="ngduFilters.includes(ngdu.Id)" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" :id="`ngdu_option_${index}`" type="checkbox">
-                                                <label class="cursor-pointer text-gray-800" :for="`ngdu_option_${index}`">{{ ngdu.NgduName }}</label>
+                                                <input @change="handleNgduCheckboxFilter(ngdu)" :checked="ngduFilters.includes(ngdu.Id)" class="text-green-600 dark:bg-gray-800 dark:border-gray-700 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" :id="`ngdu_option_${index}`" type="checkbox">
+                                                <label class="cursor-pointer text-gray-800 dark:text-gray-400" :for="`ngdu_option_${index}`">{{ ngdu.NgduName }}</label>
                                             </template>
                                             <template #trigger>
                                                 <DropDownIcon />
@@ -244,7 +250,7 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                                             <template #content>
                                                 <ul v-if="ngdu.shops.length">
                                                     <li v-for="(shop, index) in ngdu.shops" :id="`shop_option_${index}`" class="flex items-center gap-2 py-1">
-                                                        <input @change="handleShopCheckboxFilter(shop)" :checked="shopFilters.includes(shop.Id)" :id="`shop_option_${index}`" type="checkbox" class="text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" >
+                                                        <input @change="handleShopCheckboxFilter(shop)" :checked="shopFilters.includes(shop.Id)" :id="`shop_option_${index}`" type="checkbox" class="text-green-600 dark:bg-gray-800 dark:border-gray-700 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" >
                                                         <label class="cursor-pointer text-gray-500" :for="`shop_option_${index}`">{{ shop.ShopName }}</label>
                                                     </li>
                                                 </ul>
@@ -260,14 +266,14 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                 </div>
 
                 <div class="flex items-center gap-3">
-                        <input v-model="radioFilter" id="today-radio" type="radio" name="filter" value="available" checked class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
-                        <label for="today-radio" class="font-medium text-sm">Доступные</label>
+                        <input v-model="radioFilter" id="today-radio" type="radio" name="filter" value="available" checked class="text-green-500 dark:bg-gray-800 dark:border-gray-700 focus:ring-green-500 bg-gray-100 border-gray-300"/>
+                        <label for="today-radio" class="font-medium text-sm text-gray-800 dark:text-gray-400">Доступные</label>
 
-                        <input v-model="radioFilter" id="earlier-radio" type="radio" name="filter" value="lost" class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
-                        <label for="earlier-radio" class="font-medium text-sm">Недоступные</label>
+                        <input v-model="radioFilter" id="earlier-radio" type="radio" name="filter" value="lost" class="text-green-500 dark:bg-gray-800 dark:border-gray-700 focus:ring-green-500 bg-gray-100 border-gray-300"/>
+                        <label for="earlier-radio" class="font-medium text-sm text-gray-800 dark:text-gray-400">Недоступные</label>
 
-                        <input v-model="radioFilter" id="all-radio" type="radio" name="filter" value="all" class="text-green-500 focus:ring-green-500 bg-gray-100 border-gray-300"/>
-                        <label for="all-radio" class="font-medium text-sm">Все</label>
+                        <input v-model="radioFilter" id="all-radio" type="radio" name="filter" value="all" class="text-green-500 dark:bg-gray-800 dark:border-gray-700 focus:ring-green-500 bg-gray-100 border-gray-300"/>
+                        <label for="all-radio" class="font-medium text-sm text-gray-800 dark:text-gray-400">Все</label>
                 </div>
                 
                 <div class="flex items-center gap-3 lg:ml-auto">
@@ -277,8 +283,8 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                         <li>
                             <button
                             for="grid-wiew" 
-                            class="w-12 h-12 rounded-lg items-center justify-center flex hover:bg-gray-100" 
-                            :class="viewType === 'grid' ? 'bg-gray-100' : ''"
+                            class="w-12 h-12 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700" 
+                            :class="viewType === 'grid' ? 'bg-gray-100 dark:bg-gray-700' : ''"
                             v-on:click="changeView('grid')"
                             >
                                 <GridIcon />
@@ -288,8 +294,8 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                         <li>
                             <button 
                             for="grid-wiew" 
-                            class="w-12 h-12 rounded-lg items-center justify-center flex hover:bg-gray-100" 
-                            :class="viewType === 'table' ? 'bg-gray-100' : ''"
+                            class="w-12 h-12 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700" 
+                            :class="viewType === 'table' ? 'bg-gray-100 dark:bg-gray-700' : ''"
                             v-on:click="changeView('table')"
                             >
                                 <TableIcon />
@@ -324,7 +330,7 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
             </div>
 
             <div class="flex items-center gap-3 p-4 pt-0 w-full">
-                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
+                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
                     <option v-for="option in perPageOptions" :key="option" :value="option">
                         {{ `${option} записей` }}
                     </option>

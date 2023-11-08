@@ -2,12 +2,8 @@
 import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
-    to: {
-        type: String,
-        required: true,
-    },
-    inc: {
-        type: String,
+    active: {
+        type: Boolean,
         required: true,
     }
 });
@@ -15,9 +11,9 @@ const props = defineProps({
 </script>
 
 <template>
-    <Link :href="route(to)">
-        <div :class="{ 'bg-gray-100': $page.url.includes(inc) }" class="flex items-center justify-center p-[10px] hover:bg-gray-100 rounded-[10px] cursor-pointer">
-        <slot />
+    <Link>
+        <div :class="{ 'bg-gray-100 dark:bg-gray-700': active }" class="flex items-center justify-center p-[10px] dark:hover:bg-gray-700 hover:bg-gray-100 rounded-[10px] cursor-pointer">
+            <slot />
         </div>
     </Link>
 </template>

@@ -24,7 +24,7 @@ import { Head } from '@inertiajs/vue3';
                 <div class="w-56 h-56 rounded-lg">
                     <img class="rounded-lg" src="/images/well.png" alt="">
                 </div>      
-                <h3 class="font-semibold text-gray-800 text-lg mt-5">Ой, здесь пусто!</h3>
+                <h3 class="font-semibold text-gray-800 text-lg mt-5 dark:text-gray-300">Ой, здесь пусто!</h3>
                 <span class="text-gray-400 text-sm mt-2">Но скоро что-то будет</span>
             </div>
 

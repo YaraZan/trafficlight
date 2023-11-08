@@ -7,6 +7,10 @@ import AlarmsTable from '@/Pages/Alarms/Partials/AlarmsTable.vue';
 import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
+import DatePicker from 'vue-datepicker-next';
+import 'vue-datepicker-next/index.css';
+import 'vue-datepicker-next/locale/ru';
+
 const props = defineProps({
     data: {
         type: Array
@@ -17,9 +21,9 @@ const props = defineProps({
     }
 });
 
-
 const currentPage = ref(1);
 const perPage = ref(20);
+const dateFilters = ref();
 
 const perPageOptions = [10, 20, 30];
 
@@ -51,8 +55,22 @@ const nextPage = () => {
   }
 };
 
+const clearDate = () => {
+  dateFilters.value = [];
+};
+
 const filteredData = computed(() => {
     let data = props.data;
+
+    if (dateFilters.value && dateFilters.value.length === 2) {
+    const [startDate, endDate] = dateFilters.value;
+
+    data = data.filter(item => {
+      const itemDate = new Date(item.Date); // Replace 'date' with the actual property name in your data
+
+      return itemDate >= startDate && itemDate <= endDate;
+    });
+  }
 
     return data;
 });
@@ -79,6 +97,10 @@ const visiblePages = computed(() => {
 
   return pages;
 });
+
+watch(() => [dateFilters.value], () => {
+  currentPage.value = 1;
+}, { deep: true });
 
 </script>
 
@@ -139,6 +161,16 @@ const visiblePages = computed(() => {
                             </button>
                         </li>
                 </ul>
+                <date-picker class="flex relative h-9 w-56"
+                :editable="false"
+                placeholder="Дата"
+                input-class="w-full h-full border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 w-56 ring-green-600"
+                popup-class="rounded-lg p-4 relative"
+                v-model:value="dateFilters" 
+                range
+                separator="-"
+                :onClear="clearDate"
+                 ></date-picker>
             </div>
 
             <div class="w-full h-full overflow-x-auto">

@@ -60,10 +60,6 @@ const clearDate = () => {
   dateFilters.value = [];
 };
 
-watch(() => props.data, () => {
-  currentPage.value = 1;
-});
-
 const filteredData = computed(() => {
   let data = props.data;
 

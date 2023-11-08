@@ -64,7 +64,7 @@ const closeModal = () => {
 </script>
 
 <template>
-    <tr :class="editing ? 'bg-gray-50' : ''" class="border-b border-gray-200">
+    <tr :class="editing ? 'border-l-2 border-l-green-400 bg-gray-50' : ''" class="border-b border-gray-200">
         <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200 flex flex-col">
             <Input v-model="form.name" ref="nameInput" size="sm" class="focus:ring-green-500 focus:border-green-500 w-1/2 ring-green-600 " type="text"  placeholder="Название" required="">
             </Input>

@@ -58,10 +58,6 @@ const clearDate = () => {
   dateFilters.value = [];
 };
 
-watch(() => props.data, () => {
-  currentPage.value = 1;
-});
-
 const filteredData = computed(() => {
   let data = props.data;
 
@@ -100,6 +96,10 @@ const visiblePages = computed(() => {
 
   return pages;
 });
+
+watch(() => [dateFilters.value], () => {
+  currentPage.value = 1;
+}, { deep: true });
 </script>
 
 <template>
