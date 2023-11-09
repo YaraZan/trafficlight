@@ -118,7 +118,7 @@ watch(() => [searchFilter.value], () => {
 
                 <Input v-model="searchFilter" size="sm" class="focus:ring-green-600 focus:border-green-500 w-56 ring-green-600 " type="text"  placeholder="Название" required="">
                 </Input>
-                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
+                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-800 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg focus:ring-green-600 focus:border-green-600 cursor-pointer">
                     <option v-for="option in perPageOptions" :key="option" :value="option">
                         {{ `${option} записей` }}
                     </option>
@@ -160,17 +160,19 @@ watch(() => [searchFilter.value], () => {
             <div class="w-full h-full overflow-x-auto">
                 <table v-if="props.roles.length" class="w-full" striped>
                     <thead>
-                        <tr class="border-y border-gray-200">
-                            <th scope="col" class="bg-gray-50 px-6 py-3 text-left border-l border-gray-200">
-                                <span class="text font-semibold text-gray-800">Название</span>
+                        <tr class="border-y bg-gray-50 dark:bg-gray-900 dark:bg-opacity-40 border-gray-200 dark:border-gray-700">
+                            <th scope="col" class="px-6 py-3 text-left">
+                                <span class="text font-semibold text-gray-800 dark:text-gray-300">Название</span>
                             </th>
-                            <th scope="col" class="bg-gray-50 px-6 py-3 text-left border-l border-gray-200">
-                                <span class="text font-semibold text-gray-800">Редактирование</span>
+                            <th scope="col" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
+                                <span class="text font-semibold text-gray-800 dark:text-gray-300">Редактирование</span>
                             </th>
-                            <th scope="col" class="bg-gray-50 px-6 py-3 text-left border-l border-gray-200">
-                                <span class="text font-semibold text-gray-800">Все НГДУ</span>
+                            <th scope="col" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
+                                <span class="text font-semibold text-gray-800 dark:text-gray-300">Все НГДУ</span>
                             </th>
-                            <th scope="col" class="bg-gray-50 px-6 py-3 text-left border-l border-gray-200">Действие</th>
+                            <th scope="col" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
+                                <span class="text font-semibold text-gray-800 dark:text-gray-300">Действие</span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>

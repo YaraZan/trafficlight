@@ -22,7 +22,7 @@ const getBgColor = (val) => {
 
     switch (val) {
         case 0:
-            colorClass= 'bg-gray-100';
+            colorClass= 'bg-gray-100 dark:bg-gray-900 dark:bg-opacity-50';
             break;
 
         case 2:
@@ -41,11 +41,19 @@ const getBgColor = (val) => {
 };
 
 const getFontColor = (val) => {
-    let colorClass = 'text-white';
+    let colorClass = 'text-gray-300 dark:text-gray-600';
 
     switch (val) {
         case 1:
             colorClass= 'text-gray-400';
+            break;
+
+        case 2:
+            colorClass= 'text-white';
+            break;
+
+        case 3:
+            colorClass= 'text-white';
             break;
     }
 
@@ -55,7 +63,7 @@ const getFontColor = (val) => {
 </script>
 
 <template>
-    <td class="px-6 py-4 text-left border-l border-gray-200">
+    <td class="px-4 py-3 text-left border-l border-gray-200 dark:border-gray-700">
         <div class="flex items-center gap-2">
             <div :class="getBgColor(stat)" class="flex gap-2 h-[30px] rounded-lg p-2">
                 <div class="flex items-center gap-1">

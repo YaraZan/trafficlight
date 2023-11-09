@@ -1,15 +1,17 @@
-<script setup>
+<!-- <script setup>
 import { ref, computed, watch } from 'vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import { Link, Head } from '@inertiajs/vue3';
-import AskStatsTable from './Partials/AskStatsTable.vue';
+import HourArchTable from './Partials/HourArchTable.vue';
+import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
 
 import DatePicker from 'vue-datepicker-next';
 import 'vue-datepicker-next/index.css';
 import 'vue-datepicker-next/locale/ru';
 import CalendarIcon from '@/Components/Icons/CalendarIcon.vue';
 import ClearIcon from '@/Components/Icons/ClearIcon.vue';
+
 
 const props = defineProps({
     data: {
@@ -22,86 +24,6 @@ const props = defineProps({
     }
 });
 
-const currentPage = ref(1);
-const perPage = ref(20);
-const dateFilters = ref();
-
-const perPageOptions = [10, 20, 30];
-
-const totalPages = computed(() => Math.ceil(filteredData.value.length / perPage.value));
-
-const paginatedData = computed(() => {
-    const start = (currentPage.value - 1) * perPage.value;
-    const end = start + perPage.value;
-    return filteredData.value.slice(start, end);
-});
-
-const updateData = () => {
-  currentPage.value = 1;
-};
-
-const setCurrentPage = (page) => {
-  currentPage.value = page;
-};
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
-};
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
-};
-
-const clearDate = () => {
-  dateFilters.value = [];
-};
-
-const filteredData = computed(() => {
-  let data = props.data;
-
-  if (dateFilters.value && dateFilters.value.length === 2) {
-    const [startDate, endDate] = dateFilters.value;
-
-    data = data.filter(item => {
-      const itemDate = new Date(item.Date); // Replace 'date' with the actual property name in your data
-
-      return itemDate >= startDate && itemDate <= endDate;
-    });
-  }
-
-    return data;
-});
-
-const visiblePages = computed(() => {
-  const totalVisiblePages = 5;
-  const pages = [];
-  let startPage;
-
-  if (totalPages.value <= totalVisiblePages) {
-    startPage = 1;
-  } else if (currentPage.value <= 2) {
-    startPage = 1;
-  } else if (currentPage.value >= totalPages.value - 2) {
-    startPage = totalPages.value - totalVisiblePages + 1;
-  } else {
-    startPage = currentPage.value - Math.floor(totalVisiblePages / 2);
-  }
-
-  for (let i = 0; i < totalVisiblePages && startPage <= totalPages.value; i++) {
-    pages.push(startPage);
-    startPage++;
-  }
-
-  return pages;
-});
-
-watch(() => [dateFilters.value], () => {
-  currentPage.value = 1;
-}, { deep: true });
 </script>
 
 <template>
@@ -119,9 +41,9 @@ watch(() => [dateFilters.value], () => {
                 :name="item.Name"
                 ></BreadCrumb>
             </Link>
-            <Link :href="route('matrix.askstats', item.public_id)">
+            <Link :href="route('matrix.diagrams', item.public_id)">
                 <BreadCrumb
-                :name="'Статистика опроса'"
+                :name="'Диаграммы'"
                 ></BreadCrumb>
             </Link>
         </template>
@@ -182,8 +104,12 @@ watch(() => [dateFilters.value], () => {
             </div>
 
             <div class="w-full h-full overflow-x-auto">
-                <AskStatsTable :data="paginatedData" :item="item"></AskStatsTable>
+                <HourArchTable v-if="paginatedData.length" :data="paginatedData" :item="item"></HourArchTable>
+                <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
+                    <NoDataIcon />
+                    <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
+                </div>
             </div>
         </div>
     </AuthorizedLayout>
-</template>
+</template> -->

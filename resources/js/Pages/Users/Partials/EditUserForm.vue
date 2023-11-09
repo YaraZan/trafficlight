@@ -87,71 +87,71 @@ const closeModal = () => {
 </script>
 
 <template>
-    <tr :class="editing ? 'border-l-2 border-l-green-400 bg-gray-50' : ''" class="border-b border-gray-200">
+    <tr :class="editing ? 'border-l-2 border-l-green-400 dark:border-l-green-400 bg-gray-50 dark:bg-gray-900 dark:bg-opacity-40' : ''" class="border-b border-gray-200 dark:border-gray-700">
 
         <!-- ФИО -->
         <th scope="row" v-if="editing" class="px-6 py-3 text-left flex flex-col">
             <Input v-model="form.name" ref="nameInput" size="sm" class="focus:ring-green-500 focus:border-green-500 w-1/2 ring-green-600 " type="text"  placeholder="ФИО" />
             <span v-if="form.errors.name" class="text-red-600">{{ form.errors.name }}</span>
         </th>
-        <th v-else scope="row" class="font-semibold text-gray-800 px-6 py-3 text-left">{{ user.name }}</th>
+        <th v-else scope="row" class="font-semibold text-gray-800 dark:text-gray-400 px-6 py-3 text-left">{{ user.name }}</th>
 
         <!-- Пароль -->
-        <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200">
+        <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
             <Input v-model="form.password" ref="passwordInput" size="sm" class="focus:ring-green-500 focus:border-green-500 w-1/2 ring-green-600 " type="password"  placeholder="Пароль" />
             <span v-if="form.errors.password" class="text-red-600">{{ form.errors.password }}</span>
         </td>
-        <td v-else class="px-6 py-3 text-left border-l border-gray-200">
+        <td v-else class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
             <Input disabled v-model="hidePassPlaceholder" size="sm" class="focus:ring-green-500 focus:border-green-500 w-1/2 ring-green-600 " type="password"  placeholder="Пароль" />
         </td>
 
         <!-- Роль -->
-        <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200">
-            <select v-model="form.role_id" ref="roleSelect" class="block p-2 text-sm font-semibold text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
+        <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
+            <select v-model="form.role_id" ref="roleSelect" class="block p-2 text-sm font-semibold text-gray-800 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-opacity-80 dark:text-gray-300 border border-gray-300 rounded-lg focus:ring-green-600 focus:border-green-600 cursor-pointer">
                 <option v-for="role in roles" :key="role.id" :value="role.id">
                     {{ role.name }}
                 </option>
             </select>
         </td>
-        <td v-else class="px-6 py-3 text-left border-l border-gray-200">
-            <span class="py-1 px-2 bg-blue-100 text-blue-800 font-semibold rounded-3xl">{{ user.roleName }}</span>
+        <td v-else class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
+            <span class="py-1 px-2 bg-blue-200 text-blue-800 font-semibold rounded-3xl">{{ user.roleName }}</span>
         </td>
 
         <!-- Роль -->
-        <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200 flex flex-col">
+        <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700 flex flex-col">
             <Input v-model="form.email" ref="emailInput" size="sm" class="focus:ring-green-500 focus:border-green-500 w-1/2 ring-green-600 " type="text"  placeholder="ФИО" />
             <span v-if="form.errors.email" class="text-red-600">{{ form.errors.email }}</span>
         </td>
-        <td v-else class="font-semibold text-gray-800 px-6 py-3 text-left border-l border-gray-200">
+        <td v-else class="font-semibold text-gray-800 dark:text-gray-400 px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
             {{ user.email }}
         </td>
 
         <!-- НГДУ -->
-        <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200">
-            <select v-model="form.ngdu_id" ref="ngduSelect" class="block p-2 text-sm font-semibold text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
+        <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
+            <select v-model="form.ngdu_id" ref="ngduSelect" class="block p-2 text-sm font-semibold text-gray-800 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-opacity-80 dark:text-gray-300 border border-gray-300 rounded-lg focus:ring-green-600 focus:border-green-600 cursor-pointer">
                 <option v-for="ngdu in ngdus" :key="ngdu.Id" :value="ngdu.Id">
                     {{ ngdu.NgduName }}
                 </option>
             </select>
         </td>
-        <td v-else class="px-6 py-3 text-left border-l border-gray-200">
-            <span class="py-1 px-2 bg-orange-100 text-orange-800 font-semibold rounded-3xl">{{ user.ngduName }}</span>
+        <td v-else class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
+            <span class="py-1 px-2 bg-orange-200 text-orange-800  font-semibold rounded-3xl">{{ user.ngduName }}</span>
         </td>
 
         <!-- Действия -->
-        <td v-if="editing" class="flex gap-5 px-6 py-3 text-left border-l border-gray-200">
-            <button @click="editing = !editing" class="text-gray-600 text-sm font-semibold p-2 hover:bg-gray-100 rounded-lg">Отмена</button>
+        <td v-if="editing" class="flex gap-5 px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
+            <button @click="editing = !editing" class="text-gray-600 dark:hover:bg-gray-700 text-sm font-semibold p-2 hover:bg-gray-100 rounded-lg">Отмена</button>
             <button @click.prevent="confirmUserEditing" :disabled="form.processing" class="flex gap-2 bg-green-600 px-4 py-2 border border-green-700 rounded-lg text-white text-sm font-semibold hover:opacity-80">
                 <Spinner color="green" v-show="form.processing" />
                 Сохранить
             </button>
         </td>
-        <td v-else class="px-3 py-3 text-left border-l border-gray-200 flex gap-5">
-            <button @click="editing = !editing" class="text-green-600 text-sm font-semibold flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
+        <td v-else class="px-3 py-3 text-left border-l border-gray-200 dark:border-gray-700 flex gap-5">
+            <button @click="editing = !editing" class="text-green-600 text-sm font-semibold flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                 <EditIcon />
                 Изменить
             </button>
-            <button @click.prevent="confirmUserDeletion" :disabled="form.processing" class="text-red-600 text-sm font-semibold flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg">
+            <button @click.prevent="confirmUserDeletion" :disabled="form.processing" class="text-red-600 text-sm font-semibold flex items-center gap-2 p-2 dark:hover:bg-gray-700 hover:bg-gray-100 rounded-lg">
                 <DeleteIcon />
                 Удалить
             </button>
@@ -162,7 +162,7 @@ const closeModal = () => {
 
     <Modal :show="confirmingUserEditing" @close="closeModal">
             <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900">
+                <h2 class="text-lg font-medium text-gray-800 dark:text-gray-300">
                     Подтвердите действие
                 </h2>
 
@@ -178,7 +178,7 @@ const closeModal = () => {
                 <div class="mt-6 flex justify-end">
                     <button 
                         @click="closeModal"
-                        class="flex gap-2 bg-transparent px-4 py-2 border border-gray-200 rounded-lg text-gray-800 text-sm font-semibold hover:bg-gray-100"
+                        class="flex gap-2 bg-transparent px-4 py-2 border border-gray-200 dark:border-gray-700 dark:hover:bg-gray-900 dark:text-gray-300 rounded-lg text-gray-800 text-sm  hover:bg-gray-100"
                     > Отмена </button>
 
                     <button
@@ -195,11 +195,11 @@ const closeModal = () => {
 
         <Modal :show="confirmingUserDeletion" @close="closeModal">
             <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-300">
                     Вы точно хотите удалить пользователя?
                 </h2>
 
-                <p class="mt-1 text-sm text-gray-600">
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-500">
                     После того как вы это сделаете, пользователь и его данные будут удалены навсегда.
                 </p>
 
@@ -211,7 +211,7 @@ const closeModal = () => {
                 <div class="mt-6 flex justify-end">
                     <button 
                         @click="closeModal"
-                        class="flex gap-2 bg-transparent px-4 py-2 border border-gray-200 rounded-lg text-gray-800 text-sm font-semibold hover:bg-gray-100"
+                        class="flex gap-2 bg-transparent px-4 py-2 border border-gray-200 dark:border-gray-700 dark:hover:bg-gray-900 dark:text-gray-300 rounded-lg text-gray-800 text-sm  hover:bg-gray-100"
                     > Отмена </button>
 
                     <button

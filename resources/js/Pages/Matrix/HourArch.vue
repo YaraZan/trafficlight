@@ -9,6 +9,8 @@ import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
 import DatePicker from 'vue-datepicker-next';
 import 'vue-datepicker-next/index.css';
 import 'vue-datepicker-next/locale/ru';
+import CalendarIcon from '@/Components/Icons/CalendarIcon.vue';
+import ClearIcon from '@/Components/Icons/ClearIcon.vue';
 
 
 const props = defineProps({
@@ -129,10 +131,10 @@ watch(() => [dateFilters.value], () => {
         <div class="bg-white dark:bg-gray-800 relative w-full">
 
             <div class="flex items-center gap-3 p-4 w-full">
-                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
-                    <option v-for="option in perPageOptions" :key="option" :value="option">
-                        {{ `${option} записей` }}
-                    </option>
+                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-900 border dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
+                  <option v-for="option in perPageOptions" :key="option" :value="option">
+                      {{ `${option} записей` }}
+                  </option>
                 </select>
                 <ul class="flex items-center -space-x-px h-9 text-sm">
                     <li>
@@ -164,13 +166,21 @@ watch(() => [dateFilters.value], () => {
                 <date-picker class="flex relative h-9 w-56"
                 :editable="false"
                 placeholder="Дата"
-                input-class="w-full h-full border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 w-56 ring-green-600"
-                popup-class="rounded-lg p-4 relative"
+                input-class="w-full h-full dark:text-green-400 dark:bg-gray-700 bg-gray-50 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-green-500 focus:border-green-500 w-56 ring-green-600"
+                popup-class="rounded-lg p-4 relative dark:bg-gray-900 dark:border-gray-600"
                 v-model:value="dateFilters" 
                 range
                 separator="-"
                 :onClear="clearDate"
-                 ></date-picker>
+                 >
+                  <template #icon-calendar>
+                      <CalendarIcon />
+                  </template>
+
+                  <template #icon-clear>
+                      <ClearIcon />
+                  </template>
+                </date-picker>
             </div>
 
             <div class="w-full h-full overflow-x-auto">

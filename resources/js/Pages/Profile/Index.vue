@@ -38,7 +38,7 @@ const props = defineProps({
                 <span class="font-normal text-gray-400 text-lg">{{ profile_data.email }}</span>
 
                 <Link :href="route('logout')" method="post">
-                    <span class="border border-gray-200 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:bg-gray-900 px-3 py-2 w-32 rounded-lg mt-12 font-medium flex items-center justify-center hover:bg-gray-50">
+                    <span class="border border-gray-200 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-opacity-80 dark:bg-gray-700 px-3 py-2 w-18 rounded-lg mt-5 font-medium flex items-center justify-center hover:bg-gray-50">
                         Выход
                     </span>
                 </Link>

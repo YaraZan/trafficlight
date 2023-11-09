@@ -53,7 +53,7 @@ const props = defineProps({
 
         <div class="bg-white dark:bg-gray-800 relative w-full">
             <div class="w-full h-full overflow-x-auto">
-                <HourArchDetailTable v-if="data.length" :data="data"></HourArchDetailTable>
+                <HourArchDetailTable v-if="data.length" :data="data" :well="well_item" :head_hour="head_hour_item"></HourArchDetailTable>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
