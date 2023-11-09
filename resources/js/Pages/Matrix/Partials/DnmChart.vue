@@ -1,7 +1,7 @@
 <template>
-  <div class="w-[60%] flex items-start border border-gray-200 rounded-xl">
+  <div class="w-[60%] flex items-start border border-gray-200 dark:border-gray-700 rounded-xl">
     <svg ref="dinamogram" class="min-h-full w-full"></svg>
-    <div id="tooltip" class="absolute hidden p-2 bg-gray-900 text-white border border-gray-200 rounded-lg gap-1">
+    <div id="tooltip" class="absolute hidden p-2 bg-white dark:bg-gray-900 dark:border-gray-700 text-white border border-gray-200 rounded-lg gap-1">
 
     </div>
   </div>
@@ -106,7 +106,7 @@ const drawChart = (datasets) => {
 
         tooltip.style('display', 'block');
         tooltip.html(`
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 text-gray-800 dark:text-gray-300">
           <div class="w-2 h-2 rounded-full" style="background-color: ${dataset.color}"></div> Нагрузка, кг: <b>${d.Y}</b>, Длина: <b>${d.X}</b>
         </div>
         `)
@@ -131,13 +131,13 @@ const drawChart = (datasets) => {
     }
 
     svg.selectAll('path.domain')
-    .style('stroke', 'white');
+    .classed("text-white dark:text-gray-800", true);
 
     svg.selectAll('g.tick line')
-      .style('stroke', '#9ca3af');
+    .classed("text-gray-300 dark:text-gray-600", true);
 
     svg.selectAll('text')
-      .style('fill', '#9ca3af');
+    .classed("text-gray-300 dark:text-gray-600", true);
   });
 };
 </script>

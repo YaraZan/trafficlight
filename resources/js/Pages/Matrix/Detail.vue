@@ -209,100 +209,100 @@ watch(() => dnmhData.value, () => {
                     <div class="flex flex-col gap-5 w-[40%]">
 
                         <div class="flex gap-5 items-center mt-2">
-                            <div :class="item.Connect ? 'bg-green-100' : 'bg-gray-200'" class="w-5 h-5 rounded-full z-1 flex items-center justify-center cursor-pointer" data-tooltip-target="operation-connect-tooltip" data-tooltip-placement="bottom">
-                                <div :class="item.Connect ? 'bg-green-300' : 'bg-gray-400'" class="w-1/2 h-1/2 rounded-full z-2"></div>
+                            <div :class="item.Connect ? 'bg-green-100 dark:bg-green-800 dark:bg-opacity-50' : 'bg-gray-100 dark:bg-gray-700'" class="w-5 h-5 rounded-full z-1 flex items-center justify-center cursor-pointer">
+                                <div :class="item.Connect ? 'bg-green-300 dark:bg-green-400' : 'bg-gray-300 dark:bg-gray-600'" class="w-1/2 h-1/2 rounded-full z-2"></div>
                             </div >
-                            <span class="font-bold text-gray-800 text-lg">{{ item.Name }}</span>
+                            <span class="font-bold text-gray-800 dark:text-gray-300 text-lg">{{ item.Name }}</span>
                         </div>
 
-                        <div class="flex flex-col border border-gray-200 rounded-xl mt-2">
-                            <div class="flex gap-2 p-3 items-center border-b border-gray-200">
-                                <span class="text-sm text-gray-500 w-1/3">Номер</span>
-                                <span class="text-lg font-semibold text-gray-800">{{ extractWellNumber(item.Name) }}</span>
+                        <div class="flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl mt-2">
+                            <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-700">
+                                <span class="text-sm text-gray-500 w-1/4">Номер</span>
+                                <span class="text-lg font-semibold text-gray-800 dark:text-gray-300">{{ extractWellNumber(item.Name) }}</span>
                             </div>
-                            <div class="flex gap-2 p-3 items-center border-b border-gray-200">
-                                <span class="text-sm text-gray-500 w-1/3">ПЛК</span>
-                                <span class="text-lg font-semibold text-gray-800">{{ item.PlcName }}</span>
+                            <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-700">
+                                <span class="text-sm text-gray-500 w-1/4">ПЛК</span>
+                                <span class="text-lg font-semibold text-gray-800 dark:text-gray-300">{{ item.PlcName }}</span>
                             </div>
-                            <div class="flex gap-2 p-3 items-center border-b border-gray-200">
-                                <span class="text-sm text-gray-500 w-1/3">НГДУ</span>
-                                <span class="text-lg font-semibold text-gray-800">{{ item.NgduName }}</span>
+                            <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-700">
+                                <span class="text-sm text-gray-500 w-1/4">НГДУ</span>
+                                <span class="text-lg font-semibold text-gray-800 dark:text-gray-300">{{ item.NgduName }}</span>
                             </div>
                             <div class="flex gap-2 p-3 items-center">
-                                <span class="text-sm text-gray-500 w-1/3">Цех</span>
-                                <span class="text-lg font-semibold text-gray-800">{{ item.ShopName }}</span>
+                                <span class="text-sm text-gray-500 w-1/4">Цех</span>
+                                <span class="text-lg font-semibold text-gray-800 dark:text-gray-300">{{ item.ShopName }}</span>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-5">
                             <Link :href="route('matrix.hourarch', item.public_id)">
-                                <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 items-center hover:bg-gray-100 cursor-pointer h-10">
+                                <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
                                     <HourArchIcon />
-                                    <span class="text-sm font-semibold text-gray-800">Часовые архивы</span>
+                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Часовые архивы</span>
                                 </div>
                             </Link>
                             <Link :href="route('matrix.askstats', item.public_id)">
-                                <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 items-center hover:bg-gray-100 cursor-pointer h-10">
+                                <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
                                     <AskStatsIcon />
-                                    <span class="text-sm font-semibold text-gray-800">Статистика опроса</span>
+                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Статистика опроса</span>
                                 </div>
                             </Link>
                             <Link :href="route('matrix.alarms', item.public_id)">
-                                <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 items-center hover:bg-gray-100 cursor-pointer h-10">
+                                <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
                                     <AlarmIcon />
-                                    <span class="text-sm font-semibold text-gray-800">Аварии</span>
+                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Аварии</span>
                                 </div>
                             </Link>
                             
-                            <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 items-center hover:bg-gray-100 cursor-pointer h-10">
+                            <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
                                 <DiagramsIcon />
-                                <span class="text-sm font-semibold text-gray-800">Диаграммы</span>
+                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Диаграммы</span>
                             </div>
                         </div>
 
                     </div>
 
                     <DnmChart v-if="dnmData.length > 0" :data="dnmData"/>
-                    <div v-else class="flex flex-col gap-10 w-[60%] min-h-full items-center justify-center border border-gray-200 rounded-xl">
+                    <div v-else class="flex flex-col gap-10 w-[60%] min-h-full items-center justify-center border border-gray-200 dark:border-gray-700  rounded-xl">
                         <Dinamogram />
                         <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения в таблице ниже</span>
                     </div>
 
                 </div>
 
-                <div class="w-full overflow-x-auto overflow-y-auto border border-gray-200 rounded-xl">
+                <div class="w-full overflow-x-auto overflow-y-auto border border-gray-200 dark:border-gray-700  rounded-xl">
                       <table v-if="paginatedData.length" class="w-full" striped>
                         <thead>
-                            <tr class="border-b border-gray-200">
-                                <th scope="col" class="bg-gray-50 px-6 py-4 text-left w-[50px]">
+                            <tr class="border-b bg-gray-50 border-gray-200 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 ">
+                                <th scope="col" class="px-6 py-4 text-left w-[50px]">
                                     <span class="text font-semibold text-gray-800"></span>
                                 </th>
-                                <th scope="col" class="bg-gray-50 px-6 py-4 text-left border-l border-gray-200">
-                                    <span class="text font-semibold text-gray-800">Дата</span>
+                                <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Дата</span>
                                 </th>
-                                <th scope="col" class="bg-gray-50 px-6 py-4 text-left border-l border-gray-200">
-                                    <span class="text font-semibold text-gray-800">Опрос</span>
+                                <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Опрос</span>
                                 </th>
-                                <th scope="col" class="bg-gray-50 px-6 py-4 text-left border-l border-gray-200">
-                                    <span class="text font-semibold text-gray-800">Наименование</span>
+                                <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Наименование</span>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(row, index) in paginatedData" :key="index" class="border-b border-gray-200">
-                                <th scope="row" class="font-normal text-gray-500 px-6 py-4 text-left border-b border-gray-200">
+                            <tr v-for="(row, index) in paginatedData" :key="index" class="border-b border-gray-200 dark:border-gray-700 ">
+                                <th scope="row" class="font-normal text-gray-500 px-6 py-4 text-left border-b border-gray-200 dark:border-gray-700 ">
                                     <input
                                     @change="() => selectDinamogram(row.public_id)"
                                     :value="row.public_id"
                                     :checked="dnmData.some((item) => item.public_id === row.public_id)"
                                     :style="{ color: dnmData.find((item) => item.public_id === row.public_id)?.color }"
-                                    class="bg-gray-100 text-gray-100 border-gray-300 rounded focus:ring-gray-300 cursor-pointer"
+                                    class="bg-gray-100 text-gray-100 dark:text-gray-800 dark:bg-gray-800 dark:border-gray-700 focus:ring-gray-100 dark:focus:ring-gray-800  border-gray-300 rounded cursor-pointer"
                                     type="checkbox"
                                 />
                                 </th>
-                                <td class="font-normal border-l border-gray-200 text-gray-500 px-6 py-4 text-left">{{ row.Dat }}</td>
-                                <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.AskLong }}</td>
-                                <td class="px-6 py-4 text-left border-l border-gray-200">{{ row.DnmAdress }}</td>
+                                <td class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">{{ row.Dat }}</td>
+                                <td class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.AskLong }}</td>
+                                <td class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.DnmAdress }}</td>
                             </tr>
                         </tbody>
                     </table> 

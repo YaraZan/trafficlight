@@ -5,70 +5,93 @@ const props = defineProps({
     data: {
         type: Array,
         required: true
+    },
+    well: {
+        type: Object,
+        required: true
+    },
+    head_hour: {
+        type: Object,
+        required: true
     }
 });
 </script>
 
 <template>
+   <!--  <div class="flex flex-col gap-2 px-4 py-5">
+
+        <div class="flex items-center gap-3">
+            <span class="text-gray-800 font-semibold">Данные по скважине</span>
+            <Link :href="route('matrix.detail', well.public_id)">
+                <span class="font-semibold text-green-600 hover:opacity-70">{{ well.Name }}</span>
+            </Link>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <span class="text-gray-800 font-semibold">Дата</span>
+            <span class="text-gray-400">{{ head_hour.Date }}</span>
+        </div>
+    </div> -->
+
      <table striped>
         <thead>
-            <tr class="border-b border-gray-200">
-                <th class="bg-gray-50 text-left px-4 py-3">
-                    <span class="text font-semibold text-gray-800">Категория</span>
+            <tr class="border-b bg-gray-50 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 border-gray-200">
+                <th class="text-left px-4 py-3">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Категория</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Уставка А</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Уставка А</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Значение А</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Значение А</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Отклонение А, %</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Отклонение А, %</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Ранг А</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Ранг А</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Уставка B</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Уставка B</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Значение B</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Значение B</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Отклонение B, %</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Отклонение B, %</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Ранг B</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Ранг B</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Уставка C</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Уставка C</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Значение C</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Значение C</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Отклонение C, %</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Отклонение C, %</span>
                 </th>
-                <th class="bg-gray-50 text-left px-4 py-3 border-l border-gray-200">
-                    <span class="text font-semibold text-gray-800">Ранг C</span>
+                <th class="text-left px-4 py-3 border-l border-gray-200 dark:border-gray-700">
+                    <span class="font-semibold text-gray-800 dark:text-gray-300">Ранг C</span>
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(row, index) in data" :key="index" class="border-b border-gray-200">
-                <td class="px-4 py-3 font-semibold text-gray-800">{{ row.CatName }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Ref1 }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Cur1 }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Res1 }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Err1 }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Ref2 }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Cur2 }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Res2 }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Err2 }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Ref3 }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Cur3 }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Res3 }}</td>
-                <td class="px-4 py-3 border-l border-gray-200">{{ row.Err3 }}</td>
+            <tr v-for="(row, index) in data" :key="index" class="border-b border-gray-200 dark:border-gray-700">
+                <td class="px-4 py-3 font-semibold text-gray-800 dark:text-gray-400">{{ row.CatName }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Ref1 }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Cur1 }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Res1 }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Err1 }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Ref2 }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Cur2 }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Res2 }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Err2 }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Ref3 }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Cur3 }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Res3 }}</td>
+                <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Err3 }}</td>
             </tr>
         </tbody>
     </Table>   

@@ -28,16 +28,16 @@ const submit = () => {
 <template>
     <Head title="Вход" />
 
-    <div class="w-screen h-screen flex items-center justify-center font-montserrat bg-white">
+    <div class="w-screen h-screen flex items-center justify-center font-montserrat bg-white dark:bg-gray-800">
         
         <div class="flex flex-col items-center justify-center gap-6">
 
-            <div class="p-4 flex items-center justify-center border border-gray-200 rounded-lg bg-white">
+            <div class="p-4 flex items-center justify-center border border-gray-200 rounded-lg bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Logo />
             </div>
 
             <div class="flex flex-col gap-2 text-center">
-                <h2 class="font-semibold text-[24px] text-gray-800">Вход</h2>
+                <h2 class="font-semibold text-[24px] text-gray-800 dark:text-gray-300">Вход</h2>
                 <span class="text-[16px] text-gray-300">Войдите в свой аккаунт</span>
             </div>
 

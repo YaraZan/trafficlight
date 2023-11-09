@@ -1,6 +1,5 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import { Button } from 'flowbite-vue';
 import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import { Head } from '@inertiajs/vue3';
@@ -137,6 +136,9 @@ const selectAllNgduCheckboxes = () => {
         return;
     }
 
+    ngduFilters.value = [];
+    shopFilters.value = [];
+
     props.data.ngdu_data.forEach(ngdu => {
         if (!ngduFilters.value.includes(ngdu.Id)) {
             ngdu.shops.forEach(shop => {
@@ -217,17 +219,17 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
             <div class="flex flex-col items-start gap-3 p-4 w-full md:flex-row md:items-center md:gap-3">
 
                 <div class="flex items-center gap-3">
-                    <Input v-model="searchFilter" size="sm" class="focus:ring-green-600 focus:border-green-500 w-56 ring-green-600 " type="text"  placeholder="Поиск" required="">
+                    <Input v-model="searchFilter" size="sm" class="focus:ring-green-600 focus:border-green-500 w-56 ring-green-600 h-9" type="text"  placeholder="Поиск" required="">
                     </Input>
                     <Dropdown align="bottom" width="48">
                         <template #trigger>
-                            <Button v-if="data.ngdu_data" 
-                            :class="ngduFilters.length > 0 ? 'border-green-600 text-green-600 dark:border-green-600 dark:text-green-600' : ''" 
+                            <button v-if="data.ngdu_data" 
+                            :class="ngduFilters.length > 0 ? 'border-green-600 text-green-600' : 'hover:bg-gray-100 dark:hover:bg-gray-900 border-gray-300 text-gray-800 dark:border-gray-700 dark:text-gray-300'" 
                             size="md" color="light"
-                            class="hover:bg-gray-100 dark:hover:bg-gray-900"
+                            class="border rounded-lg px-3 py-1 h-9"
                             >
                                 <span class="font-semibold">НГДУ</span>
-                            </Button>
+                            </button>
                         </template>
 
                         <template #content>
@@ -330,7 +332,7 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
             </div>
 
             <div class="flex items-center gap-3 p-4 pt-0 w-full">
-                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
+                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
                     <option v-for="option in perPageOptions" :key="option" :value="option">
                         {{ `${option} записей` }}
                     </option>
@@ -366,14 +368,14 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
 
             <div v-if="viewType === 'grid'" class="w-full h-full overflow-x-auto p-4">
                 <OperationsGrid v-if="paginatedData.length" :data="paginatedData"/>
-                <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
+                <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 dark:border-gray-700 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
                 </div>
             </div>
             <div v-else class="w-full h-full overflow-x-auto overflow-y-auto">
                 <MatrixTable v-if="paginatedData.length" :data="paginatedData"/>
-                <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 rounded-xl">
+                <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 dark:border-gray-700 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
                 </div>

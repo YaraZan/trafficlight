@@ -11,6 +11,8 @@ import { Input } from 'flowbite-vue';
 import DatePicker from 'vue-datepicker-next';
 import 'vue-datepicker-next/index.css';
 import 'vue-datepicker-next/locale/ru';
+import CalendarIcon from '@/Components/Icons/CalendarIcon.vue';
+import ClearIcon from '@/Components/Icons/ClearIcon.vue';
 
 const props = defineProps({
     alarms_data: {
@@ -133,11 +135,19 @@ watch(() => [dateFilters.value, searchFilter.value], () => {
                 range
                 separator="-"
                 :onClear="clearDate"
-                 ></date-picker>
+                 >
+                  <template #icon-calendar>
+                      <CalendarIcon />
+                  </template>
+
+                  <template #icon-clear>
+                      <ClearIcon />
+                  </template>
+                </date-picker>
               </div>
 
               <div class="flex items-center gap-3">
-                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold text-gray-900 border dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
+                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-900 border dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
                     <option v-for="option in perPageOptions" :key="option" :value="option">
                         {{ `${option} записей` }}
                     </option>

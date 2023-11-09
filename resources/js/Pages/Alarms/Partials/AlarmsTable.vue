@@ -11,7 +11,7 @@ const props = defineProps({
 <template>
      <table class="w-full" striped>
         <thead>
-            <tr class="border-y border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+            <tr class="border-y border-gray-200 dark:border-gray-700 dark:bg-opacity-40 bg-gray-50 dark:bg-gray-900">
                 <th scope="col" class="px-6 py-4 text-left">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Скважина</span>
                 </th>
