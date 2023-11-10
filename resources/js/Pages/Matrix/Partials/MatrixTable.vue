@@ -34,7 +34,7 @@ function extractNumericPart(data) {
     <table class="w-full" striped>
         <thead>
             <tr class="border-y bg-gray-50 dark:bg-gray-900 dark:bg-opacity-40 border-gray-200 dark:border-gray-700">
-                <th scope="col" class="items-center px-4 py-3 text-left border-gray-200 dark:border-gray-700 border-l">
+                <th scope="col" class="items-center px-4 py-3 text-left">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Связь</span>
                 </th>
                 <th scope="col" class="items-center px-4 py-3 text-left border-gray-200 dark:border-gray-700 border-l">
