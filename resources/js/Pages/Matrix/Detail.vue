@@ -11,6 +11,7 @@ import axios from 'axios';
 import SkeletonDnmhTable from './Partials/SkeletonDnmhTable.vue';
 import DnmChart from './Partials/DnmChart.vue';
 import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
+import EngineIcon from '@/Components/Icons/EngineIcon.vue';
 import { watch } from 'vue';
 import Dinamogram from '@/Components/Icons/Dinamogram.vue';
 
@@ -234,7 +235,7 @@ watch(() => dnmhData.value, () => {
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-5">
+                        <div class="grid grid-cols-3 gap-3">
                             <Link :href="route('matrix.hourarch', item.public_id)">
                                 <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
                                     <HourArchIcon />
@@ -244,7 +245,7 @@ watch(() => dnmhData.value, () => {
                             <Link :href="route('matrix.askstats', item.public_id)">
                                 <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
                                     <AskStatsIcon />
-                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Статистика опроса</span>
+                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Опросы</span>
                                 </div>
                             </Link>
                             <Link :href="route('matrix.alarms', item.public_id)">
@@ -254,9 +255,16 @@ watch(() => dnmhData.value, () => {
                                 </div>
                             </Link>
                             
-                            <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
-                                <DiagramsIcon />
-                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Диаграммы</span>
+                            <Link :href="route('matrix.diagrams', item.public_id)">
+                                <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
+                                    <DiagramsIcon />
+                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Диаграммы</span>
+                                </div>
+                            </Link>
+
+                            <div class="p-6 flex gap-5 bg-green-600 rounded-lg shadow border border-green-500 items-center hover:bg-opacity-80 dark:hover:bg-opacity-80 cursor-pointer h-10">
+                                <EngineIcon />
+                                <span class="text-sm font-semibold text-white">Управление</span>
                             </div>
                         </div>
 
@@ -337,7 +345,7 @@ watch(() => dnmhData.value, () => {
                             </button>
                         </li>
                     </ul>
-                    </div>
+                </div>
 
             </div>
         </div>

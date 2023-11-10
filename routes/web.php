@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Matrix\DiagramController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,6 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/matrix/{well_uuid}/hourarch/{head_hour_uuid}', [HeadHourController::class, 'show'])->name('matrix.hourarch.detail');
     Route::get('/matrix/{well_uuid}/askstats', [AskStatsController::class, 'index'])->name('matrix.askstats');
     Route::get('/matrix/{well_uuid}/alarms', [WellAlarmsController::class, 'index'])->name('matrix.alarms');
+    Route::get('/matrix/{well_uuid}/diagrams', [DiagramController::class, 'index'])->name('matrix.diagrams');
 
     Route::get('/alarms', [AlarmsController::class, 'index'])->name('alarms');
 
@@ -51,6 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/api')->group(function () {
         Route::get('/dnmh/{public_id}', [DnmhController::class, 'index']);
         Route::get('/dnm/{public_id}', [DnmhController::class, 'show']);
+
+        Route::get('/diagrams/{public_id}', [DiagramController::class, 'show']);
     });
 });
 
