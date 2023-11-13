@@ -28,8 +28,10 @@ class DiagramController extends Controller
         ]);
     }
 
-    public function show($category_uuid) 
+    public function show($well_uuid, $category_uuid) 
     {
+        $well = Well::where('public_id', $well_uuid)->first();
+
         $category = DB::table('Category')->where('public_id', '=', $category_uuid)->first();
 
         $hour_arch_data = DB::table('HourArch as ha')
@@ -42,9 +44,9 @@ class DiagramController extends Controller
             'ha.Category_Id',
             'ha.Well_Id',
             'cat.CatName as CatName',
-            'ha.Date as Y',
-            'ha.Ref1',
-            'ha.Cur1 as X',
+            'ha.Date as X',
+            'ha.Ref1 as R',
+            'ha.Cur1 as Y',
             'ha.Res1',
             'ha.Err1',
             'ha.Stat1',
@@ -60,8 +62,9 @@ class DiagramController extends Controller
             'ha.Stat3',
         ])
         ->where('ha.Category_Id', '=', $category->Id)
+        ->where('ha.Well_Id', '=', $well->Id)
         ->orderBy('ha.Date', 'desc')
-        ->take(1500)
+        ->take(500)
         ->get();
 
         return response()->json($hour_arch_data);

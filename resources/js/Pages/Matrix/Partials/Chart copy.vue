@@ -29,7 +29,7 @@ watch(() => props.data, (newData) => {
 }, { deep: true });
 
 const drawChart = (datasets) => {
-  // Extract and merge all data points from the datasets
+// Extract and merge all data points from the datasets
   const allData = datasets.reduce((acc, dataset) => [...acc, ...dataset.data], []);
 
   const margin = { top: 20, right: 30, bottom: 30, left: 60 };
@@ -43,6 +43,7 @@ const drawChart = (datasets) => {
 
   // Create the SVG for each dataset
   datasets.forEach((dataset) => {
+
     const data = dataset.data.map(d => {
       return {
         ...d,
@@ -95,7 +96,7 @@ const drawChart = (datasets) => {
       .attr('transform', `translate(0, ${height})`)
       .call(d3.axisBottom(xScale)
         .ticks(d3.timeHour.every(2))
-        .tickFormat(customTickFormat)
+        .tickFormat(customTickFormat) // Use custom tick formatting
       );
 
     const yScale = d3.scaleLinear()
@@ -108,11 +109,10 @@ const drawChart = (datasets) => {
     const tooltip = d3.select('#tooltip');
 
     // Draw points for each dataset
-    svg.selectAll('circle.fact') // <-- Add 'fact' class to distinguish between fact and setpoint circles
+    svg.selectAll('circle')
       .data(data)
       .enter()
       .append('circle')
-      .attr('class', 'fact') // <-- Add 'fact' class
       .attr('cx', (d) => xScale(d.X.getTime()))
       .attr('cy', (d) => yScale(d.Y))
       .attr('r', 2)
@@ -146,7 +146,7 @@ const drawChart = (datasets) => {
         tooltip.style('display', 'none');
       });
 
-    // Draw lines between fact points based on "X" field
+    // Draw lines between points based on "X" field
     for (let i = 1; i < data.length; i++) {
       svg.append('line')
         .attr('x1', xScale(data[i - 1].X))
@@ -155,63 +155,6 @@ const drawChart = (datasets) => {
         .attr('y2', yScale(data[i].Y))
         .attr('stroke', dataset.color)
         .attr('stroke-width', 1);
-    }
-
-    // Setpoint chart
-    const setpointData = data.map(d => ({
-      X: d.X,
-      Y: parseFloat(d.R),
-    }));
-
-    svg.selectAll('circle.setpoint') // <-- Add 'setpoint' class
-      .data(setpointData)
-      .enter()
-      .append('circle')
-      .attr('class', 'setpoint') // <-- Add 'setpoint' class
-      .attr('cx', (d) => xScale(d.X.getTime()))
-      .attr('cy', (d) => yScale(d.Y))
-      .attr('r', 2)
-      .attr('fill', dataset.color)
-      .attr('opacity', 0.7) // Set opacity to 70%
-      .style('cursor', 'pointer')
-      .on('mouseover', (event, d) => {
-        const tooltipWidth = 300;
-        const mouseX = event.pageX;
-        const mouseY = event.pageY;
-
-        let left = mouseX + 10; // Default position
-
-        // Check if the tooltip would overflow to the right
-        if (left + tooltipWidth > window.innerWidth) {
-          // Move the tooltip to the left of the cursor
-          left = mouseX - tooltipWidth - 10;
-        }
-
-        tooltip.style('display', 'block');
-        tooltip.html(`
-        <div class="flex items-center gap-2 text-gray-800 dark:text-gray-300">
-          <div class="w-2 h-2 rounded-full" style="background-color: ${dataset.color}"></div> 
-          Уставка: <b>${d.Y}</b>
-        </div>
-        `)
-          .style('left', left + 'px')
-          .style('top', mouseY - 25 + 'px')
-          .style('border-radius', '10px');
-      })
-      .on('mouseout', () => {
-        tooltip.style('display', 'none');
-      });
-
-    // Draw lines between setpoint points based on "X" field
-    for (let i = 1; i < setpointData.length; i++) {
-      svg.append('line')
-        .attr('x1', xScale(setpointData[i - 1].X))
-        .attr('y1', yScale(setpointData[i - 1].Y))
-        .attr('x2', xScale(setpointData[i].X))
-        .attr('y2', yScale(setpointData[i].Y))
-        .attr('stroke', dataset.color)
-        .attr('stroke-width', 1)
-        .attr('opacity', 0.6); // Set opacity to 70%
     }
 
     svg.selectAll('path.domain')
