@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dnmh/{public_id}', [DnmhController::class, 'index']);
         Route::get('/dnm/{public_id}', [DnmhController::class, 'show']);
 
-        Route::get('/diagrams/{public_id}', [DiagramController::class, 'show']);
+        Route::get('well/{well_uuid}/diagrams/{category_uuid}', [DiagramController::class, 'show']);
     });
 });
 

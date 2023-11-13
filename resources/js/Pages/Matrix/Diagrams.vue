@@ -31,7 +31,7 @@ const paginatedData = ref([]);
 const dateFilters = ref();
 
 const fetchHourArchData = (publicId) => {
-  return axios.get(`/api/diagrams/${publicId}`)
+  return axios.get(`/api/well/${props.item.public_id}/diagrams/${publicId}`)
     .then((response) => {
       return response.data;
     })
@@ -42,6 +42,7 @@ const fetchHourArchData = (publicId) => {
 
 
 onMounted(() => {
+    selectParam(props.categories[1].public_id, "Число качаний");
     paginateData();
 });
 
@@ -112,9 +113,10 @@ const totalPages = computed(() => {
 });
 
 const paginateData = () => {
-  const start = (currentPage.value - 1) * perPage.value;
-  const end = start + perPage.value;
-  paginatedData.value = filtredData.value.slice(start, end);
+    const data = props.categories;
+    const start = (currentPage.value - 1) * perPage.value;
+    const end = start + perPage.value;
+    paginatedData.value = data.slice(start, end);
 };
 
 const setCurrentPage = (page) => {
@@ -140,11 +142,54 @@ const nextPage = () => {
   }
 };
 
-const filtredData = computed(() => {
-    let data = props.categories;
+const filteredData = computed(() => {
+  let data = hourArchData.value;
 
-    return data;
+  if (!dateFilters.value || dateFilters.value.length !== 2) {
+    // Set default date filter if not provided
+    dateFilters.value = getDefaultDateFilters();
+  }
+
+  const [startDate, endDate] = dateFilters.value;
+
+  // Create a new array using map to ensure reactivity
+  data = data.map(item => {
+    const filteredData = item.data.filter(dataItem => {
+      const itemDate = new Date(dataItem.X);
+
+      // Convert dates to local date strings
+      const itemDateString = itemDate.toLocaleDateString();
+      const startDateString = startDate.toLocaleDateString();
+      const endDateString = endDate.toLocaleDateString();
+
+      // Check if the itemDate is on or between startDate and endDate
+      return (
+        (itemDate >= startDate && itemDate <= endDate) ||
+        (itemDateString === startDateString) ||
+        (itemDateString === endDateString)
+      );
+    });
+
+    // Create a new object to ensure reactivity
+    return { ...item, data: filteredData };
+  });
+
+  return data;
 });
+
+
+function getDefaultDateFilters() {
+  const endDate = new Date(); // Current date
+  const startDate = new Date();
+  startDate.setDate(endDate.getDate() - 7); // Subtract 7 days
+
+  // Adjust the time to 00:00:00 for both start and end dates
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(23, 59, 59, 999);
+
+  return [startDate, endDate];
+}
+
 
 const visiblePages = computed(() => {
   const totalVisiblePages = 5;
@@ -202,7 +247,7 @@ watch(() => hourArchData.value, () => {
             <div class="w-full flex flex-col p-4 gap-4">
 
 
-                <Chart v-if="hourArchData.length > 0" :data="hourArchData" />
+                <Chart v-if="filteredData.length > 0" :data="filteredData" />
                 <div v-else class="flex flex-col gap-10 w-full h-[500px] items-center justify-center border border-gray-200 dark:border-gray-700  rounded-xl">
                     <Dinamogram />
                     <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения в таблице ниже</span>
@@ -244,7 +289,7 @@ watch(() => hourArchData.value, () => {
                             popup-class="rounded-lg p-4 relative dark:bg-gray-900 dark:border-gray-600"
                             v-model:value="dateFilters" 
                             
-                            multiple
+                            range
                             separator="-"
                             :onClear="clearDate"
                             >
@@ -259,7 +304,7 @@ watch(() => hourArchData.value, () => {
                     </div>
                     <div class="w-full flex items-center gap-3">
 
-                        <div class="border border-gray-200 dark:border-gray-700 rounded-xl">
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-xl w-full">
                             <table v-if="paginatedData.length > 0" class="w-full" striped>
                                 <thead>
                                     <tr class="border-b bg-gray-50 border-gray-200 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 ">
@@ -268,6 +313,9 @@ watch(() => hourArchData.value, () => {
                                         </th>
                                         <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
                                             <span class="text font-semibold text-gray-800 dark:text-gray-300">Категория</span>
+                                        </th>
+                                        <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                                            <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
                                         </th>
                                     </tr>
                                 </thead>
@@ -284,6 +332,9 @@ watch(() => hourArchData.value, () => {
                                         />
                                         </th>
                                         <td class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">{{ row.CatName }}</td>
+<!--                                         <td v-if="hourArchData.some((item) => item.public_id === row.public_id)" class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">
+                                            {{ hourArchData.find((item) => item.public_id === row.public_id) }}
+                                        </td> -->
                                     </tr>
                                 </tbody>
                             </table> 
