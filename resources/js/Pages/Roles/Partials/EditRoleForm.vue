@@ -101,19 +101,17 @@ const closeModal = () => {
         </td>
         <td v-if="editing" class="flex gap-5 px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
             <button @click="editing = !editing" class="text-gray-600 text-sm font-semibold p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Отмена</button>
-            <button @click.prevent="updateRole" :disabled="form.processing" class="flex gap-2 bg-green-600 px-4 py-2 border border-green-700 rounded-lg text-white text-sm font-semibold hover:opacity-80">
+            <button @click.prevent="updateRole" :disabled="form.processing" class="flex gap-2 bg-green-600 px-4 py-2 border border-green-500 rounded-lg text-white text-sm font-semibold hover:bg-opacity-80">
                 <Spinner color="green" v-show="form.processing" />
                 Сохранить
             </button>
         </td>
-        <td v-else class="px-3 py-3 text-left border-l border-gray-200 dark:border-gray-700 flex gap-5">
+        <td v-else class="px-3 py-3 text-left border-l border-gray-200 dark:border-gray-700 flex gap-2">
             <button @click="editing = !editing" class="text-green-600 text-sm font-semibold flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                 <EditIcon />
-                Изменить
             </button>
             <button @click.prevent="confirmRoleDeletion" :disabled="form.processing" class="text-red-600 text-sm font-semibold flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                 <DeleteIcon />
-                Удалить
             </button>
         </td>
     </tr>

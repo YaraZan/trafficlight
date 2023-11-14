@@ -88,7 +88,7 @@ function extractNumericPart(data) {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(row, index) in data" :key="index"  class="hover:bg-gray-50 dark:hover:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+            <tr v-for="(row, index) in data" :key="index"  class="hover:bg-gray-50 dark:hover:bg-gray-900 dark:hover:bg-opacity-40 border-b border-gray-200 dark:border-gray-700">
                 <th scope="row" class="px-4 py-3 text-center cursor-pointer">
                     <Link :href="route('matrix.detail', row.public_id)">
                         <div :class="row.Connect ? 'bg-green-100 dark:bg-green-800 dark:bg-opacity-50' : 'bg-gray-100 dark:bg-gray-700'" class="w-5 h-5 mx-auto rounded-full z-1 flex items-center justify-center cursor-pointer">

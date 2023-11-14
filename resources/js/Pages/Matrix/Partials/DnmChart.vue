@@ -127,7 +127,8 @@ const drawChart = (datasets) => {
         .attr('x2', xScale(data[i].X))
         .attr('y2', yScale(data[i].Y))
         .attr('stroke', dataset.color)
-        .attr('stroke-width', 1);
+        .attr('opacity', 0.7)
+        .attr('stroke-width', 2);
     }
 
     svg.selectAll('path.domain')

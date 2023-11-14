@@ -48,6 +48,7 @@ const submit = () => {
                     <Spinner color="green" v-show="form.processing" />
                     Войти
                 </button>
+                <span v-if="form.errors.email || form.errors.password" class="font-normal text-red-500">Пароль или почта введены неверно!</span>
             </div>
 
         </div>

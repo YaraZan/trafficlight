@@ -315,7 +315,7 @@ watch(() => hourArchData.value, () => {
                                             <span class="text font-semibold text-gray-800 dark:text-gray-300">Категория</span>
                                         </th>
                                         <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
-                                            <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
+                                            <span class="text font-semibold text-gray-800 dark:text-gray-300">Единица измерения</span>
                                         </th>
                                     </tr>
                                 </thead>

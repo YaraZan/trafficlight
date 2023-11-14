@@ -13,6 +13,8 @@ import { timeParse } from 'd3-time-format';
 
 const dinamogram = ref(null);
 
+const lastDatasetRef = ref(null);
+
 const props = defineProps({
   data: {
     type: Array,
@@ -46,6 +48,7 @@ const drawChart = (datasets) => {
     const data = dataset.data.map(d => {
       return {
         ...d,
+        R: parseFloat(d.R),
         X: parseTime(d.X), // Parse the X field as a date
         Y: parseFloat(d.Y),
       };
@@ -99,13 +102,25 @@ const drawChart = (datasets) => {
       );
 
     const yScale = d3.scaleLinear()
-      .domain([d3.min(data, d => d.Y), d3.max(data, d => d.Y)])
+      .domain([d3.min(data, d => Math.min(d.Y, d.R)), d3.max(data, d => Math.max(d.Y, d.R))])
       .range([height, 0]);
+
 
     svg.append('g')
       .call(d3.axisLeft(yScale));
 
     const tooltip = d3.select('#tooltip');
+
+    // Draw lines between fact points based on "X" field
+    for (let i = 1; i < data.length; i++) {
+      svg.append('line')
+        .attr('x1', xScale(data[i - 1].X))
+        .attr('y1', yScale(data[i - 1].Y))
+        .attr('x2', xScale(data[i].X))
+        .attr('y2', yScale(data[i].Y))
+        .attr('stroke', dataset.color)
+        .attr('stroke-width', 2);
+    }
 
     // Draw points for each dataset
     svg.selectAll('circle.fact') // <-- Add 'fact' class to distinguish between fact and setpoint circles
@@ -135,7 +150,7 @@ const drawChart = (datasets) => {
         tooltip.html(`
         <div class="flex items-center gap-2 text-gray-800 dark:text-gray-300">
           <div class="w-2 h-2 rounded-full" style="background-color: ${dataset.color}"></div> 
-          ${dataset.paramName}: <b>${d.Y}</b>, Дата: <b>${d.X.toLocaleString()}</b>
+          ${dataset.paramName}: <b>${d.Y}</b>, Дата: <b>${customTickFormat(d.X)}</b>
         </div>
         `)
           .style('left', left + 'px')
@@ -146,22 +161,25 @@ const drawChart = (datasets) => {
         tooltip.style('display', 'none');
       });
 
-    // Draw lines between fact points based on "X" field
-    for (let i = 1; i < data.length; i++) {
-      svg.append('line')
-        .attr('x1', xScale(data[i - 1].X))
-        .attr('y1', yScale(data[i - 1].Y))
-        .attr('x2', xScale(data[i].X))
-        .attr('y2', yScale(data[i].Y))
-        .attr('stroke', dataset.color)
-        .attr('stroke-width', 1);
-    }
+    const setpointData = [];
+    data.forEach(d => {
+      setpointData.push({
+        X: d.X,
+        Y: d.R
+      })
+    });
 
-    // Setpoint chart
-    const setpointData = data.map(d => ({
-      X: d.X,
-      Y: parseFloat(d.R),
-    }));
+        // Draw lines between setpoint points based on "X" field
+    for (let i = 1; i < setpointData.length; i++) {
+      svg.append('line')
+        .attr('x1', xScale(setpointData[i - 1].X))
+        .attr('y1', yScale(setpointData[i - 1].Y))
+        .attr('x2', xScale(setpointData[i].X))
+        .attr('y2', yScale(setpointData[i].Y))
+        .attr('stroke', dataset.color)
+        .attr('stroke-width', 2)
+        .attr('opacity', 0.7); // Set opacity to 70%
+    }
 
     svg.selectAll('circle.setpoint') // <-- Add 'setpoint' class
       .data(setpointData)
@@ -172,7 +190,6 @@ const drawChart = (datasets) => {
       .attr('cy', (d) => yScale(d.Y))
       .attr('r', 2)
       .attr('fill', dataset.color)
-      .attr('opacity', 0.7) // Set opacity to 70%
       .style('cursor', 'pointer')
       .on('mouseover', (event, d) => {
         const tooltipWidth = 300;
@@ -202,26 +219,28 @@ const drawChart = (datasets) => {
         tooltip.style('display', 'none');
       });
 
-    // Draw lines between setpoint points based on "X" field
-    for (let i = 1; i < setpointData.length; i++) {
-      svg.append('line')
-        .attr('x1', xScale(setpointData[i - 1].X))
-        .attr('y1', yScale(setpointData[i - 1].Y))
-        .attr('x2', xScale(setpointData[i].X))
-        .attr('y2', yScale(setpointData[i].Y))
-        .attr('stroke', dataset.color)
-        .attr('stroke-width', 1)
-        .attr('opacity', 0.6); // Set opacity to 70%
+      lastDatasetRef.current = datasets[datasets.length - 1];
+
+      if (dataset === lastDatasetRef.current) {
+      // Apply styles only for the last dataset
+      svg.selectAll('path.domain')
+        .classed("text-white dark:text-gray-800", true);
+
+      svg.selectAll('g.tick line')
+        .classed("text-gray-300 dark:text-gray-600", true);
+
+      svg.selectAll('text')
+        .classed("text-gray-300 dark:text-gray-600", true);
+    } else {
+      svg.selectAll('path.domain')
+        .classed("text-white dark:text-gray-800", true);
+
+      svg.selectAll('g.tick line')
+        .classed("text-white dark:text-gray-800", true);
+
+      svg.selectAll('text')
+        .classed("text-white dark:text-gray-800", true);
     }
-
-    svg.selectAll('path.domain')
-    .classed("text-white dark:text-gray-800", true);
-
-    svg.selectAll('g.tick line')
-    .classed("text-gray-300 dark:text-gray-600", true);
-
-    svg.selectAll('text')
-    .classed("text-gray-300 dark:text-gray-600", true);
   });
 };
 
