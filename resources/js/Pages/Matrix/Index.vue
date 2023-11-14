@@ -224,9 +224,9 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                     <Dropdown align="bottom" width="48">
                         <template #trigger>
                             <button v-if="data.ngdu_data" 
-                            :class="ngduFilters.length > 0 ? 'border-green-600 text-green-600' : 'hover:bg-gray-100 dark:hover:bg-gray-900 border-gray-300 text-gray-800 dark:border-gray-700 dark:text-gray-300'" 
+                            :class="ngduFilters.length > 0 ? 'border-green-500 ring-1 ring-green-500 text-green-500' : ' border-gray-300 text-gray-800 dark:border-gray-600 dark:text-gray-400'"  
                             size="md" color="light"
-                            class="border rounded-lg px-3 py-1 h-9"
+                            class="hover:bg-gray-100 dark:hover:bg-gray-700 border rounded-lg px-3 py-1 h-9"
                             >
                                 <span class="font-semibold">НГДУ</span>
                             </button>

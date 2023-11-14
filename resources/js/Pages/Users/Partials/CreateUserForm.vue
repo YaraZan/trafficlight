@@ -77,7 +77,7 @@ const createUser = () => {
         </td>
         <td class="flex items-center px-4 gap-3 py-3 text-left border-l border-gray-200">
             <button @click="emit('cancelled')" class="text-gray-600 dark:hover:bg-gray-700 text-sm font-semibold p-2 hover:bg-gray-100 rounded-lg">Отмена</button>
-            <button @click.prevent="createUser" :disabled="form.processing" class="flex gap-2 bg-green-600 px-4 py-2 border border-green-700 rounded-lg text-white text-sm font-semibold hover:opacity-80">
+            <button @click.prevent="createUser" :disabled="form.processing" class="flex gap-2 bg-green-600 px-4 py-2 border border-green-500 rounded-lg text-white text-sm font-semibold hover:bg-opacity-80">
                 <Spinner color="green" v-show="form.processing" />
                 Сохранить
             </button>

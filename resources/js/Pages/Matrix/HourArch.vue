@@ -65,15 +65,26 @@ const clearDate = () => {
 const filteredData = computed(() => {
   let data = props.data;
 
-  if (dateFilters.value && dateFilters.value.length === 2) {
-    const [startDate, endDate] = dateFilters.value;
+  if (dateFilters.value && dateFilters.value.length == 2) {
+        const [startDate, endDate] = dateFilters.value;
 
-    data = data.filter(item => {
-      const itemDate = new Date(item.Date); // Replace 'date' with the actual property name in your data
+        // Create a new array using map to ensure reactivity
+        data = data.filter(dataItem => {
+            const itemDate = new Date(dataItem.Date);
 
-      return itemDate >= startDate && itemDate <= endDate;
-    });
-  }
+            // Convert dates to local date strings
+            const itemDateString = itemDate.toLocaleDateString();
+            const startDateString = startDate.toLocaleDateString();
+            const endDateString = endDate.toLocaleDateString();
+
+            // Check if the itemDate is on or between startDate and endDate
+            return (
+                (itemDate >= startDate && itemDate <= endDate) ||
+                (itemDateString === startDateString) ||
+                (itemDateString === endDateString)
+            );
+        });
+    }
 
   return data;
 });

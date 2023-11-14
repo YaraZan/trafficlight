@@ -150,7 +150,7 @@ watch(() => [searchFilter.value], () => {
                         </button>
                     </li>
                 </ul>
-                <button @click="creating = !creating" :class="creating ? 'opacity-80' : ''" :disabled="creating" class="flex gap-2 bg-green-600 px-4 py-2 border border-green-700 rounded-lg text-white text-sm font-semibold hover:opacity-80">
+                <button @click="creating = !creating" :class="creating ? 'opacity-80 dark:bg-opacity-80' : ''" :disabled="creating" class="flex gap-2 bg-green-600 px-4 py-2 border border-green-500 rounded-lg text-white text-sm font-semibold hover:bg-opacity-80 dark:hover:bg-opacity-80">
                     Создать
                 </button>
 

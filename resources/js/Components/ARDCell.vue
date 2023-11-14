@@ -22,7 +22,7 @@ const getBgColor = (val) => {
 
     switch (val) {
         case 0:
-            colorClass= 'bg-gray-100 dark:bg-gray-900 dark:bg-opacity-50';
+            colorClass= 'bg-gray-100 dark:bg-gray-900 dark:bg-opacity-40';
             break;
 
         case 2:
@@ -79,8 +79,8 @@ const getFontColor = (val) => {
                     <span :class="getFontColor(stat)" class="font-semibold">{{ diff }}</span>
                 </div>
             </div>  
-            <WarningIcon v-if="stat === 2"/>
-            <ErrorIcon v-if="stat === 3"/>
+<!--             <WarningIcon v-if="stat === 2"/>
+            <ErrorIcon v-if="stat === 3"/> -->
         </div>
     </td>
 </template>

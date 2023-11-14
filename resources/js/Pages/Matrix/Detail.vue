@@ -219,19 +219,19 @@ watch(() => dnmhData.value, () => {
                         <div class="flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl mt-2">
                             <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-700">
                                 <span class="text-sm text-gray-500 w-1/4">Номер</span>
-                                <span class="text-lg font-semibold text-gray-800 dark:text-gray-300">{{ extractWellNumber(item.Name) }}</span>
+                                <span class="text-lg font-medium text-gray-800 dark:text-gray-400">{{ extractWellNumber(item.Name) }}</span>
                             </div>
                             <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-700">
                                 <span class="text-sm text-gray-500 w-1/4">ПЛК</span>
-                                <span class="text-lg font-semibold text-gray-800 dark:text-gray-300">{{ item.PlcName }}</span>
+                                <span class="text-lg font-medium text-gray-800 dark:text-gray-400">{{ item.PlcName }}</span>
                             </div>
                             <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-700">
                                 <span class="text-sm text-gray-500 w-1/4">НГДУ</span>
-                                <span class="text-lg font-semibold text-gray-800 dark:text-gray-300">{{ item.NgduName }}</span>
+                                <span class="text-lg font-medium text-gray-800 dark:text-gray-400">{{ item.NgduName }}</span>
                             </div>
                             <div class="flex gap-2 p-3 items-center">
                                 <span class="text-sm text-gray-500 w-1/4">Цех</span>
-                                <span class="text-lg font-semibold text-gray-800 dark:text-gray-300">{{ item.ShopName }}</span>
+                                <span class="text-lg font-medium text-gray-800 dark:text-gray-400">{{ item.ShopName }}</span>
                             </div>
                         </div>
 
