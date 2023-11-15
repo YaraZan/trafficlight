@@ -262,10 +262,12 @@ watch(() => dnmhData.value, () => {
                                 </div>
                             </Link>
 
-                            <div class="p-6 flex gap-5 bg-green-600 rounded-lg shadow border border-green-500 items-center hover:bg-opacity-80 dark:hover:bg-opacity-80 cursor-pointer h-10">
-                                <EngineIcon />
-                                <span class="text-sm font-semibold text-white">Управление</span>
-                            </div>
+                            <Link :href="route('matrix.control', item.public_id)">
+                                <div class="p-6 flex gap-5 bg-green-600 rounded-lg shadow border border-green-500 items-center hover:bg-opacity-80 dark:hover:bg-opacity-80 cursor-pointer h-10">
+                                    <EngineIcon />
+                                    <span class="text-sm font-semibold text-white">Управление</span>
+                                </div>
+                            </Link>
                         </div>
 
                     </div>
