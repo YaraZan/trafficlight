@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Matrix\ControlContrloller;
 use App\Http\Controllers\Matrix\DiagramController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -43,9 +44,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/matrix/{well_uuid}/askstats', [AskStatsController::class, 'index'])->name('matrix.askstats');
     Route::get('/matrix/{well_uuid}/alarms', [WellAlarmsController::class, 'index'])->name('matrix.alarms');
     Route::get('/matrix/{well_uuid}/diagrams', [DiagramController::class, 'index'])->name('matrix.diagrams');
+    Route::get('/matrix/{well_uuid}/control', [ControlContrloller::class, 'index'])->name('matrix.control');
 
     Route::get('/alarms', [AlarmsController::class, 'index'])->name('alarms');
-
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 });
 

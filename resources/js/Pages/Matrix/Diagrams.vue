@@ -54,15 +54,7 @@ const selectParam = (publicId, paramName) => {
         hourArchData.value.splice(existingParamIndex, 1);
 
         // Reassign colors based on their order for the first three dinamograms
-        for (let i = 0; i < hourArchData.value.length; i++) {
-            if (i === 0) {
-                hourArchData.value[i].color = 'green';
-            } else if (i === 1) {
-                hourArchData.value[i].color = 'orange';
-            } else {
-                hourArchData.value[i].color = 'red';
-            }
-        }
+        reassignColors();
     } else {
         if (hourArchData.value.length >= 3) {
             // If there are already 3 dinamograms, remove the oldest one
@@ -78,24 +70,38 @@ const selectParam = (publicId, paramName) => {
                     color: selectedColor,
                     data: data,
                     paramName: paramName,
+                    setpoint: true
                 };
 
                 hourArchData.value.push(diagram);
 
                 // Reassign colors based on their order for the first three dinamograms
-                for (let i = 0; i < hourArchData.value.length; i++) {
-                    if (i === 0) {
-                        hourArchData.value[i].color = 'green';
-                    } else if (i === 1) {
-                        hourArchData.value[i].color = 'orange';
-                    } else {
-                        hourArchData.value[i].color = 'red';
-                    }
-                }
+                reassignColors();
             });
     }
 };
 
+// Helper function to reassign colors based on order
+const reassignColors = () => {
+    for (let i = 0; i < hourArchData.value.length; i++) {
+        if (i === 0) {
+            hourArchData.value[i].color = 'green';
+        } else if (i === 1) {
+            hourArchData.value[i].color = 'orange';
+        } else {
+            hourArchData.value[i].color = 'red';
+        }
+    }
+};
+
+
+const toggleSetpoint = (publicId) => {
+    const param = hourArchData.value.find((item) => item.public_id === publicId);
+
+    if (param) {
+        param.setpoint = !param.setpoint;
+    }
+};
 
 
 // Pagination
@@ -315,7 +321,7 @@ watch(() => hourArchData.value, () => {
                                             <span class="text font-semibold text-gray-800 dark:text-gray-300">Категория</span>
                                         </th>
                                         <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
-                                            <span class="text font-semibold text-gray-800 dark:text-gray-300">Единица измерения</span>
+                                            <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
                                         </th>
                                     </tr>
                                 </thead>
@@ -332,9 +338,22 @@ watch(() => hourArchData.value, () => {
                                         />
                                         </th>
                                         <td class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">{{ row.CatName }}</td>
-<!--                                         <td v-if="hourArchData.some((item) => item.public_id === row.public_id)" class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">
-                                            {{ hourArchData.find((item) => item.public_id === row.public_id) }}
-                                        </td> -->
+                                        <td v-if="hourArchData.some((item) => item.public_id === row.public_id)" class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">
+                                            <!-- Toggle -->
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    :checked="hourArchData.find((item) => item.public_id === row.public_id)?.setpoint"
+                                                    @change="() => toggleSetpoint(row.public_id)"
+                                                    type="checkbox"
+                                                    value=""
+                                                    class="sr-only peer"
+                                                />
+                                                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                            </label>
+                                        </td>
+                                        <td v-else class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">
+                                            <span class="text-gray-400 dark:text-gray-600">Не выбрано</span>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table> 
