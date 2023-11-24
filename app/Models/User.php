@@ -48,6 +48,11 @@ class User extends Authenticatable
         return optional($this->role)->name == 'admin';
     }
 
+    public function logs()
+    {
+        return $this->hasMany(Log::class);
+    }
+
     public function role()
     {
         return $this->belongsTo(Role::class);

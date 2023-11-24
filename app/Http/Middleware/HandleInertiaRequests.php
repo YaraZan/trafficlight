@@ -35,6 +35,8 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'isAdmin' => $request->user() ? $request->user()->isAdmin() : null,
+                'viewWells' => $request->user() ? $request->user()->viewAllWells() : null,
+                'controlWells' => $request->user() ? $request->user()->canEdit() : null,
             ],
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),

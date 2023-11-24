@@ -5,7 +5,7 @@ import HourArchIcon from '@/Components/Icons/HourArchIcon.vue';
 import AskStatsIcon from '@/Components/Icons/AskStatsIcon.vue';
 import AlarmIcon from '@/Components/Icons/AlarmIcon.vue';
 import DiagramsIcon from '@/Components/Icons/DiagramsIcon.vue';
-import { Link, Head } from '@inertiajs/vue3';
+import { Link, Head, usePage } from '@inertiajs/vue3';
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import SkeletonDnmhTable from './Partials/SkeletonDnmhTable.vue';
@@ -179,6 +179,9 @@ const visiblePages = computed(() => {
 watch(() => dnmhData.value, () => {
   paginateData();
 }, {deep: true});
+
+const page = usePage();
+const controlWells = computed(() => page.props.auth.controlWells);
 </script>
 
 <template>
@@ -239,7 +242,7 @@ watch(() => dnmhData.value, () => {
                             <Link :href="route('matrix.hourarch', item.public_id)">
                                 <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
                                     <HourArchIcon />
-                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Часовые архивы</span>
+                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Архивы</span>
                                 </div>
                             </Link>
                             <Link :href="route('matrix.askstats', item.public_id)">
@@ -262,7 +265,7 @@ watch(() => dnmhData.value, () => {
                                 </div>
                             </Link>
 
-                            <Link :href="route('matrix.control', item.public_id)">
+                            <Link v-if="controlWells" :href="route('matrix.control', item.public_id)">
                                 <div class="p-6 flex gap-5 bg-green-600 rounded-lg shadow border border-green-500 items-center hover:bg-opacity-80 dark:hover:bg-opacity-80 cursor-pointer h-10">
                                     <EngineIcon />
                                     <span class="text-sm font-semibold text-white">Управление</span>
@@ -299,8 +302,8 @@ watch(() => dnmhData.value, () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(row, index) in paginatedData" :key="index" class="border-b border-gray-200 dark:border-gray-700 ">
-                                <th scope="row" class="font-normal text-gray-500 px-6 py-4 text-left border-b border-gray-200 dark:border-gray-700 ">
+                            <tr v-for="(row, index) in paginatedData" :key="index" class="border-b border-gray-200 dark:border-gray-700">
+                                <th scope="row" class="font-normal text-gray-500 px-6 py-4 text-left border-b border-gray-200 dark:border-gray-700">
                                     <input
                                     @change="() => selectDinamogram(row.public_id)"
                                     :value="row.public_id"

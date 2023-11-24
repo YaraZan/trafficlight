@@ -15,25 +15,11 @@ const props = defineProps({
         required: true
     }
 });
+
 </script>
 
 <template>
-   <!--  <div class="flex flex-col gap-2 px-4 py-5">
-
-        <div class="flex items-center gap-3">
-            <span class="text-gray-800 font-semibold">Данные по скважине</span>
-            <Link :href="route('matrix.detail', well.public_id)">
-                <span class="font-semibold text-green-600 hover:opacity-70">{{ well.Name }}</span>
-            </Link>
-        </div>
-
-        <div class="flex items-center gap-3">
-            <span class="text-gray-800 font-semibold">Дата</span>
-            <span class="text-gray-400">{{ head_hour.Date }}</span>
-        </div>
-    </div> -->
-
-     <table striped>
+     <table id="hourarchTable" striped>
         <thead>
             <tr class="border-b bg-gray-50 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 border-gray-200">
                 <th class="text-left px-4 py-3">
@@ -94,5 +80,5 @@ const props = defineProps({
                 <td class="px-4 py-3 border-l text-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700">{{ row.Err3 }}</td>
             </tr>
         </tbody>
-    </Table>   
+    </table>   
 </template>

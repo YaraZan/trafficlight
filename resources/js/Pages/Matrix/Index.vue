@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import { Head } from '@inertiajs/vue3';
@@ -175,6 +175,7 @@ const handleNgduCheckboxFilter = (ngdu) => {
 
 const handleShopCheckboxFilter = (shop) => {
     const val = parseInt(shop.Id);
+    const nId = parseInt(shop.Ngdu_Id);
 
     if (shopFilters.value.includes(val)) {
         return shopFilters.value.splice(shopFilters.value.indexOf(val), 1);
@@ -201,6 +202,9 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
     currentPage.value = 1;
 }, { deep: true });
 
+const page = usePage();
+const viewAll = computed(() => page.props.auth.viewWells);
+
 </script>
 
 <template>
@@ -219,11 +223,46 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
             <div class="flex flex-col items-start gap-3 p-4 w-full md:flex-row md:items-center md:gap-3">
 
                 <div class="flex items-center gap-3">
+                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
+                    <option v-for="option in perPageOptions" :key="option" :value="option">
+                        {{ `${option} записей` }}
+                    </option>
+                </select>
+                <ul class="flex items-center -space-x-px h-9 text-sm">
+                        <li>
+                            <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                <span class="sr-only">Пред.</span>
+                                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                </svg>
+                            </button>
+                        </li>
+                        <li v-for="page in visiblePages" :key="page">
+                            <button
+                                @click="setCurrentPage(page)"
+                                :class="{ 'font-bold text-green-600': currentPage === page }"
+                                class="flex items-center justify-center px-3 h-9 leading-tight text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                            >
+                                {{ page }}
+                            </button>
+                        </li>
+                        <li>
+                            <button @click="nextPage" :disabled="currentPage === totalPages" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                <span class="sr-only">След.</span>
+                                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                </svg>
+                            </button>
+                        </li>
+                </ul>
+                </div>
+
+                <div class="flex items-center gap-3">
                     <Input v-model="searchFilter" size="sm" class="focus:ring-green-600 focus:border-green-500 w-56 ring-green-600 h-9" type="text"  placeholder="Поиск" required="">
                     </Input>
                     <Dropdown align="bottom" width="48">
                         <template #trigger>
-                            <button v-if="data.ngdu_data" 
+                            <button v-if="viewAll" 
                             :class="ngduFilters.length > 0 ? 'border-green-500 ring-1 ring-green-500 text-green-500' : ' border-gray-300 text-gray-800 dark:border-gray-600 dark:text-gray-400'"  
                             size="md" color="light"
                             class="hover:bg-gray-100 dark:hover:bg-gray-700 border rounded-lg px-3 py-1 h-9"
@@ -233,7 +272,7 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                         </template>
 
                         <template #content>
-                            <div class="absolute p-5 right-0 z-10 bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 rounded-lg shadow min-w-[300px]">
+                            <div class="absolute p-2 right-0 z-10 bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 rounded-lg shadow min-w-[300px]">
                                 <h6 class="font-medium text-sm text-gray-400">Выберите НГДУ</h6>
                                 <ul class="mt-[10px] w-full flex flex-col">
                                     <li class="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
@@ -285,7 +324,7 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                         <li>
                             <button
                             for="grid-wiew" 
-                            class="w-12 h-12 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700" 
+                            class="w-10 h-10 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700" 
                             :class="viewType === 'grid' ? 'bg-gray-100 dark:bg-gray-700' : ''"
                             v-on:click="changeView('grid')"
                             >
@@ -296,7 +335,7 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                         <li>
                             <button 
                             for="grid-wiew" 
-                            class="w-12 h-12 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700" 
+                            class="w-10 h-10 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700" 
                             :class="viewType === 'table' ? 'bg-gray-100 dark:bg-gray-700' : ''"
                             v-on:click="changeView('table')"
                             >
@@ -305,66 +344,11 @@ watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.v
                         </li>
 
                     </ul>
-
-                    <!-- <Dropdown align="bottom" width="48">
-                        <template #trigger>
-                            <Button class="bg-green-600 ml-auto focus:ring-green-100" size="md" color="green">
-                                Действия
-                                <template #suffix>
-                                    <ActionsIcon class="stroke-white"></ActionsIcon>
-                                </template>
-                            </Button>
-                        </template>
-                        <template #content>
-                            <div class="absolute p-3 right-20 z-10 bg-white rounded-lg shadow min-w-[300px]">
-                                <h6 class="font-medium text-sm text-gray-400">Выберите действие</h6>
-                                <ul class="mt-[10px] gap-2 w-full flex flex-col">
-                                    <li @click="exportToExcel" class="flex flex-col cursor-pointer p-4 hover:bg-gray-100 rounded-lg">
-                                        <span class="font-semibold text-gray-800 text-sm">Экспорт в Excel</span>
-                                        <span class="text-gray-400 text-sm">Экспортируйте данные матрицы в удобном формате excel</span>  
-                                    </li>
-                                </ul>
-                            </div>
-                        </template>
-                    </Dropdown> -->
                     
                 </div>
             </div>
 
-            <div class="flex items-center gap-3 p-4 pt-0 w-full">
-                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
-                    <option v-for="option in perPageOptions" :key="option" :value="option">
-                        {{ `${option} записей` }}
-                    </option>
-                </select>
-                <ul class="flex items-center -space-x-px h-9 text-sm">
-                        <li>
-                            <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                <span class="sr-only">Пред.</span>
-                                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                                </svg>
-                            </button>
-                        </li>
-                        <li v-for="page in visiblePages" :key="page">
-                            <button
-                                @click="setCurrentPage(page)"
-                                :class="{ 'font-bold text-green-600': currentPage === page }"
-                                class="flex items-center justify-center px-3 h-9 leading-tight text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                            >
-                                {{ page }}
-                            </button>
-                        </li>
-                        <li>
-                            <button @click="nextPage" :disabled="currentPage === totalPages" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                <span class="sr-only">След.</span>
-                                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                                </svg>
-                            </button>
-                        </li>
-                </ul>
-            </div>
+
 
             <div v-if="viewType === 'grid'" class="w-full h-full overflow-x-auto p-4">
                 <OperationsGrid v-if="paginatedData.length" :data="paginatedData"/>

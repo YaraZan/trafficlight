@@ -8,7 +8,7 @@ import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
 
 import DatePicker from 'vue-datepicker-next';
 import 'vue-datepicker-next/index.css';
-import 'vue-datepicker-next/locale/ru';
+import 'vue-datepicker-next/locale/ru.es';
 import CalendarIcon from '@/Components/Icons/CalendarIcon.vue';
 import ClearIcon from '@/Components/Icons/ClearIcon.vue';
 
