@@ -15,7 +15,7 @@ class WellController extends Controller
 {
     public function index()
     {
-        if (Gate::allows('view-wells', User::class)) {
+        if (Gate::allows('view-wells')) {
             $matrix_data = DB::table('WellAlarm as wa')
                 ->join('Well as we', 'wa.Well_Id', '=', 'we.Id')
                 ->join('Ngdu as ngdu', 'wa.Ngdu_Id', '=', 'ngdu.Id')
@@ -176,34 +176,37 @@ class WellController extends Controller
     public function show($well_uuid)
     {
         $well = Well::where('public_id', $well_uuid)->first();
-        $this->authorize('view', $well);
 
-        $well_data = DB::table('WellAlarm as wa')
-        ->join('Well as we', 'wa.Well_Id', '=', 'we.Id')
-        ->join('Ngdu as ngdu', 'wa.Ngdu_Id', '=', 'ngdu.Id')
-        ->join('Shop as sh', 'wa.Shop_Id', '=', 'sh.Id')
-        ->join('Plc as pl', 'we.Plc_Id', '=', 'pl.Id')
-        ->join('WellState as st', 'wa.WState_Id', '=', 'st.Id')
-        ->join('Hd as h', 'we.Hd_Id', '=', 'h.Id')
-        ->orderBy('wa.Ngdu_Id')
-        ->orderBy('wa.Id')
-        ->select([
-            'we.public_id',
-            'ngdu.NgduName as NgduName',
-            'pl.Name as PlcName',
-            'sh.ShopName as ShopName',
-            'h.Hdname as HdName',
-            'we.Name',
-            'we.Ask',
-            'wa.Connect',
-            'we.Web',
-            'wa.Dif1',
-            'wa.Dif2',
-            'wa.Dif3',
-        ])
-        ->where('we.public_id', '=', $well_uuid)
-        ->first();
+        if (Gate::allows('view-wells') || Gate::allows('view-well', $well)) {
+            $well_data = DB::table('WellAlarm as wa')
+            ->join('Well as we', 'wa.Well_Id', '=', 'we.Id')
+            ->join('Ngdu as ngdu', 'wa.Ngdu_Id', '=', 'ngdu.Id')
+            ->join('Shop as sh', 'wa.Shop_Id', '=', 'sh.Id')
+            ->join('Plc as pl', 'we.Plc_Id', '=', 'pl.Id')
+            ->join('WellState as st', 'wa.WState_Id', '=', 'st.Id')
+            ->join('Hd as h', 'we.Hd_Id', '=', 'h.Id')
+            ->orderBy('wa.Ngdu_Id')
+            ->orderBy('wa.Id')
+            ->select([
+                'we.public_id',
+                'ngdu.NgduName as NgduName',
+                'pl.Name as PlcName',
+                'sh.ShopName as ShopName',
+                'h.Hdname as HdName',
+                'we.Name',
+                'we.Ask',
+                'wa.Connect',
+                'we.Web',
+                'wa.Dif1',
+                'wa.Dif2',
+                'wa.Dif3',
+            ])
+            ->where('we.public_id', '=', $well_uuid)
+            ->first();
 
-        return Inertia::render('Matrix/Detail', ['item' => $well_data]);
+            return Inertia::render('Matrix/Detail', ['item' => $well_data]);
+        }
+
+        return Inertia::render('Errors/NotAuthorized');
     }
 }

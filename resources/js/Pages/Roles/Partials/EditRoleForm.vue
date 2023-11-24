@@ -138,7 +138,7 @@ const closeModal = () => {
                     > Отмена </button>
 
                     <button
-                        class="ml-3 flex bg-red-600 px-4 py-2 rounded-lg text-white text-sm font-semibold hover:opacity-80"
+                        class="ml-3 flex border border-red-600 bg-red-800 px-4 py-2 rounded-lg text-white text-sm font-normal text-center hover:bg-opacity-80"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                         @click="deleteRole"

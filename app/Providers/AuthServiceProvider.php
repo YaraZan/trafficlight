@@ -8,6 +8,7 @@ use App\Policies\WellPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
+use App\Models\Well;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,14 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('view-wells', function (User $user) {
             return $user->viewAllWells();
+        });
+
+        Gate::define('control-wells', function (User $user) {
+            return $user->canEdit();
+        });
+
+        Gate::define('view-well', function (User $user, Well $well) {
+            return $user->isAdmin() || $user->ngdu_id == $well->Ngdu_Id;
         });
     }
 }

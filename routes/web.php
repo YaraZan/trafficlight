@@ -6,13 +6,14 @@ use App\Http\Controllers\Matrix\AskStatsController;
 use App\Http\Controllers\Matrix\WellController;
 use App\Http\Controllers\Matrix\WellAlarmsController;
 use App\Http\Controllers\Matrix\HeadHourController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Matrix\ControlContrloller;
 use App\Http\Controllers\Matrix\DiagramController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -30,8 +31,9 @@ use Inertia\Inertia;
 /**
  * [->] Redirects
  */
-Route::redirect('/', '/matrix');
-
+Route::get('/', function () {
+    return redirect('/matrix');
+})->name('home');
 /**
  * Matrix routes
  */
@@ -47,10 +49,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/matrix/{well_uuid}/control', [ControlContrloller::class, 'index'])->name('matrix.control');
 
     Route::get('/alarms', [AlarmsController::class, 'index'])->name('alarms');
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+
+    Route::get('/settings', function () { return redirect('/settings/profile'); })->name('settings');
+    Route::get('/settings/profile', [ProfileController::class, 'index'])->name('settings.profile');
+    Route::get('/settings/data', function () {
+        return Inertia::render('Errors/Developing');
+    })->name('settings.data');
+
+    Route::get('/analytics', function () {
+        return Inertia::render('Errors/Developing');
+    })->name('analytics');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/api')->group(function () {
         Route::get('/dnmh/{public_id}', [DnmhController::class, 'index']);
         Route::get('/dnm/{public_id}', [DnmhController::class, 'show']);
@@ -58,14 +69,6 @@ Route::middleware('auth')->group(function () {
         Route::get('well/{well_uuid}/diagrams/{category_uuid}', [DiagramController::class, 'show']);
     });
 });
-
-/**
- * Analytics routes
- */
-Route::get('/analytics', function () {
-    return Inertia::render('Analytics/Analytics');
-})->name('analytics');
-
 
 /**
  * !!! Admin routes !!!

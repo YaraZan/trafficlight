@@ -1,0 +1,79 @@
+<script setup>
+import { Link, usePage } from '@inertiajs/vue3';
+import NavLink from '@/Components/NavLink.vue';
+import MatrixIcon from '@/Components/Icons/MatrixIcon.vue';
+import AlarmIcon from '@/Components/Icons/AlarmIcon.vue';
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import OperatingIcon from '@/Components/Icons/OperatingIcon.vue';
+import AnalyticsIcon from '@/Components/Icons/AnalyticsIcon.vue';
+import Logo from '@/Components/Logo.vue';
+import AdminPanelIcon from '@/Components/Icons/AdminPanelIcon.vue';
+import SettingsIcon from '@/Components/Icons/SettingsIcon.vue';
+import UsersIcon from '@/Components/Icons/UsersIcon.vue';
+import RolesIcon from '@/Components/Icons/RolesIcon.vue';
+import { computed } from 'vue';
+import { useDark, useToggle } from '@vueuse/core';
+import LightThemeIcon from '@/Components/Icons/LightThemeIcon.vue';
+import DarkThemeIcon from '@/Components/Icons/DarkThemeIcon.vue';
+import { onMounted } from 'vue';
+
+const page = usePage();
+const isDark = useDark();
+const toggleDark = useToggle(isDark);
+
+const isAdmin = computed(() => page.props.auth.isAdmin);
+
+</script>
+
+<template>
+    <div class="bg-white dark:bg-gray-800 min-w-screen min-h-screen font-montserrat overflow-x-hidden">
+        
+        <!-- Page Heading -->
+        <nav class="flex items-center w-screen border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800" v-if="$slots.nav">
+            <div class="ml-[250px] w-full h-[50px] px-[20px] flex items-center">
+                <slot name="nav" />
+
+                <button
+                @click="toggleDark()"
+                class="px-2 py-2 flex items-center justify-center hover:bg-gray-100 rounded-lg dark:hover:bg-gray-700 ml-auto"
+                >
+                <LightThemeIcon v-if="isDark" />
+                <DarkThemeIcon v-else />
+                </button>
+            </div>
+        </nav>
+
+        <aside class="fixed top-0 left-0 z-40 w-[50px] h-screen border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <div class="w-full h-[51px] flex items-center justify-center border-b border-gray-200 dark:border-gray-700">
+                <Link
+                :href="route('matrix')">
+                    <Logo></Logo>
+                </Link>
+            </div>
+            <div class="py-[10px] px-[5px] flex flex-col gap-[10px] w-full h-full">
+                <NavLink v-if="isAdmin" :href="route('users')" :active="$page.component.includes('Users/')"><UsersIcon></UsersIcon></NavLink>
+                <NavLink v-if="isAdmin" :href="route('roles')" :active="$page.component.includes('Roles/')"><RolesIcon></RolesIcon></NavLink>
+                <div v-if="isAdmin" class="border-b border-gray-200 dark:border-gray-700 w-full"></div>
+
+                <NavLink :href="route('matrix')" :active="$page.component.includes('Matrix/')"><MatrixIcon></MatrixIcon></NavLink>
+                <NavLink  :href="route('alarms')" :active="$page.component.includes('Alarms/')"><AlarmIcon></AlarmIcon></NavLink>
+                <NavLink :href="route('analytics')" :active="$page.component.includes('Analytics/')"><AnalyticsIcon></AnalyticsIcon></NavLink>
+                <NavLink :href="route('settings')" :active="$page.component.includes('Settings/')"><SettingsIcon /></NavLink>
+            </div>
+            
+        </aside>
+
+        <aside class="fixed top-0 left-[50px] z-40 w-[200px] h-screen border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <slot name="subAside" />
+        </aside>
+
+        <!-- Page Content -->
+        <main>
+            <div class="ml-[50px]">
+                <slot name="content" />
+            </div>
+        </main>
+
+    </div>
+</template>

@@ -10,7 +10,8 @@ import { Input } from 'flowbite-vue';
 
 import DatePicker from 'vue-datepicker-next';
 import 'vue-datepicker-next/index.css';
-import 'vue-datepicker-next/locale/ru';
+import 'vue-datepicker-next/locale/ru.es';
+
 import CalendarIcon from '@/Components/Icons/CalendarIcon.vue';
 import ClearIcon from '@/Components/Icons/ClearIcon.vue';
 
@@ -66,15 +67,26 @@ const filteredData = computed(() => {
         data = data.filter(item => item.WellName.toLowerCase().includes(searchFilter.value.toLowerCase()));
     }
 
-    if (dateFilters.value && dateFilters.value.length === 2) {
-    const [startDate, endDate] = dateFilters.value;
+    if (dateFilters.value && dateFilters.value.length == 2) {
+        const [startDate, endDate] = dateFilters.value;
 
-    data = data.filter(item => {
-      const itemDate = new Date(item.Date); // Replace 'date' with the actual property name in your data
+        // Create a new array using map to ensure reactivity
+        data = data.filter(dataItem => {
+            const itemDate = new Date(dataItem.Date);
 
-      return itemDate >= startDate && itemDate <= endDate;
-    });
-  }
+            // Convert dates to local date strings
+            const itemDateString = itemDate.toLocaleDateString();
+            const startDateString = startDate.toLocaleDateString();
+            const endDateString = endDate.toLocaleDateString();
+
+            // Check if the itemDate is on or between startDate and endDate
+            return (
+                (itemDate >= startDate && itemDate <= endDate) ||
+                (itemDateString === startDateString) ||
+                (itemDateString === endDateString)
+            );
+        });
+    }
 
     return data;
 });
@@ -121,30 +133,7 @@ watch(() => [dateFilters.value, searchFilter.value], () => {
 
         <div v-if="props.alarms_data" class="bg-white dark:bg-gray-800 relative w-full">
 
-            <div class="flex flex-col gap-3 p-4 w-full">
-
-              <div class="flex items-center gap-3">
-                <Input v-model="searchFilter" size="sm" class="focus:ring-green-600 focus:border-green-500 w-56 ring-green-600 " type="text"  placeholder="Поиск" required="">
-                </Input>
-                <date-picker class="flex relative h-9 w-56"
-                :editable="false"
-                placeholder="Дата"
-                input-class="w-full h-full dark:text-green-400 dark:bg-gray-700 bg-gray-50 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-green-500 focus:border-green-500 w-56 ring-green-600"
-                popup-class="rounded-lg p-4 relative dark:bg-gray-900 dark:border-gray-600"
-                v-model:value="dateFilters" 
-                range
-                separator="-"
-                :onClear="clearDate"
-                 >
-                  <template #icon-calendar>
-                      <CalendarIcon />
-                  </template>
-
-                  <template #icon-clear>
-                      <ClearIcon />
-                  </template>
-                </date-picker>
-              </div>
+            <div class="flex items-center gap-3 p-4 w-full">
 
               <div class="flex items-center gap-3">
                 <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-900 border dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
@@ -180,6 +169,30 @@ watch(() => [dateFilters.value, searchFilter.value], () => {
                     </li>
                 </ul>
               </div>
+
+              <div class="flex items-center gap-3">
+                <Input v-model="searchFilter" size="sm" class="focus:ring-green-600 focus:border-green-500 w-56 ring-green-600 " type="text"  placeholder="Поиск" required="">
+                </Input>
+                <date-picker class="flex relative h-9 w-56"
+                :editable="false"
+                placeholder="Дата"
+                input-class="w-full h-full dark:text-green-400 dark:bg-gray-700 bg-gray-50 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-green-500 focus:border-green-500 w-56 ring-green-600"
+                popup-class="rounded-lg p-2 relative dark:bg-gray-900 dark:border-gray-600"
+                v-model:value="dateFilters" 
+                range
+                separator="-"
+                :onClear="clearDate"
+                 >
+                  <template #icon-calendar>
+                      <CalendarIcon />
+                  </template>
+
+                  <template #icon-clear>
+                      <ClearIcon />
+                  </template>
+                </date-picker>
+              </div>
+              
             </div>
 
             <div class="w-full h-full overflow-x-auto">

@@ -146,7 +146,7 @@ const closeModal = () => {
                 Сохранить
             </button>
         </td>
-        <td v-else class="px-3 py-3 text-left border-l border-gray-200 dark:border-gray-700 flex gap-5">
+        <td v-else class="px-3 py-3 text-left border-l border-gray-200 dark:border-gray-700 flex gap-2">
             <button @click="editing = !editing" class="text-green-600 text-sm font-semibold flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                 <EditIcon />
             </button>
@@ -173,7 +173,7 @@ const closeModal = () => {
                     </Input>
                 </div>
 
-                <div class="mt-6 flex justify-end">
+                <div class="mt-6 flex justify-end gap-2">
                     <button 
                         @click="closeModal"
                         class="flex gap-2 bg-transparent px-4 py-2 border border-gray-200 dark:border-gray-700 dark:hover:bg-gray-900 dark:text-gray-300 rounded-lg text-gray-800 text-sm  hover:bg-gray-100"
@@ -213,7 +213,7 @@ const closeModal = () => {
                     > Отмена </button>
 
                     <button
-                        class="ml-3 flex bg-red-600 px-4 py-2 rounded-lg text-white text-sm font-semibold hover:opacity-80"
+                        class="ml-3 flex border border-red-600 bg-red-800 px-4 py-2 rounded-lg text-white text-sm font-normal text-center hover:bg-opacity-80"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                         @click="deleteUser"

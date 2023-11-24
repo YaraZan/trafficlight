@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminPanel
@@ -21,6 +22,8 @@ class AdminPanel
             return $next($request);
         }
 
-        return response('Forbidden', 403);
+        return Inertia::render('Errors/NotAuthorized')
+        ->toResponse($request)
+        ->setStatusCode(403);
     }
 }

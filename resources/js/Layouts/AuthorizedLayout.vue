@@ -9,7 +9,7 @@ import OperatingIcon from '@/Components/Icons/OperatingIcon.vue';
 import AnalyticsIcon from '@/Components/Icons/AnalyticsIcon.vue';
 import Logo from '@/Components/Logo.vue';
 import AdminPanelIcon from '@/Components/Icons/AdminPanelIcon.vue';
-import ProfileIcon from '@/Components/Icons/ProfileIcon.vue';
+import SettingsIcon from '@/Components/Icons/SettingsIcon.vue';
 import UsersIcon from '@/Components/Icons/UsersIcon.vue';
 import RolesIcon from '@/Components/Icons/RolesIcon.vue';
 import { computed } from 'vue';
@@ -59,7 +59,7 @@ const isAdmin = computed(() => page.props.auth.isAdmin);
                 <NavLink :href="route('matrix')" :active="$page.component.includes('Matrix/')"><MatrixIcon></MatrixIcon></NavLink>
                 <NavLink  :href="route('alarms')" :active="$page.component.includes('Alarms/')"><AlarmIcon></AlarmIcon></NavLink>
                 <NavLink :href="route('analytics')" :active="$page.component.includes('Analytics/')"><AnalyticsIcon></AnalyticsIcon></NavLink>
-                <NavLink :href="route('profile')" :active="$page.component.includes('Profile/')"><ProfileIcon /></NavLink>
+                <NavLink :href="route('settings')" :active="$page.component.includes('Settings/')"><SettingsIcon /></NavLink>
             </div>
             
         </aside>

@@ -3,6 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Inertia\Inertia;
+
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -27,4 +30,34 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+        try {
+            $response = parent::render($request, $e);
+    
+            switch ($response->status()) {
+                case 404:
+                    return Inertia::render('Errors/NotFound')
+                        ->toResponse($request)
+                        ->setStatusCode($response->status());
+    
+                case 403:
+                    return Inertia::render('Errors/NotAuthorized')
+                        ->toResponse($request)
+                        ->setStatusCode($response->status());
+    
+                case 500:
+                    return Inertia::render('Errors/ServerError')
+                        ->toResponse($request)
+                        ->setStatusCode($response->status());
+    
+                default:
+                    return $response;
+            }
+        } catch (Throwable $exception) {
+            return parent::render($request, $exception);
+        }
+    }
+    
 }
