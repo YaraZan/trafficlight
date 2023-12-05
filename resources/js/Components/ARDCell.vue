@@ -32,7 +32,7 @@ const getBgColor = (val) => {
         case 3:
             colorClass= 'bg-red-500';
             break;
-    
+
         default:
             break;
     }
@@ -49,11 +49,11 @@ const getFontColor = (val) => {
             break;
 
         case 2:
-            colorClass= 'text-white';
+            colorClass= 'text-orange-400';
             break;
 
         case 3:
-            colorClass= 'text-white';
+            colorClass= 'text-red-500';
             break;
     }
 
@@ -63,24 +63,13 @@ const getFontColor = (val) => {
 </script>
 
 <template>
-    <td class="px-4 py-3 text-left border-l border-gray-200 dark:border-gray-700">
-        <div class="flex items-center gap-2">
-            <div :class="getBgColor(stat)" class="flex gap-2 h-[30px] rounded-lg p-2">
-                <div class="flex items-center gap-1">
-                    <span :class="getFontColor(stat)">Ф:</span>
-                    <span :class="getFontColor(stat)" class="font-semibold">{{ alarm }}</span>
-                </div>
-                <div class="flex items-center gap-1">
-                    <span :class="getFontColor(stat)">У:</span>
-                    <span :class="getFontColor(stat)" class="font-semibold">{{ setting }}</span>
-                </div>
-                <div class="flex items-center gap-1">
-                    <span :class="getFontColor(stat)">О:</span>
-                    <span :class="getFontColor(stat)" class="font-semibold">{{ diff }}</span>
-                </div>
-            </div>  
-<!--             <WarningIcon v-if="stat === 2"/>
-            <ErrorIcon v-if="stat === 3"/> -->
-        </div>
+    <td :class="getFontColor(stat)" class="h-[30px] rounded-lg p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
+        {{ alarm }}
+    </td>
+    <td :class="getFontColor(stat)" class="h-[30px] rounded-lg p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
+        {{ setting }}
+    </td>
+    <td :class="getFontColor(stat)" class="h-[30px] rounded-lg p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
+        {{ diff }}
     </td>
 </template>

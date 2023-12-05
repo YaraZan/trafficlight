@@ -5,7 +5,7 @@ import BreadCrumb from '@/Components/BreadCrumb.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
-import ShopDropdown from '@/Components/ShopDropdown.vue'; 
+import ShopDropdown from '@/Components/ShopDropdown.vue';
 import ActionsIcon from '@/Components/Icons/ActionsIcon.vue';
 
 import { Input } from 'flowbite-vue';
@@ -18,6 +18,8 @@ import OperationsGrid from './Partials/OperationsGrid.vue';
 import axios from 'axios';
 import DropDownIcon from '@/Components/Icons/DropDownIcon.vue';
 
+import * as XLSX from 'xlsx';
+
 const props = defineProps({
     data: {
         type: Object
@@ -26,9 +28,28 @@ const props = defineProps({
 
 onMounted(() => {
     if (props.data.ngdu_data) {
-        selectAllNgduCheckboxes();   
+        selectAllNgduCheckboxes();
     }
 });
+
+function exportTableToExcel(type) {
+    const data = document.getElementById('exportMatrix');
+    const excelFile = XLSX.utils.table_to_book(data, { sheet: "sheet1" });
+
+    // Установим ширину колонок автоматически
+    const wscols = [];
+    for (let i = 0; i < excelFile.Sheets.sheet1["!ref"].split(":")[1].charCodeAt(0) - 'A'.charCodeAt(0) + 1; i++) {
+        wscols.push({ wch: 25 }); // Установим ширину колонки в символах, например, 15
+    }
+    excelFile.Sheets.sheet1["!cols"] = wscols;
+
+    const now = new Date();
+    const nd = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}_${now.getHours()}.${now.getMinutes()}`;
+
+    XLSX.write(excelFile, { bookType: type, bookSST: true, type: 'base64' });
+    XLSX.writeFile(excelFile, `Матрица_${nd}` + '.' + type);
+}
+
 
 const searchFilter = ref('');
 const radioFilter = ref('available');
@@ -41,11 +62,20 @@ const perPage = ref(20);
 
 const viewType = ref('grid');
 
-const perPageOptions = [10, 20, 30];
+const perPageOptions = [10, 20, 30, 'all'];
 
-const totalPages = computed(() => Math.ceil(filteredData.value.length / perPage.value));
+const totalPages = computed(() => {
+    if (perPage.value == 'all') {
+        return 1;
+    }
+    return Math.ceil(filteredData.value.length / perPage.value);
+});
 
 const paginatedData = computed(() => {
+    if (perPage.value == 'all') {
+        return filteredData.value;
+    }
+
     const start = (currentPage.value - 1) * perPage.value;
     const end = start + perPage.value;
 
@@ -94,9 +124,9 @@ const filteredData = computed(() => {
     }
 
     if (props.data.ngdu_data) {
-        data = data.filter(item => ngduFilters.value.includes(item.Ngdu_Id));   
-        data = data.filter(item => shopFilters.value.includes(item.Shop_Id));  
-    } 
+        data = data.filter(item => ngduFilters.value.includes(item.Ngdu_Id));
+        data = data.filter(item => shopFilters.value.includes(item.Shop_Id));
+    }
 
     if (searchFilter.value !== '') {
         data = data.filter(item => item.WellName.toLowerCase().includes(searchFilter.value.toLowerCase()));
@@ -151,7 +181,7 @@ const selectAllNgduCheckboxes = () => {
     });
 
 
-    selectAllNgdus.value = true;   
+    selectAllNgdus.value = true;
 };
 
 const handleNgduCheckboxFilter = (ngdu) => {
@@ -225,7 +255,7 @@ const viewAll = computed(() => page.props.auth.viewWells);
                 <div class="flex items-center gap-3">
                 <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
                     <option v-for="option in perPageOptions" :key="option" :value="option">
-                        {{ `${option} записей` }}
+                        {{ option == 'all' ? 'Все записи' : `${option} записей` }}
                     </option>
                 </select>
                 <ul class="flex items-center -space-x-px h-9 text-sm">
@@ -262,8 +292,8 @@ const viewAll = computed(() => page.props.auth.viewWells);
                     </Input>
                     <Dropdown align="bottom" width="48">
                         <template #trigger>
-                            <button v-if="viewAll" 
-                            :class="ngduFilters.length > 0 ? 'border-green-500 ring-1 ring-green-500 text-green-500' : ' border-gray-300 text-gray-800 dark:border-gray-600 dark:text-gray-400'"  
+                            <button v-if="viewAll"
+                            :class="ngduFilters.length > 0 ? 'border-green-500 ring-1 ring-green-500 text-green-500' : ' border-gray-300 text-gray-800 dark:border-gray-600 dark:text-gray-400'"
                             size="md" color="light"
                             class="hover:bg-gray-100 dark:hover:bg-gray-700 border rounded-lg px-3 py-1 h-9"
                             >
@@ -306,6 +336,10 @@ const viewAll = computed(() => page.props.auth.viewWells);
                     </Dropdown>
                 </div>
 
+                <button v-if="viewType !== 'grid'" @click="exportTableToExcel('xlsx')" size="md" class="hover:bg-opacity-80 border rounded-lg px-3 py-1 h-9 bg-green-600 border-green-500">
+                    <span class="font-semibold text-white">Excel</span>
+                </button>
+
                 <div class="flex items-center gap-3">
                         <input v-model="radioFilter" id="today-radio" type="radio" name="filter" value="available" checked class="text-green-500 dark:bg-gray-800 dark:border-gray-700 focus:ring-green-500 bg-gray-100 border-gray-300"/>
                         <label for="today-radio" class="font-medium text-sm text-gray-800 dark:text-gray-400">Доступные</label>
@@ -316,15 +350,15 @@ const viewAll = computed(() => page.props.auth.viewWells);
                         <input v-model="radioFilter" id="all-radio" type="radio" name="filter" value="all" class="text-green-500 dark:bg-gray-800 dark:border-gray-700 focus:ring-green-500 bg-gray-100 border-gray-300"/>
                         <label for="all-radio" class="font-medium text-sm text-gray-800 dark:text-gray-400">Все</label>
                 </div>
-                
+
                 <div class="flex items-center gap-3 lg:ml-auto">
 
                     <ul class="grid grid-cols-2 items-center gap-2">
 
                         <li>
                             <button
-                            for="grid-wiew" 
-                            class="w-10 h-10 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700" 
+                            for="grid-wiew"
+                            class="w-10 h-10 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700"
                             :class="viewType === 'grid' ? 'bg-gray-100 dark:bg-gray-700' : ''"
                             v-on:click="changeView('grid')"
                             >
@@ -333,9 +367,9 @@ const viewAll = computed(() => page.props.auth.viewWells);
                         </li>
 
                         <li>
-                            <button 
-                            for="grid-wiew" 
-                            class="w-10 h-10 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700" 
+                            <button
+                            for="grid-wiew"
+                            class="w-10 h-10 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700"
                             :class="viewType === 'table' ? 'bg-gray-100 dark:bg-gray-700' : ''"
                             v-on:click="changeView('table')"
                             >
@@ -344,7 +378,7 @@ const viewAll = computed(() => page.props.auth.viewWells);
                         </li>
 
                     </ul>
-                    
+
                 </div>
             </div>
 
@@ -370,7 +404,7 @@ const viewAll = computed(() => page.props.auth.viewWells);
           <div class="flex flex-col items-center mt-52">
             <div class="w-56 h-56 rounded-lg">
                 <img class="rounded-lg" src="/images/well.png" alt="">
-            </div>      
+            </div>
             <h3 class="font-semibold text-gray-800 text-lg mt-5">Ой, здесь пусто!</h3>
             <span class="text-gray-400 text-sm mt-2">Но скоро что-то будет</span>
           </div>
