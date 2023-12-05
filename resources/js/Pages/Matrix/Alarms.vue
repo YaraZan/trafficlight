@@ -9,7 +9,7 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
 import DatePicker from 'vue-datepicker-next';
 import 'vue-datepicker-next/index.css';
-import 'vue-datepicker-next/locale/ru';
+import 'vue-datepicker-next/locale/ru.es';
 import CalendarIcon from '@/Components/Icons/CalendarIcon.vue';
 import ClearIcon from '@/Components/Icons/ClearIcon.vue';
 
@@ -179,7 +179,7 @@ watch(() => [dateFilters.value], () => {
                 placeholder="Дата"
                 input-class="w-full h-full dark:text-green-400 dark:bg-gray-700 bg-gray-50 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-green-500 focus:border-green-500 w-56 ring-green-600"
                 popup-class="rounded-lg p-4 relative dark:bg-gray-900 dark:border-gray-600"
-                v-model:value="dateFilters" 
+                v-model:value="dateFilters"
                 range
                 separator="-"
                 :onClear="clearDate"
@@ -219,7 +219,7 @@ watch(() => [dateFilters.value], () => {
                             </td>
                         </tr>
                     </tbody>
-                </table>   
+                </table>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 dark:border-gray-700 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
@@ -227,6 +227,6 @@ watch(() => [dateFilters.value], () => {
             </div>
 
         </div>
-        
+
     </AuthorizedLayout>
 </template>

@@ -83,6 +83,8 @@ Route::middleware(['admin', 'auth', 'verified'])->group(function () {
     Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
     Route::patch('/roles', [RoleController::class, 'update'])->name('roles.update');
     Route::delete('/roles', [RoleController::class, 'destroy'])->name('roles.destroy');
+
+    Route::get('/logs', [LogController::class, 'index'])->name('logs');
 });
 
 require __DIR__.'/auth.php';

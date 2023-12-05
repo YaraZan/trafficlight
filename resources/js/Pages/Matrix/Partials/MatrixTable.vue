@@ -103,8 +103,8 @@ function extractNumericPart(data) {
                 <td class="px-4 py-2 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.Date }}</td>
                 <td class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.SumErr ? row.SumErr : '-' }}</td>
                 <td class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">
-                    <span v-if="row.Ask" class="py-2 px-2 bg-green-100 text-green-600 dark:bg-green-500 dark:text-gray-300 dark:font-semibold rounded-3xl">Выполнен</span>
-                    <span v-else class="py-2 px-2 bg-red-100 text-red-600 dark:bg-red-500 dark:text-gray-300 dark:font-semibold rounded-3xl">Нет</span>
+                    <span v-if="row.Ask" class="py-2 px-2 bg-green-100 text-green-600 dark:bg-green-500 dark:text-white dark:font-semibold rounded-3xl">Выполнен</span>
+                    <span v-else class="py-2 px-2 bg-red-100 text-red-600 dark:bg-red-500 dark:text-white dark:font-semibold rounded-3xl">Нет</span>
                 </td>
                 <ARDCell :alarm="row.Alarm1" :setting="row.Ref1" :diff="row.Dif1" :stat="row.Stat1"></ARDCell>
                 <ARDCell :alarm="row.Alarm2" :setting="row.Ref2" :diff="row.Dif2" :stat="row.Stat2"></ARDCell>

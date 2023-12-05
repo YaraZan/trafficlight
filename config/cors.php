@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['http://trafficlight.tatneft.ru'],
 
     'allowed_origins_patterns' => [],
 

@@ -12,6 +12,7 @@ import AdminPanelIcon from '@/Components/Icons/AdminPanelIcon.vue';
 import SettingsIcon from '@/Components/Icons/SettingsIcon.vue';
 import UsersIcon from '@/Components/Icons/UsersIcon.vue';
 import RolesIcon from '@/Components/Icons/RolesIcon.vue';
+import LogsIcon from '@/Components/Icons/LogsIcon.vue';
 import { computed } from 'vue';
 import { useDark, useToggle } from '@vueuse/core';
 import LightThemeIcon from '@/Components/Icons/LightThemeIcon.vue';
@@ -54,6 +55,7 @@ const isAdmin = computed(() => page.props.auth.isAdmin);
             <div class="py-[10px] px-[5px] flex flex-col gap-[10px] w-full h-full">
                 <NavLink v-if="isAdmin" :href="route('users')" :active="$page.component.includes('Users/')"><UsersIcon></UsersIcon></NavLink>
                 <NavLink v-if="isAdmin" :href="route('roles')" :active="$page.component.includes('Roles/')"><RolesIcon></RolesIcon></NavLink>
+                <NavLink v-if="isAdmin" :href="route('logs')" :active="$page.component.includes('Logs/')"><LogsIcon></LogsIcon></NavLink>
                 <div v-if="isAdmin" class="border-b border-gray-200 dark:border-gray-700 w-full"></div>
 
                 <NavLink :href="route('matrix')" :active="$page.component.includes('Matrix/')"><MatrixIcon></MatrixIcon></NavLink>

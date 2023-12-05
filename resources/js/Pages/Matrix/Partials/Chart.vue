@@ -151,7 +151,7 @@ const drawChart = (datasets) => {
         tooltip.style('display', 'block');
         tooltip.html(`
         <div class="flex items-center gap-2 text-gray-800 dark:text-gray-300">
-          <div class="w-2 h-2 rounded-full" style="background-color: ${dataset.color}"></div> 
+          <div class="w-2 h-2 rounded-full" style="background-color: ${dataset.color}"></div>
           ${dataset.paramName}: <b>${d.Y}</b>, Дата: <b>${d.X.toLocaleString()}</b>
         </div>
         `)
@@ -211,7 +211,7 @@ const drawChart = (datasets) => {
           tooltip.style('display', 'block');
           tooltip.html(`
           <div class="flex items-center gap-2 text-gray-800 dark:text-gray-300">
-            <div class="w-2 h-2 rounded-full" style="background-color: ${dataset.color}"></div> 
+            <div class="w-2 h-2 rounded-full" style="background-color: ${dataset.color}"></div>
             Уставка: <b>${d.Y}</b>, Дата: <b>${d.X.toLocaleString()}</b>
           </div>
           `)

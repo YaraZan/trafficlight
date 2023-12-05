@@ -38,8 +38,8 @@ const drawChart = (datasets) => {
 
   // Find the maximum and minimum X and Y values across all datasets
   const xMax = d3.max(allData, (d) => parseFloat(d.X));
-  const yMax = Math.ceil(d3.max(allData, (d) => d.Y) / 500) * 500;
-  const yMin = Math.floor(d3.min(allData, (d) => d.Y) / 500) * 500;
+  const yMax = Math.ceil(d3.max(allData, (d) => parseFloat(d.Y)) / 500) * 500;
+  const yMin = Math.floor(d3.min(allData, (d) => parseFloat(d.Y)) / 500) * 500;
   
 
   // Clear the existing chart
