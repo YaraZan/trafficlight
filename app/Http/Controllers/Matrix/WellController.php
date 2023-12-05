@@ -81,7 +81,7 @@ class WellController extends Controller
                     'wa.Ref9',
                     'wa.Ref11',
                     'wa.Ref12',
-                    'we.Web',
+                    'we.Web as Web',
                 ])
                 ->orderBy('wa.Dif1', 'desc')
                 ->orderBy('wa.Dif2', 'desc')
@@ -156,7 +156,7 @@ class WellController extends Controller
                     'wa.Ref9',
                     'wa.Ref11',
                     'wa.Ref12',
-                    'we.Web',
+                    'we.Web as Web',
                 ])
                 ->orderBy('wa.Dif1', 'desc')
                 ->orderBy('wa.Dif2', 'desc')
