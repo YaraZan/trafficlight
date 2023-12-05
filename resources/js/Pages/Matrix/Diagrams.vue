@@ -27,7 +27,7 @@ const props = defineProps({
 });
 
 const hourArchData = ref([]);
-const paginatedData = ref([]); 
+const paginatedData = ref([]);
 const dateFilters = ref();
 
 const fetchHourArchData = (publicId) => {
@@ -109,7 +109,7 @@ const toggleSetpoint = (publicId) => {
 const currentPage = ref(1);
 const perPage = ref(4);
 
-const totalPages = computed(() => { 
+const totalPages = computed(() => {
 
   if (paginatedData.value.length > 0) {
     return Math.ceil(props.categories.length / perPage.value);
@@ -293,8 +293,8 @@ watch(() => hourArchData.value, () => {
                             placeholder="Дата"
                             input-class="w-full h-full dark:text-green-400 dark:bg-gray-700 bg-gray-50 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-green-500 focus:border-green-500 w-56 ring-green-600"
                             popup-class="rounded-lg p-4 relative dark:bg-gray-900 dark:border-gray-600"
-                            v-model:value="dateFilters" 
-                            
+                            v-model:value="dateFilters"
+
                             range
                             separator="-"
                             :onClear="clearDate"
@@ -356,11 +356,11 @@ watch(() => hourArchData.value, () => {
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table> 
+                            </table>
 
                             <div v-else>Ничего нет </div>
                         </div>
-                        
+
                     </div>
                 </div>
 
