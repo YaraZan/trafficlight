@@ -13,10 +13,6 @@ function getColorClass(value) {
   let colorClass = '';
 
   switch (value) {
-    case 0:
-      colorClass = 'bg-gray-300 dark:bg-gray-900';
-      break;
-
     case 1:
       colorClass = 'bg-green-400 dark:bg-green-500';
       break;
@@ -30,7 +26,7 @@ function getColorClass(value) {
       break;
 
     default:
-      colorClass = 'bg-gray-500'; // Default to gray if none of the conditions are met
+      colorClass = 'bg-gray-100 dark:bg-gray-700';
       break;
   }
 
@@ -41,10 +37,6 @@ function getColorBgClass(value) {
   let colorClass = '';
 
   switch (value) {
-    case 0:
-      colorClass = 'bg-gray-100 group-hover:bg-gray-50 dark:bg-gray-700 dark:group-hover:bg-gray-700';
-      break;
-
     case 1:
       colorClass = 'bg-green-100 dark:bg-green-900 dark:bg-opacity-60';
       break;
@@ -58,7 +50,7 @@ function getColorBgClass(value) {
       break;
 
     default:
-      colorClass = 'bg-gray-500 dark:bg-'; // Default to gray if none of the conditions are met
+      colorClass = 'bg-gray-100 group-hover:bg-gray-50 dark:bg-gray-700 dark:group-hover:bg-gray-700';
       break;
   }
 
@@ -83,8 +75,15 @@ function getColorBgClass(value) {
                     </div>
                 </div>
                 <div class="flex gap-3 h-auto">
-                    <div v-for="(item, index) in [{dif: row.Dif1, stat:row.Stat1}, {dif: row.Dif2, stat:row.Stat2}, {dif: row.Dif3, stat:row.Stat3},]" :class="row.Connect ? getColorBgClass(item.stat) : 'bg-gray-100 group-hover:bg-gray-50 dark:bg-gray-700 dark:group-hover:bg-gray-700'"  :key="index" class="flex flex-col flex-nowrap justify-end w-2 h-28 rounded-full overflow-hidden">
-                        <div :class="row.Connect ? getColorClass(item.stat): 'bg-gray-300 dark:bg-gray-500'" :style="item.dif ? { height: `${item.dif}%` } : { height: '0%' }" class="overflow-hidden" role="progressbar"></div>
+                    <div v-for="(item, index) in [{dif: row.Dif1, stat:row.Stat1}, {dif: row.Dif2, stat:row.Stat2}, {dif: row.Dif3, stat:row.Stat3}]"
+                    :class="row.Connect ? getColorBgClass(item.stat) : 'bg-gray-100 group-hover:bg-gray-50 dark:bg-gray-700 dark:group-hover:bg-gray-700'"
+                    :key="index"
+                    class="flex flex-col flex-nowrap justify-end w-2 h-28 rounded-full overflow-hidden">
+                        <div
+                        :class="row.Connect ? getColorClass(item.stat): 'bg-gray-300 dark:bg-gray-500'"
+                        :style="item.dif ? { height: `${item.dif}%` } : { height: '0%' }"
+                        class="overflow-hidden"
+                        role="progressbar"></div>
                     </div>
                 </div>
             </div>

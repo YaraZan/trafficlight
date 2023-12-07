@@ -250,41 +250,41 @@ const viewAll = computed(() => page.props.auth.viewWells);
         </template>
 
         <div v-if="data.matrix_data.length" class="bg-white dark:bg-gray-800 relative w-full">
-            <div class="flex flex-col items-start gap-3 p-4 w-full md:flex-row md:items-center md:gap-3">
+            <div class="flex flex-col items-start justify-between gap-3 p-4 w-full md:flex-row md:items-center md:gap-3">
 
-                <div class="flex items-center gap-3">
-                <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
-                    <option v-for="option in perPageOptions" :key="option" :value="option">
-                        {{ option == 'all' ? 'Все записи' : `${option} записей` }}
-                    </option>
-                </select>
-                <ul class="flex items-center -space-x-px h-9 text-sm">
-                        <li>
-                            <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                <span class="sr-only">Пред.</span>
-                                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                                </svg>
-                            </button>
-                        </li>
-                        <li v-for="page in visiblePages" :key="page">
-                            <button
-                                @click="setCurrentPage(page)"
-                                :class="{ 'font-bold text-green-600': currentPage === page }"
-                                class="flex items-center justify-center px-3 h-9 leading-tight text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                            >
-                                {{ page }}
-                            </button>
-                        </li>
-                        <li>
-                            <button @click="nextPage" :disabled="currentPage === totalPages" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                <span class="sr-only">След.</span>
-                                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                                </svg>
-                            </button>
-                        </li>
-                </ul>
+                <div class="flex w-full md:w-auto items-center justify-between gap-3">
+                    <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
+                        <option v-for="option in perPageOptions" :key="option" :value="option">
+                            {{ option == 'all' ? 'Все записи' : `${option} записей` }}
+                        </option>
+                    </select>
+                    <ul class="flex items-center ml-auto -space-x-px h-9 text-sm md:ml-0">
+                            <li>
+                                <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                    <span class="sr-only">Пред.</span>
+                                    <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                    </svg>
+                                </button>
+                            </li>
+                            <li v-for="page in visiblePages" :key="page">
+                                <button
+                                    @click="setCurrentPage(page)"
+                                    :class="{ 'font-bold text-green-600': currentPage === page }"
+                                    class="flex items-center justify-center px-3 h-9 leading-tight text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                >
+                                    {{ page }}
+                                </button>
+                            </li>
+                            <li>
+                                <button @click="nextPage" :disabled="currentPage === totalPages" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                    <span class="sr-only">След.</span>
+                                    <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                    </svg>
+                                </button>
+                            </li>
+                    </ul>
                 </div>
 
                 <div class="flex items-center gap-3">
