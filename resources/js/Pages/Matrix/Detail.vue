@@ -24,7 +24,7 @@ const props = defineProps({
 
 const dnmhData = ref([]);
 const dnmData = ref([]);
-const paginatedData = ref([]); 
+const paginatedData = ref([]);
 
 const fetchDnmhData = () => {
   return axios.get(`/api/dnmh/${props.item.public_id}`)
@@ -119,7 +119,7 @@ const selectDinamogram = (publicId) => {
 const currentPage = ref(1);
 const perPage = ref(4);
 
-const totalPages = computed(() => { 
+const totalPages = computed(() => {
 
   if (paginatedData.value.length > 0) {
     return Math.ceil(dnmhData.value.length / perPage.value);
@@ -257,7 +257,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                     <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Аварии</span>
                                 </div>
                             </Link>
-                            
+
                             <Link :href="route('matrix.diagrams', item.public_id)">
                                 <div class="p-6 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
                                     <DiagramsIcon />
@@ -318,7 +318,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                 <td class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.DnmAdress }}</td>
                             </tr>
                         </tbody>
-                    </table> 
+                    </table>
 
                     <SkeletonDnmhTable v-else />
                 </div>

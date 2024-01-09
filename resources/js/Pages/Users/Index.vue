@@ -72,8 +72,8 @@ const filteredData = computed(() => {
   let data = props.users;
 
   if (searchFilter.value !== '') {
-        data = data.filter(item => item.name.toLowerCase().includes(searchFilter.value.toLowerCase()) || item.email.toLowerCase().includes(searchFilter.value.toLowerCase()));
-    }
+    data = data.filter(item => item.name.toLowerCase().includes(searchFilter.value.toLowerCase()) || item.email.toLowerCase().includes(searchFilter.value.toLowerCase()));
+  }
 
     return data;
 });
@@ -119,7 +119,7 @@ watch(() => [searchFilter.value], () => {
             </Link>
         </template>
 
-        <div class="bg-white dark:bg-gray-800 relative w-full">   
+        <div class="bg-white dark:bg-gray-800 relative w-full">
 
             <div class="flex w-full items-center p-4 gap-3">
 
@@ -196,7 +196,7 @@ watch(() => [searchFilter.value], () => {
                             leave-active-class="transition ease-in duration-75"
                             leave-from-class="opacity-100 translateX-100"
                             leave-to-class="opacity-0 translateX-95"
-                        > 
+                        >
                             <CreateUserForm v-show="creating" :roles="roles" :ngdus="ngdus" @cancelled="handleCancelled" @created="handleCreated"/>
                         </Transition>
                         <EditUserForm v-if="paginatedData.length > 0" v-for="user in paginatedData" :key="user.id" :user="user" :roles="roles" :ngdus="ngdus" />
@@ -205,9 +205,9 @@ watch(() => [searchFilter.value], () => {
                             <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
                         </div>
                     </tbody>
-                </table>  
+                </table>
             </div>
-        
+
         </div>
 
     </AuthorizedLayout>

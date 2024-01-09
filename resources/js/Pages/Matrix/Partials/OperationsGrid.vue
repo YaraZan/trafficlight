@@ -76,11 +76,11 @@ function getColorBgClass(value) {
                 </div>
                 <div class="flex gap-3 h-auto">
                     <div v-for="(item, index) in [{dif: row.Dif1, stat:row.Stat1}, {dif: row.Dif2, stat:row.Stat2}, {dif: row.Dif3, stat:row.Stat3}]"
-                    :class="row.Connect ? getColorBgClass(item.stat) : 'bg-gray-100 group-hover:bg-gray-50 dark:bg-gray-700 dark:group-hover:bg-gray-700'"
+                    :class="row.Connect ? getColorBgClass(item.stat) : 'bg-gray-100 group-hover:bg-gray-50 dark:bg-gray-800 dark:group-hover:bg-gray-700'"
                     :key="index"
                     class="flex flex-col flex-nowrap justify-end w-2 h-28 rounded-full overflow-hidden">
                         <div
-                        :class="row.Connect ? getColorClass(item.stat): 'bg-gray-300 dark:bg-gray-500'"
+                        :class="row.Connect ? getColorClass(item.stat): 'bg-gray-300 dark:bg-gray-700 dark:group-hover:bg-gray-600'"
                         :style="item.dif ? { height: `${item.dif}%` } : { height: '0%' }"
                         class="overflow-hidden"
                         role="progressbar"></div>

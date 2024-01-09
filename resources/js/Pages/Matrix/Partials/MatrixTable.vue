@@ -3,7 +3,8 @@ import ARDCell from '@/Components/ARDCell.vue';
 import ErrorIcon from '@/Components/Icons/ErrorIcon.vue';
 import DoneIcon from '@/Components/Icons/DoneIcon.vue';
 import WebwisuIcon from '@/Components/Icons/WebwisuIcon.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
+import WebwisuConnLostIcon from '@/Components/Icons/WebwisuConnLostIcon.vue';
 
 const props = defineProps({
     data: {
@@ -176,11 +177,17 @@ function extractNumericPart(data) {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(row, index) in data" :key="index"  class="hover:bg-gray-50 dark:hover:bg-gray-900 dark:hover:bg-opacity-40 border-b border-gray-200 dark:border-gray-700">
+            <tr v-for="(row, index) in data" :key="index"
+                class="hover:bg-gray-50 dark:hover:bg-gray-900 dark:hover:bg-opacity-40 border-b border-gray-200 dark:border-gray-700 cursor-pointer"
+                v-on:dblclick="router.get(`/matrix/${row.public_id}`)"
+             >
                 <th scope="row" class="px-4 py-2 text-center">
                     <a v-if="row.Web !== '#'" target="_blank" :href="row.Web" class="cursor-pointer">
-                        <span class="flex items-center justify-center">
+                        <span v-if="row.Connect" class="flex items-center justify-center">
                             <WebwisuIcon />
+                        </span>
+                        <span v-else class="flex items-center justify-center">
+                            <WebwisuConnLostIcon />
                         </span>
                     </a>
                     <div v-else :class="row.Connect ? 'bg-green-100 dark:bg-green-800 dark:bg-opacity-50' : 'bg-gray-100 dark:bg-gray-700'" class="w-5 h-5 mx-auto rounded-full z-1 flex items-center justify-center">
@@ -188,8 +195,7 @@ function extractNumericPart(data) {
                     </div >
                 </th>
                 <td class="font-bold px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">
-                    <span v-if="row.Web !== '#'" class="text-blue-500">{{ extractNgdu(row.WellName) }}</span>
-                    <span v-else :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'">{{ extractNgdu(row.WellName) }}</span>
+                    <span :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'">{{ extractNgdu(row.WellName) }}</span>
                 </td>
                 <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'" class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">{{ extractNumericPart(row.ShopName) }}</td>
                 <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'" class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">{{ extractWellNumber(row.WellName) }}</td>
