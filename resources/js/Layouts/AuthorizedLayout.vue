@@ -13,23 +13,30 @@ import SettingsIcon from '@/Components/Icons/SettingsIcon.vue';
 import UsersIcon from '@/Components/Icons/UsersIcon.vue';
 import RolesIcon from '@/Components/Icons/RolesIcon.vue';
 import LogsIcon from '@/Components/Icons/LogsIcon.vue';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useDark, useToggle } from '@vueuse/core';
 import LightThemeIcon from '@/Components/Icons/LightThemeIcon.vue';
 import DarkThemeIcon from '@/Components/Icons/DarkThemeIcon.vue';
+import QuestionIcon from '@/Components/Icons/QuestionIcon.vue';
 import { onMounted } from 'vue';
+import Modal from '@/Components/Modal.vue';
+import Help from '@/Components/Help.vue';
 
 const page = usePage();
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
-
 const isAdmin = computed(() => page.props.auth.isAdmin);
+
+const readingHelpSurvey = ref(false);
+const closeModal = () => {
+    readingHelpSurvey.value = false;
+};
 
 </script>
 
 <template>
     <div class="bg-white dark:bg-gray-800 min-w-screen min-h-screen font-montserrat overflow-x-hidden">
-        
+
         <!-- Page Heading -->
         <nav class="flex items-center w-screen border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800" v-if="$slots.nav">
             <div class="ml-[50px] w-full h-[50px] px-[20px] flex items-center">
@@ -63,8 +70,22 @@ const isAdmin = computed(() => page.props.auth.isAdmin);
                 <NavLink :href="route('analytics')" :active="$page.component.includes('Analytics/')"><AnalyticsIcon></AnalyticsIcon></NavLink>
                 <NavLink :href="route('settings')" :active="$page.component.includes('Settings/')"><SettingsIcon /></NavLink>
             </div>
-            
+
         </aside>
+
+        <aside v-if="$slots.subAside" class="fixed top-0 left-[50px] z-40 w-[200px] h-screen border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <slot name="subAside" />
+        </aside>
+
+        <div v-on:click="readingHelpSurvey = !readingHelpSurvey" class="group fixed z-40 bottom-4 right-4
+            rounded-full w-[24px] h-[24px] p-[4px] flex items-center justify-center
+            bg-gray-200 dark:bg-black cursor-pointer hover:bg-green-500 dark:hover:bg-green-500">
+            <span class="text-gray-800 dark:text-white group-hover:text-white">?</span>
+        </div>
+
+        <Modal :show="readingHelpSurvey" @close="closeModal">
+            <Help />
+        </Modal>
 
         <!-- Page Content -->
         <main>
