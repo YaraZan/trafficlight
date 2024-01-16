@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Matrix\ControlContrloller;
 use App\Http\Controllers\Matrix\DiagramController;
+use \App\Http\Controllers\Dinamograph\TrainingController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +41,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/matrix', [WellController::class, 'index'])->name('matrix');
-    Route::get('/matrix/{well_uuid}', [WellController::class, 'show'])->name('matrix.detail'); 
+    Route::get('/matrix/{well_uuid}', [WellController::class, 'show'])->name('matrix.detail');
     Route::get('/matrix/{well_uuid}/hourarch', [HeadHourController::class, 'index'])->name('matrix.hourarch');
     Route::get('/matrix/{well_uuid}/hourarch/{head_hour_uuid}', [HeadHourController::class, 'show'])->name('matrix.hourarch.detail');
     Route::get('/matrix/{well_uuid}/askstats', [AskStatsController::class, 'index'])->name('matrix.askstats');
@@ -59,6 +60,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/analytics', function () {
         return Inertia::render('Errors/Developing');
     })->name('analytics');
+
+    Route::get('/dinamograph', function () { return redirect('/dinamograph/training'); })->name('dinamograph');
+    Route::get('/dinamograph/training', [TrainingController::class, 'index'])->name('dinamograph.training');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

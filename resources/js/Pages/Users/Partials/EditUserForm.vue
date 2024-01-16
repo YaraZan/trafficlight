@@ -1,5 +1,5 @@
 <script setup>
-import { ref, nextTick, onMounted } from 'vue';
+import {ref, nextTick, onMounted, watch} from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { Input } from 'flowbite-vue';
 import EditIcon from '@/Components/Icons/EditIcon.vue';
@@ -48,7 +48,7 @@ const deleteUser = () => {
     form.delete(route('users.destroy'), {
         preserveScroll: true,
         onSuccess: () => {
-            editing.value = false; 
+            editing.value = false;
             passwordInput.value = null;
             closeModal();
         },
@@ -174,7 +174,7 @@ const closeModal = () => {
                 </div>
 
                 <div class="mt-6 flex justify-end gap-2">
-                    <button 
+                    <button
                         @click="closeModal"
                         class="flex gap-2 bg-transparent px-4 py-2 border border-gray-200 dark:border-gray-700 dark:hover:bg-gray-900 dark:text-gray-300 rounded-lg text-gray-800 text-sm  hover:bg-gray-100"
                     > Отмена </button>
@@ -207,7 +207,7 @@ const closeModal = () => {
                 </div>
 
                 <div class="mt-6 flex justify-end">
-                    <button 
+                    <button
                         @click="closeModal"
                         class="flex gap-2 bg-transparent px-4 py-2 border border-gray-200 dark:border-gray-700 dark:hover:bg-gray-900 dark:text-gray-300 rounded-lg text-gray-800 text-sm  hover:bg-gray-100"
                     > Отмена </button>

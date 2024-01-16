@@ -34,7 +34,7 @@ const deleteRole = () => {
     form.delete(route('roles.destroy'), {
         preserveScroll: true,
         onSuccess: () => {
-            editing.value = false; 
+            editing.value = false;
             passwordInput.value = null;
             closeModal();
         },
@@ -65,12 +65,14 @@ const closeModal = () => {
 
 <template>
     <tr :class="editing ? 'border-l-2 border-l-green-400 dark:border-l-green-400 bg-gray-50 dark:bg-gray-900 dark:bg-opacity-40' : ''" class="border-b border-gray-200 dark:border-gray-700">
+
         <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700 flex flex-col">
             <Input v-model="form.name" ref="nameInput" size="sm" class="focus:ring-green-500 focus:border-green-500 w-1/2 ring-green-600 " type="text"  placeholder="Название" required="">
             </Input>
             <span v-if="form.errors.name" class="text-red-600">{{ form.errors.name }}</span>
         </td>
         <th v-else scope="row" class="font-semibold text-gray-800 dark:text-gray-400 px-6 py-3 text-left">{{ role.name }}</th>
+
         <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
             <select v-model="form.can_edit" ref="canEditOption" class="block p-2 text-sm font-semibold text-gray-800 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-opacity-80 dark:text-gray-300 border border-gray-300 rounded-lg focus:ring-green-600 focus:border-green-600 cursor-pointer">
                 <option :value="true">
@@ -85,6 +87,7 @@ const closeModal = () => {
             <span v-if="role.canEdit" class="py-1 px-2 bg-green-100 text-green-600 dark:bg-green-500 dark:text-white rounded-3xl">Да</span>
             <span v-else class="py-1 px-2 bg-red-100 text-red-600 dark:bg-red-500 dark:text-white rounded-3xl">Нет</span>
         </td>
+
         <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
             <select v-model="form.can_view_all" ref="canViewAllOption" class="block p-2 text-sm font-semibold text-gray-800 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-opacity-80 dark:text-gray-300 border border-gray-300 rounded-lg focus:ring-green-600 focus:border-green-600 cursor-pointer">
                 <option :value="true">
@@ -99,6 +102,7 @@ const closeModal = () => {
             <span v-if="role.canViewAll" class="py-1 px-2 bg-green-100 text-green-600 dark:bg-green-500 dark:text-white rounded-3xl">Да</span>
             <span v-else class="py-1 px-2 bg-red-100 text-red-600 dark:bg-red-500 dark:text-white rounded-3xl">Нет</span>
         </td>
+
         <td v-if="editing" class="flex gap-5 px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
             <button @click="editing = !editing" class="text-gray-600 text-sm font-semibold p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Отмена</button>
             <button @click.prevent="updateRole" :disabled="form.processing" class="flex gap-2 bg-green-600 px-4 py-2 border border-green-500 rounded-lg text-white text-sm font-semibold hover:bg-opacity-80">
@@ -132,7 +136,7 @@ const closeModal = () => {
                 </div>
 
                 <div class="mt-6 flex justify-end">
-                    <button 
+                    <button
                         @click="closeModal"
                         class="flex gap-2 bg-transparent px-4 py-2 border border-gray-200 dark:border-gray-700 dark:hover:bg-gray-900 dark:text-gray-300 rounded-lg text-gray-800 text-sm  hover:bg-gray-100"
                     > Отмена </button>

@@ -26,6 +26,7 @@ class UserController extends Controller
         ->join('roles as r', 'usr.role_id', '=', 'r.id')
         ->join('Ngdu as n', 'usr.ngdu_id', '=', 'n.Id')
         ->select([
+            'usr.id',
             'usr.public_id',
             'usr.name',
             'usr.email',
@@ -73,21 +74,21 @@ class UserController extends Controller
 
         $public_id = $request->input('public_id');
         $user = User::where('public_id', '=', $public_id)->first();
-    
+
         $new_role = Role::find($request->input('role_id'));
         $new_ngdu = Ngdu::find($request->input('ngdu_id'));
-    
+
         $user->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
         ]);
-    
+
         $user->role_id = $new_role->id;
         $user->ngdu_id = $new_ngdu->Id;
 
         $user->save();
-    
+
         return Redirect::route('users');
     }
 
@@ -96,7 +97,7 @@ class UserController extends Controller
         $request->validate([
             'confirm_password' => ['required', 'current_password'],
         ]);
-        
+
         $public_id = $request->input('public_id');
 
         $user = User::where('public_id', '=', $public_id)->first();

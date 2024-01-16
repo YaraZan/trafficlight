@@ -21,7 +21,6 @@ const currentPage = ref(1);
 const perPage = ref(20);
 const searchFilter = ref('');
 const creating = ref(false);
-const editing = ref(false);
 
 const handleCreated = () => {
     creating.value = false;
@@ -112,8 +111,8 @@ watch(() => [searchFilter.value], () => {
             </Link>
         </template>
 
-        <div class="bg-white dark:bg-gray-800 relative w-full">  
-            
+        <div class="bg-white dark:bg-gray-800 relative w-full">
+
             <div class="flex w-full items-center p-4 gap-3">
 
                 <Input v-model="searchFilter" size="sm" class="focus:ring-green-600 focus:border-green-500 w-56 ring-green-600 " type="text"  placeholder="Название" required="">
@@ -156,7 +155,7 @@ watch(() => [searchFilter.value], () => {
 
 
             </div>
-            
+
             <div class="w-full h-full overflow-x-auto">
                 <table v-if="props.roles.length" class="w-full" striped>
                     <thead>
@@ -183,19 +182,19 @@ watch(() => [searchFilter.value], () => {
                             leave-active-class="transition ease-in duration-75"
                             leave-from-class="opacity-100 translateX-100"
                             leave-to-class="opacity-0 translateX-95"
-                        > 
+                        >
                             <CreateRoleForm v-show="creating" @cancelled="handleCancelled" @created="handleCreated" />
                         </Transition>
-                        
+
                         <EditRoleForm v-if="paginatedData.length > 0" v-for="role in paginatedData" :key="role.id" :role="role" />
                         <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-full p-20">
                             <NoDataIcon />
                             <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
                         </div>
                     </tbody>
-                </table>  
+                </table>
             </div>
-        
+
         </div>
 
     </AuthorizedLayout>
