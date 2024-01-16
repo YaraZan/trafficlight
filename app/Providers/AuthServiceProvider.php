@@ -39,5 +39,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view-well', function (User $user, Well $well) {
             return $user->isAdmin() || $user->ngdu_id == $well->Ngdu_Id;
         });
+
+        Gate::define('training', function (User $user) {
+            return $user->isAdmin() || $user->isTrainer();
+        });
     }
 }

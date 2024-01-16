@@ -2,6 +2,7 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import NavLink from '@/Components/NavLink.vue';
 import MatrixIcon from '@/Components/Icons/MatrixIcon.vue';
+import Dinamograph from '@/Components/Icons/Dinamograph.vue';
 import AlarmIcon from '@/Components/Icons/AlarmIcon.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -66,6 +67,7 @@ const closeModal = () => {
                 <div v-if="isAdmin" class="border-b border-gray-200 dark:border-gray-700 w-full"></div>
 
                 <NavLink :href="route('matrix')" :active="$page.component.includes('Matrix/')"><MatrixIcon></MatrixIcon></NavLink>
+                <NavLink :href="route('dinamograph')" :active="$page.component.includes('Dinamograph/')"><Dinamograph></Dinamograph></NavLink>
                 <NavLink  :href="route('alarms')" :active="$page.component.includes('Alarms/')"><AlarmIcon></AlarmIcon></NavLink>
                 <NavLink :href="route('analytics')" :active="$page.component.includes('Analytics/')"><AnalyticsIcon></AnalyticsIcon></NavLink>
                 <NavLink :href="route('settings')" :active="$page.component.includes('Settings/')"><SettingsIcon /></NavLink>
@@ -89,7 +91,7 @@ const closeModal = () => {
 
         <!-- Page Content -->
         <main>
-            <div class="ml-[50px]">
+            <div :class="$slots.subAside ? 'ml-[250px]' : 'ml-[50px]'">
                 <slot />
             </div>
         </main>

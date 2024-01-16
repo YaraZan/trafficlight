@@ -43,9 +43,14 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function isAdmin(): bool 
+    public function isAdmin(): bool
     {
         return optional($this->role)->name == 'admin';
+    }
+
+    public function isTrainer(): bool
+    {
+        return optional($this->role)->name == 'trainer';
     }
 
     public function logs()
@@ -63,12 +68,12 @@ class User extends Authenticatable
         return $this->belongsTo(Ngdu::class);
     }
 
-    public function viewAllWells(): bool 
+    public function viewAllWells(): bool
     {
         return optional($this->role)->canViewAll;
     }
 
-    public function canEdit(): bool 
+    public function canEdit(): bool
     {
         return optional($this->role)->canEdit;
     }
