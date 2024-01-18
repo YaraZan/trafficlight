@@ -1,13 +1,12 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import {Head, Link} from '@inertiajs/vue3';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import SubAsideLink from '@/Components/SubAsideLink.vue';
-import UserDefaultIcon from '@/Components/Icons/UserDefaultIcon.vue';
-import {Img} from "flowbite-vue";
+import {Img, Spinner} from "flowbite-vue";
 import TrainInputList from "@/Components/TrainInputList.vue";
+import ClearIcon from "@/Components/Icons/ClearIcon.vue";
 
 
 const props = defineProps({
@@ -16,21 +15,25 @@ const props = defineProps({
     },
 });
 
+const API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL;
+const API_KEY =import.meta.env.VITE_DINAMOGRAPH_API_KEY;
+
 const dnmObject = ref(null);
 const markers = ref(null);
 const viewingList = ref(false);
-
+const selectedMarker = ref(null);
 const markerSearchFilter = ref('');
+const processing = ref(false);
 
 const fetchRandomDinamogram = (public_id) => {
-    return axios.get(import.meta.env.VITE_DINAMOGRAPH_API_URL + `/d/${public_id}`, {
+    return axios.get(API_URL + `/d/${public_id}`, {
         headers: {
             'Content-Type': 'application/json',
-            'x-api-key': import.meta.env.VITE_DINAMOGRAPH_API_KEY
+            'x-api-key': API_KEY
         },
     })
     .then((response) => {
-        return response.data;
+        dnmObject.value = response.data.data;
     })
     .catch((error) => {
         console.error('Ошибка при получении динамограммы', error);
@@ -38,30 +41,62 @@ const fetchRandomDinamogram = (public_id) => {
 }
 
 const fetchMarkers = () => {
-    return axios.get(import.meta.env.VITE_DINAMOGRAPH_API_URL + '/m', {
+    return axios.get(API_URL + '/m', {
         headers: {
             'Content-Type': 'application/json',
-            'x-api-key': import.meta.env.VITE_DINAMOGRAPH_API_KEY
+            'x-api-key': API_KEY
         },
     })
         .then((response) => {
-            return response.data;
+            markers.value = response.data.data;
         })
         .catch((error) => {
             console.error('Ошибка при получении динамограммы', error);
         });
 }
 
-onMounted(() => {
-    fetchRandomDinamogram(props.profile_data.public_id)
-    .then((data) => {
-        dnmObject.value = data.data;
-    });
+const selectMarker = (markerObj) => {
+    viewingList.value = false;
+    markerSearchFilter.value = '';
+    selectedMarker.value = markerObj;
+}
 
-    fetchMarkers()
-    .then((data) => {
-        markers.value = data.data;
+const validateInput = () => {
+    return selectedMarker.value && dnmObject.value;
+}
+
+const markDinamogram = () => {
+    if (!validateInput()) return
+
+    processing.value = true;
+
+    axios.post(API_URL + '/d', {
+        id: dnmObject.value.id,
+        marker_id: selectedMarker.value.id,
+    }, {
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': API_KEY
+        },
+    })
+    .then(() => {
+        processing.value = false;
+        selectedMarker.value = null;
+        fetchRandomDinamogram(props.profile_data.public_id);
+        fetchMarkers();
+
+    })
+    .catch(() => {
+        processing.value = false;
+    })
+    .finally(() => {
+        processing.value = false;
     });
+}
+
+onMounted(() => {
+    fetchRandomDinamogram(props.profile_data.public_id);
+    fetchMarkers();
 })
 
 const filtredData = computed(() => {
@@ -83,7 +118,7 @@ const filtredData = computed(() => {
         <template #nav>
             <Link :href="route('dinamograph.training')">
                 <BreadCrumb
-                    :name="'Тренировка'"
+                    :name="'Разметка данных'"
                 ></BreadCrumb>
             </Link>
         </template>
@@ -94,7 +129,7 @@ const filtredData = computed(() => {
                 <div class="flex flex-col p-2 gap-1">
                     <Link :href="route('settings.profile')">
                         <SubAsideLink
-                            :text="'Тренировка'"
+                            :text="'Разметка данных'"
                             :active="$page.component.includes('Dinamograph/Training')"
                         />
                     </link>
@@ -106,32 +141,58 @@ const filtredData = computed(() => {
 
             <div v-if="dnmObject" class="flex flex-col w-2/3 items-center justify-center">
                 <img
-                     :src="dnmObject.url"
-                     class="w-2/3 rounded-2xl shadow-xl" />
+                    :src="API_URL + '/' + dnmObject.url"
+                    class="w-2/3 rounded-2xl shadow-xl" />
                 <div class="flex relative w-full gap-[20px] items-center mt-[200px]">
-                    <TrainInputList v-if="filtredData && viewingList" :markers="filtredData" />
+                    <Transition
+                        enter-active-class="transition ease-out duration-200"
+                        enter-from-class="opacity-0 translateX-95"
+                        enter-to-class="opacity-100 translateX-100"
+                        leave-active-class="transition ease-in duration-75"
+                        leave-from-class="opacity-100 translateX-100"
+                        leave-to-class="opacity-0 translateX-95"
+                    >
+                        <TrainInputList :url="API_URL" @select="selectMarker" v-if="filtredData && viewingList" :markers="filtredData" />
+                    </Transition>
+                    <div v-if="selectedMarker"
+                         class="shadow cursor-pointer flex items-center justify-center
+                                absolute left-[5px] p-2 rounded-[5px] bg-white dark:bg-gray-700
+                                gap-[10px]" >
+                        <span class="text-green-500">{{ selectedMarker.name }}</span>
+                        <ClearIcon @click="selectedMarker = null" />
+                    </div>
                     <input @click="viewingList = !viewingList"
+                           @input="viewingList = true"
                            v-model="markerSearchFilter"
-                           class="w-full border rounded-xl focus:ring-green-600
-                           focus:border-green-500 h-[52px]
-                           focus:bg-green-100 focus:bg-opacity-10 hover:border-green-500
+                           class="w-full border rounded-xl focus:ring-0 focus:ring-offset-0
+                           focus:border-green-500 h-[52px] placeholder-gray-400
+                           focus:bg-green-100 focus:bg-opacity-10 hover:border-green-500 dark:focus:border-green-500
                            dark:focus:bg-green-100 dark:focus:bg-opacity-10 dark:hover:border-green-500
                            text-green-500 text-md font-medium
                            border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
                            type="text"
                            placeholder="Категория"
                            required="" />
-                    <button
-                        class="flex gap-2 bg-green-600 px-4 py-2
-                        h-[52px] items-center
+                    <button @click="markDinamogram"
+                            class="flex gap-2 bg-green-600 px-4 py-2
+                        h-[52px] w-[150px] items-center justify-center
                         border border-green-500 rounded-lg text-white text-sm
                         font-semibold hover:bg-opacity-80 dark:hover:bg-opacity-80">
-                        Отправить
+                        <Spinner color="green" v-if="processing" />
+                        <span v-else>Отправить</span>
                     </button>
                 </div>
 
             </div>
-            <div v-else>Пусто</div>
+
+            <div v-else class="w-2/3 flex flex-col items-center">
+                <div class="animate-pulse w-2/3 bg-gray-100 dark:bg-gray-700 rounded-2xl h-[400px]" />
+
+                <div class="flex relative w-full gap-[20px] items-center mt-[200px]">
+                    <div class="animate-pulse bg-gray-100 dark:bg-gray-700 h-[52px] w-full rounded-lg"></div>
+                    <div class="animate-pulse bg-gray-100 dark:bg-gray-700 h-[52px] w-[150px] rounded-lg"></div>
+                </div>
+            </div>
 
         </div>
 
