@@ -40,7 +40,7 @@ const closeModal = () => {
 
         <!-- Page Heading -->
         <nav class="flex items-center w-screen border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800" v-if="$slots.nav">
-            <div class="ml-[50px] w-full h-[50px] px-[20px] flex items-center">
+            <div :class="$slots.subAside ? 'ml-[250px]' : 'ml-[50px]'" class="w-full h-[50px] px-[20px] flex items-center">
                 <slot name="nav" />
 
                 <button
