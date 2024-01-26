@@ -26,14 +26,14 @@ const markerSearchFilter = ref('');
 const processing = ref(false);
 
 const fetchRandomDinamogram = (public_id) => {
-    return axios.get(API_URL + `/d/${public_id}`, {
+    return axios.get(API_URL + `/v1/dnm/${public_id}`, {
         headers: {
             'Content-Type': 'application/json',
-            'x-api-key': API_KEY
+            'Authorization': `Basic ${API_KEY}`
         },
     })
     .then((response) => {
-        dnmObject.value = response.data.data;
+        dnmObject.value = response.data;
     })
     .catch((error) => {
         console.error('Ошибка при получении динамограммы', error);
@@ -41,14 +41,14 @@ const fetchRandomDinamogram = (public_id) => {
 }
 
 const fetchMarkers = () => {
-    return axios.get(API_URL + '/m', {
+    return axios.get(API_URL + '/v1/marker', {
         headers: {
             'Content-Type': 'application/json',
-            'x-api-key': API_KEY
+            'Authorization': `Basic ${API_KEY}`
         },
     })
         .then((response) => {
-            markers.value = response.data.data;
+            markers.value = response.data.markers;
         })
         .catch((error) => {
             console.error('Ошибка при получении динамограммы', error);
@@ -70,27 +70,26 @@ const markDinamogram = () => {
 
     processing.value = true;
 
-    axios.post(API_URL + '/d', {
+    axios.post(API_URL + '/v1/dnm', {
         id: dnmObject.value.id,
         marker_id: selectedMarker.value.id,
     }, {
         headers: {
             'Content-Type': 'application/json',
-            'x-api-key': API_KEY
+            'Authorization': `Basic ${API_KEY}`
         },
     })
     .then(() => {
-        processing.value = false;
-        selectedMarker.value = null;
         fetchRandomDinamogram(props.profile_data.public_id);
         fetchMarkers();
-
     })
     .catch(() => {
         processing.value = false;
+        selectedMarker.value = null
     })
     .finally(() => {
         processing.value = false;
+        selectedMarker.value = null
     });
 }
 
@@ -139,7 +138,7 @@ const filtredData = computed(() => {
 
         <div class="flex w-full p-4 items-center justify-center">
 
-            <div v-if="dnmObject" class="flex flex-col w-2/3 items-center justify-center">
+            <div v-if="dnmObject && !processing" class="flex flex-col w-2/3 items-center justify-center">
                 <img
                     :src="API_URL + '/' + dnmObject.url"
                     class="w-2/3 rounded-2xl shadow-xl" />
