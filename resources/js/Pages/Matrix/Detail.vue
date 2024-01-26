@@ -70,25 +70,30 @@ const selectDinamogram = (publicId) => {
         // If the dinamogram already exists, remove it
         dnmData.value.splice(existingDinamogramIndex, 1);
 
-        // Reassign colors based on their order for the first three dinamograms
+        // Reassign colors based on their order for the first five dinamograms
         for (let i = 0; i < dnmData.value.length; i++) {
             if (i === 0) {
                 dnmData.value[i].color = 'green';
             } else if (i === 1) {
                 dnmData.value[i].color = 'orange';
-            } else {
+            } else if (i === 2) {
                 dnmData.value[i].color = 'red';
+            } else if (i === 3) {
+                dnmData.value[i].color = 'blue';
+            } else {
+                dnmData.value[i].color = 'purple';
             }
         }
     } else {
-        if (dnmData.value.length >= 3) {
-            // If there are already 3 dinamograms, remove the oldest one
+        if (dnmData.value.length >= 5) {
+            // If there are already 5 dinamograms, remove the oldest one
             dnmData.value.shift();
         }
 
         fetchDnmData(publicId)
             .then((data) => {
-                const selectedColor = 'green'; // Always set new dinamograms to green
+                const colorOptions = ['green', 'orange', 'red', 'blue', 'purple'];
+                const selectedColor = colorOptions[dnmData.value.length]; // Use the next available color
 
                 const dinamogram = {
                     public_id: publicId,
@@ -98,20 +103,23 @@ const selectDinamogram = (publicId) => {
 
                 dnmData.value.push(dinamogram);
 
-                // Reassign colors based on their order for the first three dinamograms
+                // Reassign colors based on their order for the first five dinamograms
                 for (let i = 0; i < dnmData.value.length; i++) {
                     if (i === 0) {
                         dnmData.value[i].color = 'green';
                     } else if (i === 1) {
                         dnmData.value[i].color = 'orange';
-                    } else {
+                    } else if (i === 2) {
                         dnmData.value[i].color = 'red';
+                    } else if (i === 3) {
+                        dnmData.value[i].color = 'blue';
+                    } else {
+                        dnmData.value[i].color = 'purple';
                     }
                 }
             });
     }
 };
-
 
 
 // Pagination
@@ -125,7 +133,6 @@ const totalPages = computed(() => {
     return Math.ceil(dnmhData.value.length / perPage.value);
   }
 
-  return;
 });
 
 const paginateData = () => {
@@ -284,7 +291,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                 </div>
 
                 <div class="w-full overflow-x-auto overflow-y-auto border border-gray-200 dark:border-gray-700  rounded-xl">
-                      <table v-if="paginatedData.length" class="w-full" striped>
+                      <table v-if="paginatedData.length" class="w-full">
                         <thead>
                             <tr class="border-b bg-gray-50 border-gray-200 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 ">
                                 <th scope="col" class="px-6 py-4 text-left w-[50px]">
