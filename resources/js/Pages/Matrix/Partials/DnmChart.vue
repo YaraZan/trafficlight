@@ -1,10 +1,8 @@
 <template>
-  <div class="w-[60%] flex items-start border border-gray-200 dark:border-gray-700 rounded-xl">
     <svg ref="dinamogram" class="min-h-full w-full"></svg>
     <div id="tooltip" class="absolute hidden p-2 bg-white dark:bg-gray-900 dark:border-gray-700 text-white border border-gray-200 rounded-lg gap-1">
 
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -40,7 +38,7 @@ const drawChart = (datasets) => {
   const xMax = d3.max(allData, (d) => parseFloat(d.X));
   const yMax = Math.ceil(d3.max(allData, (d) => parseFloat(d.Y)) / 500) * 500;
   const yMin = Math.floor(d3.min(allData, (d) => parseFloat(d.Y)) / 500) * 500;
-  
+
 
   // Clear the existing chart
   d3.select(dinamogram.value).selectAll('*').remove();
@@ -117,7 +115,7 @@ const drawChart = (datasets) => {
       .on('mouseout', () => {
         tooltip.style('display', 'none');
       });
-      
+
 
     // Draw lines between points based on "P" field
     for (let i = 1; i < data.length; i++) {

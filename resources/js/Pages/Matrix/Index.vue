@@ -250,7 +250,7 @@ const viewAll = computed(() => page.props.auth.viewWells);
         </template>
 
         <div v-if="data.matrix_data.length" class="bg-white dark:bg-gray-800 relative w-full">
-            <div class="flex flex-col items-start justify-between gap-3 p-4 w-full md:flex-row md:items-center md:gap-3">
+            <div class="fixed top-[51px] z-10 bg-white dark:bg-gray-800 flex flex-col items-start justify-between gap-3 p-4 w-[calc(100%-50px)] md:flex-row md:items-center md:gap-3">
 
                 <div class="flex w-full md:w-auto items-center justify-between gap-3">
                     <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
@@ -382,16 +382,14 @@ const viewAll = computed(() => page.props.auth.viewWells);
                 </div>
             </div>
 
-
-
-            <div v-if="viewType === 'grid'" class="w-full h-full overflow-x-auto p-4">
+            <div v-if="viewType === 'grid'" class="z-10 mt-[125px] w-full h-full overflow-x-auto p-4">
                 <OperationsGrid v-if="paginatedData.length" :data="paginatedData"/>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 dark:border-gray-700 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
                 </div>
             </div>
-            <div v-else class="w-full h-full overflow-x-auto overflow-y-auto">
+            <div v-else class="mt-[120px] block max-h-[800px] overflow-y-auto">
                 <MatrixTable v-if="paginatedData.length" :data="paginatedData"/>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 dark:border-gray-700 rounded-xl">
                     <NoDataIcon />

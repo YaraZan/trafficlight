@@ -21,12 +21,12 @@ const API_KEY =import.meta.env.VITE_DINAMOGRAPH_API_KEY;
 const dnmObject = ref(null);
 const markers = ref(null);
 const viewingList = ref(false);
-const selectedMarker = ref(null);
+const selectedMarkers = ref([]);
 const markerSearchFilter = ref('');
 const processing = ref(false);
 
 const fetchRandomDinamogram = (public_id) => {
-    return axios.get(API_URL + `/v1/dnm/${public_id}`, {
+    return axios.get(API_URL + `/v1/dnm/random/${public_id}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Basic ${API_KEY}`
@@ -41,28 +41,31 @@ const fetchRandomDinamogram = (public_id) => {
 }
 
 const fetchMarkers = () => {
-    return axios.get(API_URL + '/v1/marker', {
+    return axios.get(API_URL + '/v1/marker/all', {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Basic ${API_KEY}`
         },
     })
         .then((response) => {
-            markers.value = response.data.markers;
+            markers.value = response.data;
         })
         .catch((error) => {
-            console.error('Ошибка при получении динамограммы', error);
+            console.error('Ошибка при получении маркеров', error);
         });
 }
 
 const selectMarker = (markerObj) => {
     viewingList.value = false;
     markerSearchFilter.value = '';
-    selectedMarker.value = markerObj;
+
+    if (selectedMarkers.value.find(item => item.id === markerObj.id) || selectedMarkers.value.length >= 3) return
+
+    selectedMarkers.value.push(markerObj);
 }
 
 const validateInput = () => {
-    return selectedMarker.value && dnmObject.value;
+    return selectedMarkers.value && dnmObject.value;
 }
 
 const markDinamogram = () => {
@@ -70,10 +73,16 @@ const markDinamogram = () => {
 
     processing.value = true;
 
-    axios.post(API_URL + '/v1/dnm', {
-        id: dnmObject.value.id,
-        marker_id: selectedMarker.value.id,
-    }, {
+    const mDataArr = []
+
+    selectedMarkers.value.forEach(item => {
+        mDataArr.push({
+            id: dnmObject.value.id,
+            marker_id: item.id,
+        })
+    })
+
+    axios.post(API_URL + '/v1/dnm/mark', mDataArr, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Basic ${API_KEY}`
@@ -85,17 +94,19 @@ const markDinamogram = () => {
     })
     .catch(() => {
         processing.value = false;
-        selectedMarker.value = null
+        selectedMarkers.value = null
     })
     .finally(() => {
         processing.value = false;
-        selectedMarker.value = null
+        selectedMarkers.value = null
     });
 }
 
 onMounted(() => {
     fetchRandomDinamogram(props.profile_data.public_id);
     fetchMarkers();
+
+
 })
 
 const filtredData = computed(() => {
@@ -142,7 +153,7 @@ const filtredData = computed(() => {
                 <img
                     :src="API_URL + '/' + dnmObject.url"
                     class="w-2/3 rounded-2xl shadow-xl" />
-                <div class="flex relative w-full gap-[20px] items-center mt-[200px]">
+                <div class="flex relative w-full gap-[10px] items-center mt-[200px]">
                     <Transition
                         enter-active-class="transition ease-out duration-200"
                         enter-from-class="opacity-0 translateX-95"
@@ -153,20 +164,22 @@ const filtredData = computed(() => {
                     >
                         <TrainInputList :url="API_URL" @select="selectMarker" v-if="filtredData && viewingList" :markers="filtredData" />
                     </Transition>
-                    <div v-if="selectedMarker"
-                         class="shadow cursor-pointer flex items-center justify-center
-                                absolute left-[5px] p-2 rounded-[5px] bg-white dark:bg-gray-700
-                                gap-[10px]" >
-                        <span class="text-green-500">{{ selectedMarker.name }}</span>
-                        <ClearIcon @click="selectedMarker = null" />
+                    <div class="absolute left-[5px] flex items-center gap-[5px] overflow-x-auto">
+                        <div v-if="selectedMarkers" v-for="(marker, index) in selectedMarkers"
+                             :key="index"
+                             class="cursor-pointer flex items-center justify-center
+                                p-2 rounded-[5px] bg-gray-50 dark:bg-gray-700 gap-[10px]" >
+                            <span class="text-green-500">{{ marker.name }}</span>
+                            <ClearIcon @click="selectedMarkers = selectedMarkers.filter(item => item.id !== marker.id)" />
+                        </div>
                     </div>
                     <input @click="viewingList = !viewingList"
                            @input="viewingList = true"
                            v-model="markerSearchFilter"
                            class="w-full border rounded-xl focus:ring-0 focus:ring-offset-0
                            focus:border-green-500 h-[52px] placeholder-gray-400
-                           focus:bg-green-100 focus:bg-opacity-10 hover:border-green-500 dark:focus:border-green-500
-                           dark:focus:bg-green-100 dark:focus:bg-opacity-10 dark:hover:border-green-500
+                           hover:border-green-500 dark:focus:border-green-500
+                           dark:hover:border-green-500
                            text-green-500 text-md font-medium
                            border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
                            type="text"

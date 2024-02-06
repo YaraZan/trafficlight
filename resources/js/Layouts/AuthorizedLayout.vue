@@ -18,8 +18,6 @@ import { computed, ref } from 'vue';
 import { useDark, useToggle } from '@vueuse/core';
 import LightThemeIcon from '@/Components/Icons/LightThemeIcon.vue';
 import DarkThemeIcon from '@/Components/Icons/DarkThemeIcon.vue';
-import QuestionIcon from '@/Components/Icons/QuestionIcon.vue';
-import { onMounted } from 'vue';
 import Modal from '@/Components/Modal.vue';
 import Help from '@/Components/Help.vue';
 
@@ -27,6 +25,7 @@ const page = usePage();
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
 const isAdmin = computed(() => page.props.auth.isAdmin);
+const isTrainer = computed(() => page.props.auth.isTrainer);
 
 const readingHelpSurvey = ref(false);
 const closeModal = () => {
@@ -39,18 +38,20 @@ const closeModal = () => {
     <div class="bg-white dark:bg-gray-800 min-w-screen min-h-screen font-montserrat overflow-x-hidden">
 
         <!-- Page Heading -->
-        <nav class="flex items-center w-screen border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800" v-if="$slots.nav">
-            <div :class="$slots.subAside ? 'ml-[250px]' : 'ml-[50px]'" class="w-full h-[50px] px-[20px] flex items-center">
-                <slot name="nav" />
+        <nav
+            :class="$slots.subAside ? 'ml-[250px]' : 'ml-[50px]'"
+            class="fixed flex items-center w-[calc(100%-50px)] border-b border-gray-200
+            dark:border-gray-700 bg-white dark:bg-gray-800 h-[51px] z-10 px-4" v-if="$slots.nav">
 
-                <button
-                @click="toggleDark()"
-                class="px-2 py-2 flex items-center justify-center hover:bg-gray-100 rounded-lg dark:hover:bg-gray-700 ml-auto"
-                >
-                <LightThemeIcon v-if="isDark" />
-                <DarkThemeIcon v-else />
-                </button>
-            </div>
+            <slot name="nav" />
+
+            <button
+            @click="toggleDark()"
+            class="px-2 py-2 flex items-center justify-center hover:bg-gray-100 rounded-lg dark:hover:bg-gray-700 ml-auto"
+            >
+            <LightThemeIcon v-if="isDark" />
+            <DarkThemeIcon v-else />
+            </button>
         </nav>
 
         <aside class="fixed top-0 left-0 z-40 w-[50px] h-screen border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
@@ -64,10 +65,10 @@ const closeModal = () => {
                 <NavLink v-if="isAdmin" :href="route('users')" :active="$page.component.includes('Users/')"><UsersIcon></UsersIcon></NavLink>
                 <NavLink v-if="isAdmin" :href="route('roles')" :active="$page.component.includes('Roles/')"><RolesIcon></RolesIcon></NavLink>
                 <NavLink v-if="isAdmin" :href="route('logs')" :active="$page.component.includes('Logs/')"><LogsIcon></LogsIcon></NavLink>
+                <NavLink v-if="isTrainer || isAdmin" :href="route('dinamograph')" :active="$page.component.includes('Dinamograph/')"><Dinamograph></Dinamograph></NavLink>
                 <div v-if="isAdmin" class="border-b border-gray-200 dark:border-gray-700 w-full"></div>
 
                 <NavLink :href="route('matrix')" :active="$page.component.includes('Matrix/')"><MatrixIcon></MatrixIcon></NavLink>
-                <NavLink :href="route('dinamograph')" :active="$page.component.includes('Dinamograph/')"><Dinamograph></Dinamograph></NavLink>
                 <NavLink  :href="route('alarms')" :active="$page.component.includes('Alarms/')"><AlarmIcon></AlarmIcon></NavLink>
                 <NavLink :href="route('analytics')" :active="$page.component.includes('Analytics/')"><AnalyticsIcon></AnalyticsIcon></NavLink>
                 <NavLink :href="route('settings')" :active="$page.component.includes('Settings/')"><SettingsIcon /></NavLink>
@@ -91,7 +92,7 @@ const closeModal = () => {
 
         <!-- Page Content -->
         <main>
-            <div :class="$slots.subAside ? 'ml-[250px]' : 'ml-[50px]'">
+            <div :class="$slots.subAside ? 'ml-[250px]' : 'ml-[50px]'" class="mt-[50px]">
                 <slot />
             </div>
         </main>
