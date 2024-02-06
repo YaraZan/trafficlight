@@ -37,9 +37,9 @@ function extractNumericPart(data) {
 </script>
 
 <template>
-    <table id="exportMatrix" class="w-full" striped>
-        <thead>
-            <tr class="border-y bg-gray-50 dark:bg-gray-900 dark:bg-opacity-40 border-gray-200 dark:border-gray-700">
+    <table id="exportMatrix" class="w-full">
+        <thead class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 sticky top-0">
+            <tr class="border-y bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700">
                 <th rowspan="2" class="items-center px-4 py-1 text-left">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Связь</span>
                 </th>
@@ -92,7 +92,7 @@ function extractNumericPart(data) {
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Напряжение, В</span>
                 </th>
             </tr>
-            <tr class="border-y bg-gray-50 dark:bg-gray-900 dark:bg-opacity-40 border-gray-200 dark:border-gray-700">
+            <tr class="border-y bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700">
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Факт</span>
                 </th>
@@ -176,7 +176,7 @@ function extractNumericPart(data) {
                 </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="h-[8г00px] overflow-y-auto">
             <tr v-for="(row, index) in data" :key="index"
                 class="hover:bg-gray-50 dark:hover:bg-gray-900 dark:hover:bg-opacity-40 border-b border-gray-200 dark:border-gray-700 cursor-pointer"
                 v-on:dblclick="router.get(`/matrix/${row.public_id}`)"
@@ -221,4 +221,3 @@ function extractNumericPart(data) {
         </tbody>
     </Table>
 </template>
-

@@ -14,6 +14,9 @@ import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
 import EngineIcon from '@/Components/Icons/EngineIcon.vue';
 import { watch } from 'vue';
 import Dinamogram from '@/Components/Icons/Dinamogram.vue';
+import DinamographLogo from "@/Components/Icons/DinamographLogo.vue";
+import {Spinner} from "flowbite-vue";
+import ClearIcon from "@/Components/Icons/ClearIcon.vue";
 
 const props = defineProps({
     item: {
@@ -25,6 +28,15 @@ const props = defineProps({
 const dnmhData = ref([]);
 const dnmData = ref([]);
 const paginatedData = ref([]);
+
+const predictionsData = ref([]);
+
+const API_KEY = import.meta.env.VITE_API_KEY
+const DINAMOGRAPH_API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL
+
+const processingAiAnalysis = ref(false);
+const showAiReportWindow = ref(false);
+
 
 const fetchDnmhData = () => {
   return axios.get(`/api/dnmh/${props.item.public_id}`)
@@ -45,6 +57,48 @@ const fetchDnmData = (publicId) => {
       console.error('Error fetching Dnm data', error);
     });
 };
+
+const fetchRawPrediction = (data) => {
+    processingAiAnalysis.value = true;
+
+    return axios.post(`${DINAMOGRAPH_API_URL}/v1/ai/predict/raw`, {
+        raw_data: data,
+        model_name: 'd_v1'
+    }, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${API_KEY}`
+        },
+    })
+    .then(response => {
+        const res = response.data
+
+        return `${res.split('_').join(' ')}`
+    })
+    .catch(error => {
+        processingAiAnalysis.value = false;
+    })
+    .finally(() => {
+        processingAiAnalysis.value = false;
+    })
+}
+
+const make_ai_analysis = async () => {
+    showAiReportWindow.value = true
+    const predictionsArr = []
+
+    for (const dnm of dnmData.value) {
+        await fetchRawPrediction(dnm.data)
+            .then(res => {
+                predictionsArr.push({
+                    public_id: dnm.public_id,
+                    color: dnm.color,
+                    prediction: res
+                })
+            })
+    }
+    predictionsData.value = predictionsArr
+}
 
 
 onMounted(() => {
@@ -224,6 +278,13 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                 <div :class="item.Connect ? 'bg-green-300 dark:bg-green-400' : 'bg-gray-300 dark:bg-gray-600'" class="w-1/2 h-1/2 rounded-full z-2"></div>
                             </div >
                             <span class="font-bold text-gray-800 dark:text-gray-300 text-lg">{{ item.Name }}</span>
+                            <div class="flex items-center gap-[10px] ml-auto cursor-pointer hover:opacity-80"
+                                @click="make_ai_analysis">
+                                <span class="text-[13px] font-medium text-purple-400">AI анализ</span>
+                                <div class="flex items-center bg-purple-200 justify-center p-1 rounded-[5px]">
+                                    <span class="text-[11px] uppercase font-bold text-purple-800">бета</span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl mt-2">
@@ -282,8 +343,30 @@ const controlWells = computed(() => page.props.auth.controlWells);
 
                     </div>
 
-                    <DnmChart v-if="dnmData.length > 0" :data="dnmData"/>
-                    <div v-else class="flex flex-col gap-10 w-[60%] min-h-full items-center justify-center border border-gray-200 dark:border-gray-700  rounded-xl">
+                    <div v-if="dnmData.length > 0" class="w-[60%] flex items-start border border-gray-200 dark:border-gray-700 rounded-xl relative">
+                        <DnmChart :data="dnmData"/>
+                        <div v-if="showAiReportWindow" class="absolute top-[105%] w-full">
+                            <div class="relative w-full bg-white rounded-lg shadow-lg dark:bg-gray-900 p-4 gap-[20px]
+                           flex flex-col border border-gray-200 dark:border-none">
+                                <ClearIcon @click="showAiReportWindow = false" class="absolute top-[10px] right-[10px] cursor-pointer"/>
+                                <div class="flex items-center gap-[10px]">
+                                    <DinamographLogo/>
+                                    <code class="text-gray-800 dark:text-white text-[14px]">Отчёт Динамографа</code>
+                                </div>
+                                <div v-if="!processingAiAnalysis" class="flex flex-col gap-[15px] pl-2">
+                                    <div v-for="(dnm, index) in predictionsData"
+                                         :key="index"
+                                         class="flex items-center gap-[10px]">
+                                        <div :style="{ 'background-color': dnm.color }" class="rounded-full w-[10px] h-[10px]"></div>
+                                        <code>{{ dnm.prediction }}</code>
+                                        <span class="text-[13px] text-gray-400">{{ dnmhData.find(item => item.public_id === dnm.public_id).DnmAdress }}</span>
+                                    </div>
+                                </div>
+                                <Spinner v-else />
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else class="flex flex-col gap-10 w-[60%] min-h-full items-center justify-center border border-gray-200 dark:border-gray-700 rounded-xl">
                         <Dinamogram />
                         <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения в таблице ниже</span>
                     </div>

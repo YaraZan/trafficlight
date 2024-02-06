@@ -35,6 +35,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'isAdmin' => $request->user() ? $request->user()->isAdmin() : null,
+                'isTrainer' => $request->user() ? $request->user()->isTrainer() : null,
                 'viewWells' => $request->user() ? $request->user()->viewAllWells() : null,
                 'controlWells' => $request->user() ? $request->user()->canEdit() : null,
             ],
