@@ -3,11 +3,16 @@
 
 
 # Светофор
-Веб-приложение для мониторинга и управления состоянием скважин
+Веб-приложение, упрощающее процесс мониторинга и управления состоянием скважин. 
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
-**Автор:** [Ярослав Потёмкин](https://github.com/YaraZan)
+![Laravel](https://img.shields.io/badge/laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white)
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+
 
 ## Примеры функционала
 - **Мониторинг:**
@@ -26,7 +31,7 @@
   Аварии, Часовые архивы, Опросы фильтруются по дате и названию. Параметры и динамограммы
   на детальной странице скважины поддерживают **наложение** для мониторинга изменения состояний за разные промежутки времени
 
-- **AI отчёт** <span style="background-color: green; padding: 2px; margin-left: 5px; border-radius: 5px; font-weight: 700;">Тестируется</span>
+- **AI отчёт**
 
   Генерация отчётов моделью машинного обучения [<b>Динамограф</b>](https://github.com/YaraZan/dinamograph-api)
 
@@ -66,6 +71,8 @@
 **Client:** Vue, Vite, TailwindCSS
 
 **Server:** Laravel
+
+**Database:** PostgreSQL
 
 ## Производство
 
