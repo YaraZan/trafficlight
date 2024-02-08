@@ -1,4 +1,3 @@
-
 ![Logo](public/images/readme_logo.png)
 
 
@@ -72,4 +71,3 @@
 Проект нашёл своё применение в следующих компаниях:
 
 - [ПАО "Татнефть"](https://www.tatneft.ru/)
-
