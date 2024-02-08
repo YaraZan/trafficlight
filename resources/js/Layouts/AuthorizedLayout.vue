@@ -14,12 +14,13 @@ import SettingsIcon from '@/Components/Icons/SettingsIcon.vue';
 import UsersIcon from '@/Components/Icons/UsersIcon.vue';
 import RolesIcon from '@/Components/Icons/RolesIcon.vue';
 import LogsIcon from '@/Components/Icons/LogsIcon.vue';
-import { computed, ref } from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import { useDark, useToggle } from '@vueuse/core';
 import LightThemeIcon from '@/Components/Icons/LightThemeIcon.vue';
 import DarkThemeIcon from '@/Components/Icons/DarkThemeIcon.vue';
 import Modal from '@/Components/Modal.vue';
 import Help from '@/Components/Help.vue';
+import {encryptStorage} from "@/utils/storage.js";
 
 const page = usePage();
 const isDark = useDark();
@@ -31,6 +32,25 @@ const readingHelpSurvey = ref(false);
 const closeModal = () => {
     readingHelpSurvey.value = false;
 };
+
+const DINAMOGRAPH_API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL;
+const API_KEY =import.meta.env.VITE_DINAMOGRAPH_API_KEY;
+
+onMounted(() => {
+    if (encryptStorage.getItem('aiv') === undefined) {
+        axios.get(`${DINAMOGRAPH_API_URL}/v1/ai/models`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${API_KEY}`
+            },
+        })
+        .then(response => {
+            const models = response.data.models;
+
+            encryptStorage.setItem('aiv', models[0])
+        })
+    }
+})
 
 </script>
 
