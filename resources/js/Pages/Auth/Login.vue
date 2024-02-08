@@ -30,12 +30,12 @@ const submit = () => {
     <Head title="Вход" />
 
     <GuestLayout>
-    
+
         <div class="flex flex-col items-center justify-center gap-3">
 
-            <div class="p-4 flex items-center justify-center border border-gray-200 rounded-lg bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Logo />
-            </div>
+
+                <Logo class="w-[48px] h-[48px]" />
+
 
             <div class="flex flex-col gap-1 text-center">
                 <h2 class="font-semibold text-[24px] text-gray-800 dark:text-gray-300">Вход</h2>
@@ -53,8 +53,8 @@ const submit = () => {
             </div>
 
         </div>
-        
+
     </GuestLayout>
-        
+
 
 </template>

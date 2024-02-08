@@ -26,7 +26,7 @@ const emit = defineEmits(['select']);
                  hover:bg-gray-100 cursor-pointer dark:bg-gray-800 dark:hover:bg-gray-700">
                 <img class="w-[120px] h-[60px] rounded-lg border border-gray-200 dark:border-gray-700" :src="url + '/' + marker.url">
                 <div class="flex flex-col gap-[10px]">
-                    <span class="text-gray-800 dark:text-gray-300 font-semibold text-lg">{{ marker.name }}</span>
+                    <span class="text-gray-800 dark:text-gray-300 font-semibold text-lg">{{ marker.name.split('_').join(' ') }}</span>
                     <span class="text-gray-400 font-normal text-xm">{{ `#${marker.id}` }}</span>
                 </div>
             </div>

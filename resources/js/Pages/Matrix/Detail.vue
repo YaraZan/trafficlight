@@ -17,6 +17,7 @@ import Dinamogram from '@/Components/Icons/Dinamogram.vue';
 import DinamographLogo from "@/Components/Icons/DinamographLogo.vue";
 import {Spinner} from "flowbite-vue";
 import ClearIcon from "@/Components/Icons/ClearIcon.vue";
+import {encryptStorage} from "@/utils/storage.js";
 
 const props = defineProps({
     item: {
@@ -28,6 +29,7 @@ const props = defineProps({
 const dnmhData = ref([]);
 const dnmData = ref([]);
 const paginatedData = ref([]);
+const aiError = ref('');
 
 const predictionsData = ref([]);
 
@@ -37,6 +39,31 @@ const DINAMOGRAPH_API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL
 const processingAiAnalysis = ref(false);
 const showAiReportWindow = ref(false);
 
+const getAiModelVersion = () => {
+
+    return axios.get(`${DINAMOGRAPH_API_URL}/v1/ai/models/`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${API_KEY}`
+        },
+    }).then(res => {
+        const aiModels = res.data.models
+
+        if (!aiModels.find(item => item.public_id === encryptStorage.getItem('aiv'))) {
+            encryptStorage.setItem('aiv', aiModels[0].public_id)
+        }
+
+        return axios.get(`${DINAMOGRAPH_API_URL}/v1/ai/models/${encryptStorage.getItem('aiv')}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${API_KEY}`
+            },
+        }).then(res => {
+            return res.data.name
+        })
+    })
+
+    }
 
 const fetchDnmhData = () => {
   return axios.get(`/api/dnmh/${props.item.public_id}`)
@@ -58,12 +85,12 @@ const fetchDnmData = (publicId) => {
     });
 };
 
-const fetchRawPrediction = (data) => {
+const fetchRawPrediction = async (data) => {
     processingAiAnalysis.value = true;
 
     return axios.post(`${DINAMOGRAPH_API_URL}/v1/ai/predict/raw`, {
         raw_data: data,
-        model_name: 'd_v1'
+        model_name: await getAiModelVersion()
     }, {
         headers: {
             'Content-Type': 'application/json',
@@ -76,7 +103,13 @@ const fetchRawPrediction = (data) => {
         return `${res.split('_').join(' ')}`
     })
     .catch(error => {
-        processingAiAnalysis.value = false;
+        aiError.value = 'Ошибка при составлении отчёта. Повторите попытку позже.'
+
+        setTimeout(() => {
+            aiError.value = ''
+
+            showAiReportWindow.value = false
+        }, 5000)
     })
     .finally(() => {
         processingAiAnalysis.value = false;
@@ -174,7 +207,6 @@ const selectDinamogram = (publicId) => {
             });
     }
 };
-
 
 // Pagination
 
@@ -343,26 +375,31 @@ const controlWells = computed(() => page.props.auth.controlWells);
 
                     </div>
 
-                    <div v-if="dnmData.length > 0" class="w-[60%] flex items-start border border-gray-200 dark:border-gray-700 rounded-xl relative">
+                    <div v-if="dnmData.length > 0" class="w-[60%] flex flex-col items-start border border-gray-200 dark:border-gray-700 rounded-xl">
                         <DnmChart :data="dnmData"/>
-                        <div v-if="showAiReportWindow" class="absolute top-[105%] w-full">
-                            <div class="relative w-full bg-white rounded-lg shadow-lg dark:bg-gray-900 p-4 gap-[20px]
+                        <div class="relative w-full mt-[20px]">
+                            <div v-if="showAiReportWindow" class="absolute top-[110%] w-full">
+                                <div class="relative w-full bg-white rounded-lg shadow-lg dark:bg-gray-900 p-4 gap-[20px]
                            flex flex-col border border-gray-200 dark:border-none">
-                                <ClearIcon @click="showAiReportWindow = false" class="absolute top-[10px] right-[10px] cursor-pointer"/>
-                                <div class="flex items-center gap-[10px]">
-                                    <DinamographLogo/>
-                                    <code class="text-gray-800 dark:text-white text-[14px]">Отчёт Динамографа</code>
-                                </div>
-                                <div v-if="!processingAiAnalysis" class="flex flex-col gap-[15px] pl-2">
-                                    <div v-for="(dnm, index) in predictionsData"
-                                         :key="index"
-                                         class="flex items-center gap-[10px]">
-                                        <div :style="{ 'background-color': dnm.color }" class="rounded-full w-[10px] h-[10px]"></div>
-                                        <code>{{ dnm.prediction }}</code>
-                                        <span class="text-[13px] text-gray-400">{{ dnmhData.find(item => item.public_id === dnm.public_id).DnmAdress }}</span>
+                                    <ClearIcon @click="showAiReportWindow = false" class="absolute top-[10px] right-[10px] cursor-pointer"/>
+                                    <div class="flex items-center gap-[10px]">
+                                        <DinamographLogo />
+                                        <code class="text-gray-800 dark:text-white text-[14px]">Отчёт Динамографа</code>
                                     </div>
+                                    <div v-if="!processingAiAnalysis && !aiError" class="flex flex-col gap-[15px] pl-2">
+                                        <div v-for="(dnm, index) in predictionsData"
+                                             :key="index"
+                                             class="flex items-center gap-[10px]">
+                                            <div :style="{ 'background-color': dnm.color }" class="rounded-full w-[10px] h-[10px]"></div>
+                                            <code>{{ dnm.prediction }}</code>
+                                            <span class="text-[13px] text-gray-400">{{ dnmhData.find(item => item.public_id === dnm.public_id).DnmAdress }}</span>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="aiError">
+                                        <code class="text-red-500">{{ aiError }}</code>
+                                    </div>
+                                    <Spinner class="fill-white" v-else />
                                 </div>
-                                <Spinner v-else />
                             </div>
                         </div>
                     </div>

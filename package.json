@@ -23,6 +23,7 @@
     "chart.js": "^4.4.0",
     "crypto-js": "^4.1.1",
     "d3": "^7.8.5",
+    "encrypt-storage": "^2.12.22",
     "file-saver": "^2.0.5",
     "flowbite": "^1.8.1",
     "flowbite-vue": "^0.0.17",
@@ -32,6 +33,7 @@
     "v-click-outside": "^3.2.0",
     "vue-click-outside": "^1.1.0",
     "vue-datepicker-next": "^1.0.3",
+    "vuex": "^4.0.2",
     "xlsx": "^0.18.5"
   }
 }

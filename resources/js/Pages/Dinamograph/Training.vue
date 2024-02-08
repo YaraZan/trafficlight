@@ -26,7 +26,7 @@ const markerSearchFilter = ref('');
 const processing = ref(false);
 
 const fetchRandomDinamogram = (public_id) => {
-    return axios.get(API_URL + `/v1/dnm/random/${public_id}`, {
+    axios.get(API_URL + `/v1/dnm/random/${public_id}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Basic ${API_KEY}`
@@ -41,18 +41,18 @@ const fetchRandomDinamogram = (public_id) => {
 }
 
 const fetchMarkers = () => {
-    return axios.get(API_URL + '/v1/marker/all', {
+    axios.get(API_URL + '/v1/marker/all', {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Basic ${API_KEY}`
         },
     })
-        .then((response) => {
-            markers.value = response.data;
-        })
-        .catch((error) => {
-            console.error('Ошибка при получении маркеров', error);
-        });
+    .then((response) => {
+        markers.value = response.data;
+    })
+    .catch((error) => {
+        console.error('Ошибка при получении маркеров', error);
+    });
 }
 
 const selectMarker = (markerObj) => {
@@ -89,24 +89,22 @@ const markDinamogram = () => {
         },
     })
     .then(() => {
-        fetchRandomDinamogram(props.profile_data.public_id);
+        fetchRandomDinamogram(props.profile_data.public_id)
         fetchMarkers();
     })
     .catch(() => {
         processing.value = false;
-        selectedMarkers.value = null
+        selectedMarkers.value = []
     })
     .finally(() => {
         processing.value = false;
-        selectedMarkers.value = null
+        selectedMarkers.value = []
     });
 }
 
 onMounted(() => {
     fetchRandomDinamogram(props.profile_data.public_id);
     fetchMarkers();
-
-
 })
 
 const filtredData = computed(() => {

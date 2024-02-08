@@ -1,7 +1,6 @@
 <template>
     <svg ref="dinamogram" class="min-h-full w-full"></svg>
     <div id="tooltip" class="absolute hidden p-2 bg-white dark:bg-gray-900 dark:border-gray-700 text-white border border-gray-200 rounded-lg gap-1">
-
     </div>
 </template>
 
