@@ -1,12 +1,19 @@
 ![Logo](public/images/readme_logo.png)
 
-
 # Светофор
-Веб-приложение для мониторинга и управления состоянием скважин
+Приложение для управления состоянием скважин, который делает процесс мониторинга простым и эффективным. 
+Получайте надежную информацию о доступных вам скважинах в реальном времени и принимайте обоснованные решения на основе актуальных данных. 
+Приложение разработано с учетом вашего комфорта и простоты использования для более эффективного управления вашими скважинами.
+
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
-**Автор:** [Ярослав Потёмкин](https://github.com/YaraZan)
+![Laravel](https://img.shields.io/badge/laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white)
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+
 
 ## Примеры функционала
 - **Мониторинг:**
@@ -25,7 +32,7 @@
   Аварии, Часовые архивы, Опросы фильтруются по дате и названию. Параметры и динамограммы
   на детальной странице скважины поддерживают **наложение** для мониторинга изменения состояний за разные промежутки времени
 
-- **AI отчёт** <span style="background-color: green; padding: 2px; margin-left: 5px; border-radius: 5px; font-weight: 700;">Тестируется</span>
+- **AI отчёт**
 
   Генерация отчётов моделью машинного обучения [<b>Динамограф</b>](https://github.com/YaraZan/dinamograph-api)
 
@@ -66,8 +73,8 @@
 
 **Server:** Laravel
 
+**Database:** PostgreSQL
+
 ## Производство
 
-Проект нашёл своё применение в следующих компаниях:
-
-- [ПАО "Татнефть"](https://www.tatneft.ru/)
+Проект нашёл своё применение в компании [ПАО "Татнефть"](https://www.tatneft.ru/)
