@@ -59,13 +59,11 @@ class RoleController extends Controller
         ]);
 
         $public_id = $request->input('public_id');
-        
-        // Delete the role
+
         $role = Role::where('public_id', '=', $public_id)->first();
 
         $role->delete();
 
-        // Redirect or respond as needed
         return Redirect::route('roles');
     }
 

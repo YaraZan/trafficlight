@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->hasMany(Log::class);
     }
 
+    public function refClaims()
+    {
+        return $this->hasMany(RefClaim::class);
+    }
+
     public function role()
     {
         return $this->belongsTo(Role::class);
