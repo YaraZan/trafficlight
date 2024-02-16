@@ -38,6 +38,10 @@ const getActionColor = (action) => {
             break;
     }
 
+    if (action.includes('ИЗМЕНЕНИЕ: ')) {
+        actionColor = 'text-orange-400'
+    }
+
     return actionColor;
 }
 

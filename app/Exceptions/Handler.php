@@ -35,23 +35,23 @@ class Handler extends ExceptionHandler
     {
         try {
             $response = parent::render($request, $e);
-    
+
             switch ($response->status()) {
                 case 404:
                     return Inertia::render('Errors/NotFound')
                         ->toResponse($request)
                         ->setStatusCode($response->status());
-    
+
                 case 403:
                     return Inertia::render('Errors/NotAuthorized')
                         ->toResponse($request)
                         ->setStatusCode($response->status());
-    
+
                 case 500:
                     return Inertia::render('Errors/ServerError')
                         ->toResponse($request)
                         ->setStatusCode($response->status());
-    
+
                 default:
                     return $response;
             }
@@ -59,5 +59,5 @@ class Handler extends ExceptionHandler
             return parent::render($request, $exception);
         }
     }
-    
+
 }

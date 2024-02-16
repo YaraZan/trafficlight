@@ -176,13 +176,13 @@ function extractNumericPart(data) {
                 </th>
             </tr>
         </thead>
-        <tbody class="h-[8г00px] overflow-y-auto">
+        <tbody class="h-[800px] overflow-y-auto">
             <tr v-for="(row, index) in data" :key="index"
                 class="hover:bg-gray-50 dark:hover:bg-gray-900 dark:hover:bg-opacity-40 border-b border-gray-200 dark:border-gray-700 cursor-pointer"
                 v-on:dblclick="router.get(`/matrix/${row.public_id}`)"
              >
                 <th scope="row" class="px-4 py-2 text-center">
-                    <a v-if="row.Web !== '#'" target="_blank" :href="row.Web" class="cursor-pointer">
+                    <a v-if="row.Web !== '#' && row.Web !== null" target="_blank" :href="row.Web" class="cursor-pointer">
                         <span v-if="row.Connect" class="flex items-center justify-center">
                             <WebwisuIcon />
                         </span>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Matrix\CategoryController;
 use App\Http\Controllers\Matrix\DnmhController;
 use App\Http\Controllers\AlarmsController;
 use App\Http\Controllers\Matrix\AskStatsController;
@@ -10,7 +11,7 @@ use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LogController;
-use App\Http\Controllers\Matrix\ControlContrloller;
+use App\Http\Controllers\Matrix\ControlController;
 use App\Http\Controllers\Matrix\DiagramController;
 use \App\Http\Controllers\Dinamograph\TrainingController;
 use Illuminate\Foundation\Application;
@@ -47,7 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/matrix/{well_uuid}/askstats', [AskStatsController::class, 'index'])->name('matrix.askstats');
     Route::get('/matrix/{well_uuid}/alarms', [WellAlarmsController::class, 'index'])->name('matrix.alarms');
     Route::get('/matrix/{well_uuid}/diagrams', [DiagramController::class, 'index'])->name('matrix.diagrams');
-    Route::get('/matrix/{well_uuid}/control', [ControlContrloller::class, 'index'])->name('matrix.control');
+    Route::get('/matrix/{well_uuid}/control', [ControlController::class, 'index'])->name('matrix.control');
 
     Route::get('/alarms', [AlarmsController::class, 'index'])->name('alarms');
 
@@ -67,10 +68,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/api')->group(function () {
+
+        Route::get('/control/{well_uuid}/categories', [ControlController::class, 'getCategoriesAndValues']);
+        Route::get('/control/{well_uuid}/claims', [ControlController::class, 'getUserClaims']);
+        Route::post('/control/claims/create', [ControlController::class, 'createNewClaim'])->name('claim.create');
+        Route::delete('/control/claims/delete', [ControlController::class, 'deleteClaim'])->name('claim.delete');
+
         Route::get('/dnmh/{public_id}', [DnmhController::class, 'index']);
         Route::get('/dnm/{public_id}', [DnmhController::class, 'show']);
 
-        Route::get('well/{well_uuid}/diagrams/{category_uuid}', [DiagramController::class, 'show']);
+        Route::get('/well/{well_uuid}/diagrams/{category_uuid}', [DiagramController::class, 'show']);
     });
 });
 
