@@ -52,7 +52,7 @@ function exportTableToExcel(type) {
 
 
 const searchFilter = ref('');
-const radioFilter = ref('available');
+const radioFilter = ref('all');
 const ngduFilters = ref([]);
 const shopFilters = ref([]);
 const selectAllNgdus = ref(true);
@@ -60,7 +60,7 @@ const selectAllNgdus = ref(true);
 const currentPage = ref(1);
 const perPage = ref(20);
 
-const viewType = ref('grid');
+const viewType = ref('table');
 
 const perPageOptions = [10, 20, 30, 'all'];
 
@@ -341,19 +341,30 @@ const viewAll = computed(() => page.props.auth.viewWells);
                 </button>
 
                 <div class="flex items-center gap-3">
-                        <input v-model="radioFilter" id="today-radio" type="radio" name="filter" value="available" checked class="text-green-500 dark:bg-gray-800 dark:border-gray-700 focus:ring-green-500 bg-gray-100 border-gray-300"/>
+                        <input checked v-model="radioFilter" id="all-radio" type="radio" name="filter" value="all" class="text-green-500 dark:bg-gray-800 dark:border-gray-700 focus:ring-green-500 bg-gray-100 border-gray-300"/>
+                        <label for="all-radio" class="font-medium text-sm text-gray-800 dark:text-gray-400">Все</label>
+
+                        <input v-model="radioFilter" id="today-radio" type="radio" name="filter" value="available" class="text-green-500 dark:bg-gray-800 dark:border-gray-700 focus:ring-green-500 bg-gray-100 border-gray-300"/>
                         <label for="today-radio" class="font-medium text-sm text-gray-800 dark:text-gray-400">Доступные</label>
 
                         <input v-model="radioFilter" id="earlier-radio" type="radio" name="filter" value="lost" class="text-green-500 dark:bg-gray-800 dark:border-gray-700 focus:ring-green-500 bg-gray-100 border-gray-300"/>
                         <label for="earlier-radio" class="font-medium text-sm text-gray-800 dark:text-gray-400">Недоступные</label>
-
-                        <input v-model="radioFilter" id="all-radio" type="radio" name="filter" value="all" class="text-green-500 dark:bg-gray-800 dark:border-gray-700 focus:ring-green-500 bg-gray-100 border-gray-300"/>
-                        <label for="all-radio" class="font-medium text-sm text-gray-800 dark:text-gray-400">Все</label>
                 </div>
 
                 <div class="flex items-center gap-3 lg:ml-auto">
 
                     <ul class="grid grid-cols-2 items-center gap-2">
+
+                        <li>
+                            <button
+                                for="grid-wiew"
+                                class="w-10 h-10 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700"
+                                :class="viewType === 'table' ? 'bg-gray-100 dark:bg-gray-700' : ''"
+                                v-on:click="changeView('table')"
+                            >
+                                <TableIcon />
+                            </button>
+                        </li>
 
                         <li>
                             <button
@@ -363,17 +374,6 @@ const viewAll = computed(() => page.props.auth.viewWells);
                             v-on:click="changeView('grid')"
                             >
                                 <GridIcon />
-                            </button>
-                        </li>
-
-                        <li>
-                            <button
-                            for="grid-wiew"
-                            class="w-10 h-10 rounded-lg items-center justify-center flex hover:bg-gray-100 dark:hover:bg-gray-700"
-                            :class="viewType === 'table' ? 'bg-gray-100 dark:bg-gray-700' : ''"
-                            v-on:click="changeView('table')"
-                            >
-                                <TableIcon />
                             </button>
                         </li>
 

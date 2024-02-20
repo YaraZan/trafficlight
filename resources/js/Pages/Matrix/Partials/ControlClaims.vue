@@ -5,6 +5,7 @@ import ClearIcon from "@/Components/Icons/ClearIcon.vue";
 import {Input, P, Spinner} from "flowbite-vue";
 import Modal from "@/Components/Modal.vue";
 import {useForm} from "@inertiajs/vue3";
+import NoDataIcon from "@/Components/Icons/NoDataIcon.vue";
 
 const props = defineProps({
     claims: {
@@ -117,7 +118,7 @@ const closeModal = () => {
 </script>
 
 <template>
-    <div class="w-full flex flex-col p-4 gap-4">
+    <div v-if="claims.length > 0" class="w-full flex flex-col p-4 gap-4">
 
         <div class="flex items-center justify-between">
 
@@ -178,6 +179,12 @@ const closeModal = () => {
                  h-[200px] relative">
             </div>
         </div>
+    </div>
+
+    <div v-else class="w-full h-full flex flex-col gap-4 items-center justify-center mt-[120px] rounded-lg
+        ">
+        <NoDataIcon/>
+        <span class="text-[14px] text-gray-400 font-semibold">У вас ещё нет заявок</span>
     </div>
 
     <Modal :show="showDeletingClaimWindow" @close="closeModal">
