@@ -132,11 +132,13 @@ const countDeniedClaims = (claims) => {
 
                     <ControlCategories v-if="!categoriesLoading" @created="handleChangedCategory" :item="item" :categories="categories" />
 
-                    <div v-else
-                         v-for="(_, index) in Array.from({ length: 9 })"
-                         :key="index"
-                         class="animate-pulse bg-gray-100 dark:bg-gray-900 rounded-lg flex flex-col justify-between p-5
+                    <div v-else class="w-full grid grid-cols-3 gap-[5px]">
+                        <div
+                            v-for="(_, index) in Array.from({ length: 9 })"
+                            :key="index"
+                            class="animate-pulse bg-gray-100 dark:bg-gray-900 rounded-lg flex flex-col justify-between p-5
                  bg-opacity-60 h-[150px] relative">
+                    </div>
                     </div>
 
                 </div>

@@ -36,26 +36,20 @@ class ControlController extends Controller
 
     public function getCategoriesAndValues($well_uuid)
     {
-        $categories = DB::table('Category')
-            ->select('Id', 'CatName', 'CatNameShorted')
-            ->orderBy('Id')
+        $categories = DB::table('ControlRef as cr')
+            ->join('Well as we', 'cr.Well_Id', '=', 'we.Id')
+            ->join('Category as ct', 'cr.Category_Id', '=', 'ct.Id')
+            ->select('ct.Id as CategoryId',
+                'ct.CatName as CatName',
+                'ct.CatNameShorted as CatNameShorted',
+                'ct.is_writable as IsWritable',
+                'cr.Ref1 as CurrentValue',
+                'cr.armits_ref as ArmitsValue'
+            )
+            ->where('we.public_id', '=', $well_uuid)
+            ->orderBy('IsWritable', 'desc')
+            ->orderBy('Category_Id')
             ->get();
-
-        foreach ($categories as $category) {
-            $alarmColumnName = 'Alarm' . $category->Id;
-            $refColumnName = 'Ref' . $category->Id;
-            $stateColumnName = 'Stat' . $category->Id;
-
-            $well_data = DB::table('WellAlarm as wa')
-                ->join('Well as we', 'wa.Well_Id', '=', 'we.Id')
-                ->where('we.public_id', '=', $well_uuid)
-                ->select('wa.' . $alarmColumnName, 'wa.' . $refColumnName, 'wa.' . $stateColumnName)
-                ->first();
-
-            $category->current_value = $well_data->$alarmColumnName;
-            $category->setpoint_value = $well_data->$refColumnName;
-            $category->state_value = $well_data->$stateColumnName;
-        }
 
         return response()->json($categories);
     }
@@ -85,6 +79,8 @@ class ControlController extends Controller
         where('Id', '=', $request->input('category_id'))->first();
 
         $comment =
+            $well->Name .
+            '-' .
             $category->CatName .
             ': ' .
             $request->input('old_value') .

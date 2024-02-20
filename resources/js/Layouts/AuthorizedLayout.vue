@@ -106,7 +106,7 @@ onMounted(() => {
             <span class="text-gray-800 dark:text-white group-hover:text-white">?</span>
         </div>
 
-        <Modal :show="readingHelpSurvey" @close="closeModal">
+        <Modal custom-styles="mt-5" :show="readingHelpSurvey" @close="closeModal">
             <Help />
         </Modal>
 

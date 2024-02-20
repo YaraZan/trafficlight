@@ -4,6 +4,7 @@ import axios from "axios";
 import Modal from "@/Components/Modal.vue";
 import {Input, P, Spinner} from "flowbite-vue";
 import {useForm} from "@inertiajs/vue3";
+import LockedIcon from "@/Components/Icons/LockedIcon.vue";
 
 const props = defineProps({
     item: {
@@ -121,7 +122,7 @@ const openChangingWindow = (val, id) => {
 </script>
 
 <template>
-    <div class="w-2/3 flex flex-col gap-4">
+    <div class="w-2/3 flex flex-col gap-4 select-none">
 
         <div class="flex items-center justify-between">
 
@@ -154,24 +155,32 @@ const openChangingWindow = (val, id) => {
                     </button>
                 </li>
             </ul>
-
         </div>
 
         <div class="w-full grid grid-cols-3 gap-[5px]">
             <div v-for="(category, index) in paginatedData"
-                 @click="openChangingWindow(category.current_value, category.Id)"
+                 @click="category.IsWritable ? openChangingWindow(category.CurrentValue, category.CategoryId) : {}"
                  :key="index"
-                 class="flex items-center justify-between bg-gray-100 dark:bg-gray-900 p-4 rounded-[10px] hover:outline hover:outline-1 hover:outline-green-400 h-[150px]"
+                 class="relative h-[150px] flex items-end justify-between bg-gray-100 dark:bg-gray-900 p-4 rounded-[10px]"
+                 :class="{ 'hover:outline hover:outline-1 hover:outline-green-400' : category.IsWritable }"
             >
+                <LockedIcon v-if="!category.IsWritable" class="absolute top-4 right-4"/>
+
                 <div class="flex flex-col h-full justify-between">
                     <span class="text-[18px] font-black text-gray-800 dark:text-white">{{ category.CatNameShorted }}</span>
                     <span class="text-[14px] font-normal text-gray-800 dark:text-gray-400 max-w-[150px]">{{ category.CatName }}</span>
                 </div>
 
-                <code class="bg-gray-200 dark:bg-gray-800 rounded-[10px] p-2 text-[20px] font-semibold"
-                    :class="getFontColor(category.state_value)">
-                    {{ category.current_value }}
-                </code>
+                <div class="flex flex-col items-end gap-4">
+                    <code class="bg-gray-200 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[20px] font-semibold">
+                        {{ category.CurrentValue }}
+                    </code>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[14px] text-gray-400">АРМИТС</span>
+                        <span v-if="category.ArmitsValue" class="text-[16px] text-gray-800 dark:text-white">{{  category.ArmitsValue }}</span>
+                        <span v-else class="text-[14px] text-red-500">Пусто</span>
+                    </div>
+                </div>
             </div>
             <div v-if="paginatedData.length < perPage"
                  v-for="(_, index) in Array.from({ length: perPage - paginatedData.length })"
@@ -184,7 +193,7 @@ const openChangingWindow = (val, id) => {
     </div>
 
     <Modal :show="showCreatingClaimWindow" @close="closeModal">
-        <div class="flex flex-col p-5 w-[400px] items-center gap-4">
+        <div class="select-none flex flex-col p-5 w-[400px] items-center gap-4">
             <span class="text-[18px] text-gray-800 dark:text-white font-semibold">Изменение параметров</span>
             <p class="p-4 bg-gray-50 dark:bg-gray-700 rounded-md text-[14px] text-normal text-gray-400">
                 * Примечание: Отправленные вами данные будут сформированы в заявку, и, по возможности

@@ -32,8 +32,6 @@ const categoriesLoading = ref(false);
 const categories = ref([]);
 const paginatedData = ref([]);
 const aiError = ref('');
-const paginationSource = ref('Параметры')
-const paginationSourceTypes = ['Параметры', 'Динамограммы']
 
 const predictionsData = ref([]);
 
@@ -294,7 +292,7 @@ const visiblePages = computed(() => {
 // Pagination categories
 
 const currentPageCategories = ref(1);
-const perPageCategories = ref(10);
+const perPageCategories = ref(5);
 
 const totalPagesCategories = computed(() => {
     return Math.ceil(categories.value.length / perPageCategories.value);
@@ -377,7 +375,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
         <div class="bg-white dark:bg-gray-800 relative w-full">
 
             <!-- Flex [-] -->
-            <div class="flex flex-col gap-5 p-8">
+            <div class="flex flex-col p-8 gap-5">
 
                 <!-- Flex [ | ] -->
                 <div class="flex w-full items-stretch gap-10">
@@ -489,143 +487,135 @@ const controlWells = computed(() => page.props.auth.controlWells);
 
                 </div>
 
-                <div class="flex w-full flex-col gap-5">
+                <div class="flex w-full gap-10">
 
-                    <div class="flex w-full items-center justify-between">
-
-                        <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1">
-                            <span v-for="(item, index) in paginationSourceTypes"
-                            :key="index"
-                            @click="paginationSource = item"
-                            class="cursor-pointer rounded-lg p-2 text-gray-800 dark:text-white font-semibold text-[14px]"
-                            :class="{ 'bg-green-500 text-white hover:bg-opacity-80' : paginationSource === item }">
-                                {{ item }}
-                            </span>
+                    <div class="flex h-full flex-col gap-5 w-2/4">
+                        <div class="w-full flex items-center justify-between" v-if="paginatedDataCategories.length > 0">
+                            <span class="text-gray-800 dark:text-white text-[18px] font-semibold">Параметры</span>
+                            <ul class="flex items-center -space-x-px h-9 text-sm">
+                                <li>
+                                    <button @click="prevPageCategories" :disabled="currentPageCategories === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                        <span class="sr-only">Пред.</span>
+                                        <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                        </svg>
+                                    </button>
+                                </li>
+                                <li v-for="page in visiblePagesCategories" :key="page">
+                                    <button
+                                        @click="setCurrentPageCategories(page)"
+                                        :class="{ 'font-bold text-green-600': currentPageCategories === page }"
+                                        class="flex items-center justify-center px-3 h-9 leading-tight text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                    >
+                                        {{ page }}
+                                    </button>
+                                </li>
+                                <li>
+                                    <button @click="nextPageCategories" :disabled="currentPageCategories === totalPagesCategories" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                        <span class="sr-only">След.</span>
+                                        <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                        </svg>
+                                    </button>
+                                </li>
+                            </ul>
                         </div>
+                        <div class="w-full overflow-x-auto overflow-y-auto border border-gray-200 dark:border-gray-700  rounded-xl">
+                            <table v-if="paginatedDataCategories.length" class="w-full">
+                                <thead>
+                                <tr class="border-b bg-gray-50 border-gray-200 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 ">
+                                    <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                                        <span class="text font-semibold text-gray-800 dark:text-gray-300">Наименование</span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                                        <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(row, index) in paginatedDataCategories" :key="index" class="border-b border-gray-200 dark:border-gray-700">
+                                    <th class="text-[14px] font-semibold border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400 px-6 py-4 text-left">{{ row.CatName }}</th>
+                                    <td class="text-[14px] px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.CurrentValue }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-                        <ul v-if="paginationSource === 'Параметры'" class="flex items-center -space-x-px h-9 text-sm">
-                            <li>
-                                <button @click="prevPageCategories" :disabled="currentPageCategories === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                    <span class="sr-only">Пред.</span>
-                                    <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                                    </svg>
-                                </button>
-                            </li>
-                            <li v-for="page in visiblePagesCategories" :key="page">
-                                <button
-                                    @click="setCurrentPageCategories(page)"
-                                    :class="{ 'font-bold text-green-600': currentPageCategories === page }"
-                                    class="flex items-center justify-center px-3 h-9 leading-tight text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                >
-                                    {{ page }}
-                                </button>
-                            </li>
-                            <li>
-                                <button @click="nextPageCategories" :disabled="currentPageCategories === totalPagesCategories" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                    <span class="sr-only">След.</span>
-                                    <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                                    </svg>
-                                </button>
-                            </li>
-                        </ul>
-                        <ul v-if="paginationSource === 'Динамограммы'" class="flex items-center -space-x-px h-9 text-sm">
-                            <li>
-                                <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                    <span class="sr-only">Пред.</span>
-                                    <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                                    </svg>
-                                </button>
-                            </li>
-                            <li v-for="page in visiblePages" :key="page">
-                                <button
-                                    @click="setCurrentPage(page)"
-                                    :class="{ 'font-bold text-green-600': currentPage === page }"
-                                    class="flex items-center justify-center px-3 h-9 leading-tight text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                                >
-                                    {{ page }}
-                                </button>
-                            </li>
-                            <li>
-                                <button @click="nextPage" :disabled="currentPage === totalPages" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                    <span class="sr-only">След.</span>
-                                    <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                                    </svg>
-                                </button>
-                            </li>
-                        </ul>
-
-                    </div>
-
-                    <div v-if="paginationSource === 'Параметры'" class="w-full grid grid-cols-5 gap-[5px]">
-                        <div v-if="paginatedDataCategories.length" v-for="(category, index) in paginatedDataCategories"
-                        :key="index"
-                        class="flex h-[150px] items-center justify-between bg-gray-100 dark:bg-gray-900 p-4 rounded-lg">
-                            <div class="flex flex-col h-full justify-between">
-                                <span class="text-[18px] font-black text-gray-800 dark:text-white">{{ category.CatNameShorted }}</span>
-                                <span class="text-[14px] font-normal text-gray-800 dark:text-gray-400 max-w-[150px]">{{ category.CatName }}</span>
-                            </div>
-
-                            <div class="flex flex-col items-end gap-4">
-                                <code class="bg-gray-200 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[20px] font-semibold">
-                                    {{ category.CurrentValue }}
-                                </code>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[14px] text-gray-400">АРМИТС</span>
-                                    <code v-if="category.ArmitsValue" class="bg-gray-200 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[16px] font-semibold">
-                                        {{ category.ArmitsValue }}
-                                    </code>
-                                    <span v-else class="text-[14px] text-red-500">Пусто</span>
-                                </div>
-                            </div>
+                            <SkeletonDnmhTable v-else />
                         </div>
-
-                        <SkeletonDnmhTable v-else />
                     </div>
 
-                    <div v-if="paginationSource === 'Динамограммы'" class="w-full overflow-x-auto overflow-y-auto border border-gray-200 dark:border-gray-700  rounded-xl">
-                        <table v-if="paginatedData.length" class="w-full">
-                            <thead>
-                            <tr class="border-b bg-gray-50 border-gray-200 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 ">
-                                <th scope="col" class="px-6 py-4 text-left w-[50px]">
-                                    <span class="text font-semibold text-gray-800"></span>
-                                </th>
-                                <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
-                                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Дата</span>
-                                </th>
-                                <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
-                                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Опрос</span>
-                                </th>
-                                <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
-                                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Наименование</span>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(row, index) in paginatedData" :key="index" class="border-b border-gray-200 dark:border-gray-700">
-                                <th scope="row" class="font-normal text-gray-500 px-6 py-4 text-left border-b border-gray-200 dark:border-gray-700">
-                                    <input
-                                        @change="() => selectDinamogram(row.public_id)"
-                                        :value="row.public_id"
-                                        :checked="dnmData.some((item) => item.public_id === row.public_id)"
-                                        :style="{ color: dnmData.find((item) => item.public_id === row.public_id)?.color }"
-                                        class="bg-gray-100 text-gray-100 dark:text-gray-800 dark:bg-gray-800 dark:border-gray-700 focus:ring-gray-100 dark:focus:ring-gray-800  border-gray-300 rounded cursor-pointer"
-                                        type="checkbox"
-                                    />
-                                </th>
-                                <td class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">{{ row.Dat }}</td>
-                                <td class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.AskLong }}</td>
-                                <td class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.DnmAdress }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div class="flex h-full flex-col gap-5 w-3/4">
+                        <div class="w-full flex items-center justify-between" v-if="paginatedData.length > 0">
+                            <span class="text-gray-800 dark:text-white text-[18px] font-semibold">Динамограммы</span>
+                            <ul class="flex items-center -space-x-px h-9 text-sm">
+                                <li>
+                                    <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                        <span class="sr-only">Пред.</span>
+                                        <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                        </svg>
+                                    </button>
+                                </li>
+                                <li v-for="page in visiblePages" :key="page">
+                                    <button
+                                        @click="setCurrentPage(page)"
+                                        :class="{ 'font-bold text-green-600': currentPage === page }"
+                                        class="flex items-center justify-center px-3 h-9 leading-tight text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                    >
+                                        {{ page }}
+                                    </button>
+                                </li>
+                                <li>
+                                    <button @click="nextPage" :disabled="currentPage === totalPages" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                        <span class="sr-only">След.</span>
+                                        <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                        </svg>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="w-full overflow-x-auto overflow-y-auto border border-gray-200 dark:border-gray-700  rounded-xl">
+                            <table v-if="paginatedData.length" class="w-full">
+                                <thead>
+                                <tr class="border-b bg-gray-50 border-gray-200 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 ">
+                                    <th scope="col" class="px-6 py-4 text-left w-[50px]">
+                                        <span class="text font-semibold text-gray-800"></span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                                        <span class="text font-semibold text-gray-800 dark:text-gray-300">Дата</span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                                        <span class="text font-semibold text-gray-800 dark:text-gray-300">Опрос</span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                                        <span class="text font-semibold text-gray-800 dark:text-gray-300">Наименование</span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(row, index) in paginatedData" :key="index" class="border-b border-gray-200 dark:border-gray-700">
+                                    <th scope="row" class="font-normal text-gray-500 px-6 py-4 text-left border-b border-gray-200 dark:border-gray-700">
+                                        <input
+                                            @change="() => selectDinamogram(row.public_id)"
+                                            :value="row.public_id"
+                                            :checked="dnmData.some((item) => item.public_id === row.public_id)"
+                                            :style="{ color: dnmData.find((item) => item.public_id === row.public_id)?.color }"
+                                            class="bg-gray-100 text-gray-100 dark:text-gray-800 dark:bg-gray-800 dark:border-gray-700 focus:ring-gray-100 dark:focus:ring-gray-800  border-gray-300 rounded cursor-pointer"
+                                            type="checkbox"
+                                        />
+                                    </th>
+                                    <td class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">{{ row.Dat }}</td>
+                                    <td class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.AskLong }}</td>
+                                    <td class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.DnmAdress }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-                        <SkeletonDnmhTable v-else />
+                            <SkeletonDnmhTable v-else />
+                        </div>
                     </div>
-
+                    
                 </div>
 
             </div>
