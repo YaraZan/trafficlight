@@ -37,8 +37,8 @@ function extractNumericPart(data) {
 </script>
 
 <template>
-    <table id="exportMatrix" class="w-full">
-        <thead class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 border-spacing-0 sticky z-[5] top-0">
+    <table id="exportMatrix" class="w-full border-separate border-spacing-0">
+        <thead class="sticky z-[5] top-0 after: bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
             <tr class="border bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700">
                 <th rowspan="2" class="items-center px-4 py-1 text-left">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Связь</span>
@@ -84,6 +84,9 @@ function extractNumericPart(data) {
                 </th>
                 <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Давление в ПГА, МПа</span>
+                </th>
+                <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Длина хода</span>
                 </th>
                 <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Ток, А</span>
@@ -201,11 +204,23 @@ function extractNumericPart(data) {
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
                 </th>
+                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">АРМИТС</span>
+                </th>
+                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
+                </th>
+                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Факт</span>
+                </th>
+                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
+                </th>
             </tr>
         </thead>
-        <tbody class="h-[800px] overflow-y-auto">
+        <tbody class="h-full overflow-y-auto">
             <tr v-for="(row, index) in data" :key="index"
-                class="hover:bg-gray-50 dark:hover:bg-gray-900 dark:hover:bg-opacity-40 border-b border-gray-200 dark:border-gray-700 cursor-pointer"
+                class="hover:bg-gray-50 dark:hover:bg-gray-900 dark:hover:bg-opacity-40 border-b border-gray-200 dark:border-gray-700"
                 v-on:dblclick="router.get(`/matrix/${row.public_id}`)"
              >
                 <th scope="row" class="relative px-4 py-2" :class="{ 'border-l border-red-500' : !row.Connect }">
@@ -239,9 +254,11 @@ function extractNumericPart(data) {
                 <ARDCell :alarm="row.Alarm6" :arm="row.Arm5" :setting="row.Ref6" :diff="row.Dif6" :stat="row.Stat6"></ARDCell>
                 <ARDCell :alarm="row.Alarm7" :arm="row.Arm6" :setting="row.Ref7" :diff="row.Dif7" :stat="row.Stat7"></ARDCell>
                 <ARDCell :alarm="row.Alarm8" :arm="row.Arm7" :setting="row.Ref8" :diff="row.Dif8" :stat="row.Stat8"></ARDCell>
+                <ARDCell :alarm="row.Alarm10" :arm="row.Arm10" :setting="row.Ref10" :diff="row.Dif10" :stat="row.Stat10"></ARDCell>
                 <ARDCell :alarm="row.Alarm11" :arm="row.Arm8" :setting="row.Ref11" :diff="row.Dif11" :stat="row.Stat11"></ARDCell>
                 <ARDCell :alarm="row.Alarm12" :arm="row.Arm9" :setting="row.Ref12" :diff="row.Dif12" :stat="row.Stat12"></ARDCell>
             </tr>
         </tbody>
-    </Table>
+    </table>
 </template>
+

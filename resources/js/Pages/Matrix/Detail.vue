@@ -497,8 +497,8 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             <span v-for="(item, index) in paginationSourceTypes"
                             :key="index"
                             @click="paginationSource = item"
-                            class="cursor-pointer rounded-lg p-2 text-gray-800 dark:text-white font-semibold text-[14px]"
-                            :class="{ 'bg-green-500 text-white hover:bg-opacity-80' : paginationSource === item }">
+                            class="cursor-pointer rounded-lg p-2 text-gray-400 dark:text-gray-600 font-semibold text-[14px]"
+                            :class="{ 'bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">
                                 {{ item }}
                             </span>
                         </div>
