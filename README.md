@@ -55,7 +55,7 @@
 
 <br>
 
-![App Screenshot](public/images/readme_scht_3.png)
+![App Screenshot](public/images/readme_scht_6.png)
 
 **Детальная страница скважины**
 
