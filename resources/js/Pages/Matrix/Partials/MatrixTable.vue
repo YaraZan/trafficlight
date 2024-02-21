@@ -68,30 +68,30 @@ function extractNumericPart(data) {
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Число качаний, об/мин</span>
                 </th>
                 <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Нагрузка максимальная, кг</span>
-                </th>
-                <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Нагрузка минимальная, кг</span>
-                </th>
-                <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Температура масла в ГБ, °С</span>
-                </th>
-                <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Давление в ГН , МПа</span>
-                </th>
-                <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Давление в ГЦ , МПа</span>
-                </th>
-                <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Давление в ПГА, МПа</span>
-                </th>
-                <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Длина хода</span>
                 </th>
-                <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
+                <th colspan="3" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Нагрузка максимальная, кг</span>
+                </th>
+                <th colspan="3" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Нагрузка минимальная, кг</span>
+                </th>
+                <th colspan="3" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Температура масла в ГБ, °С</span>
+                </th>
+                <th colspan="3" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Давление в ГН , МПа</span>
+                </th>
+                <th colspan="3" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Давление в ГЦ , МПа</span>
+                </th>
+                <th colspan="3" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Давление в ПГА, МПа</span>
+                </th>
+                <th colspan="3" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Ток, А</span>
                 </th>
-                <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
+                <th colspan="3" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Напряжение, В</span>
                 </th>
             </tr>
@@ -121,7 +121,13 @@ function extractNumericPart(data) {
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">АРМИТС</span>
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
+                </th>
+                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Факт</span>
+                </th>
+                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
@@ -133,7 +139,13 @@ function extractNumericPart(data) {
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">АРМИТС</span>
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
+                </th>
+                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Факт</span>
+                </th>
+                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
@@ -145,7 +157,13 @@ function extractNumericPart(data) {
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">АРМИТС</span>
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
+                </th>
+                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Факт</span>
+                </th>
+                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
@@ -157,9 +175,6 @@ function extractNumericPart(data) {
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">АРМИТС</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
@@ -167,45 +182,6 @@ function extractNumericPart(data) {
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">АРМИТС</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Факт</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">АРМИТС</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Факт</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">АРМИТС</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Факт</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Отклонение</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">АРМИТС</span>
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
@@ -248,15 +224,15 @@ function extractNumericPart(data) {
                     </span>
                 </td>
                 <ARDCell :alarm="row.Alarm1" :arm="row.Arm1" :setting="row.Ref1" :diff="row.Dif1" :stat="row.Stat1"></ARDCell>
-                <ARDCell :alarm="row.Alarm2" :arm="row.Arm2" :setting="row.Ref2" :diff="row.Dif2" :stat="row.Stat2"></ARDCell>
-                <ARDCell :alarm="row.Alarm3" :arm="row.Arm3" :setting="row.Ref3" :diff="row.Dif3" :stat="row.Stat3"></ARDCell>
-                <ARDCell :alarm="row.Alarm4" :arm="row.Arm4" :setting="row.Ref4" :diff="row.Dif4" :stat="row.Stat4"></ARDCell>
-                <ARDCell :alarm="row.Alarm6" :arm="row.Arm5" :setting="row.Ref6" :diff="row.Dif6" :stat="row.Stat6"></ARDCell>
-                <ARDCell :alarm="row.Alarm7" :arm="row.Arm6" :setting="row.Ref7" :diff="row.Dif7" :stat="row.Stat7"></ARDCell>
-                <ARDCell :alarm="row.Alarm8" :arm="row.Arm7" :setting="row.Ref8" :diff="row.Dif8" :stat="row.Stat8"></ARDCell>
                 <ARDCell :alarm="row.Alarm10" :arm="row.Arm10" :setting="row.Ref10" :diff="row.Dif10" :stat="row.Stat10"></ARDCell>
-                <ARDCell :alarm="row.Alarm11" :arm="row.Arm8" :setting="row.Ref11" :diff="row.Dif11" :stat="row.Stat11"></ARDCell>
-                <ARDCell :alarm="row.Alarm12" :arm="row.Arm9" :setting="row.Ref12" :diff="row.Dif12" :stat="row.Stat12"></ARDCell>
+                <ARDCell :alarm="row.Alarm2" :setting="row.Ref2" :diff="row.Dif2" :stat="row.Stat2"></ARDCell>
+                <ARDCell :alarm="row.Alarm3" :setting="row.Ref3" :diff="row.Dif3" :stat="row.Stat3"></ARDCell>
+                <ARDCell :alarm="row.Alarm4" :setting="row.Ref4" :diff="row.Dif4" :stat="row.Stat4"></ARDCell>
+                <ARDCell :alarm="row.Alarm6" :setting="row.Ref6" :diff="row.Dif6" :stat="row.Stat6"></ARDCell>
+                <ARDCell :alarm="row.Alarm7" :setting="row.Ref7" :diff="row.Dif7" :stat="row.Stat7"></ARDCell>
+                <ARDCell :alarm="row.Alarm8" :setting="row.Ref8" :diff="row.Dif8" :stat="row.Stat8"></ARDCell>
+                <ARDCell :alarm="row.Alarm11" :setting="row.Ref11" :diff="row.Dif11" :stat="row.Stat11"></ARDCell>
+                <ARDCell :alarm="row.Alarm12" :setting="row.Ref12" :diff="row.Dif12" :stat="row.Stat12"></ARDCell>
             </tr>
         </tbody>
     </table>

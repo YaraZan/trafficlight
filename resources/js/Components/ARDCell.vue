@@ -66,13 +66,13 @@ const getFontColor = (val) => {
 </script>
 
 <template>
-    <td class="text-gray-400 p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
+    <td v-if="arm" class="text-gray-400 p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
         <div class="flex items-center justify-center gap-2">
-            <div v-if="arm && arm !== setting" class="bg-red-500 rounded-full w-4 h-4 flex items-center justify-center font-semibold text-white text-[13px]">
+            <div v-if="arm && arm !== setting && arm !== '0.00'" class="bg-red-500 rounded-full w-4 h-4 flex items-center justify-center font-semibold text-white text-[13px]">
                 !
             </div>
 
-            <span v-if="arm">{{ arm }}</span>
+            <span v-if="arm" :class="{ 'text-gray-300 dark:text-gray-600' : arm === '0.00' }">{{ arm }}</span>
             <span v-else class="text-red-500">Пусто</span>
         </div>
     </td>
