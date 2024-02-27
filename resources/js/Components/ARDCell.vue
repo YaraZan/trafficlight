@@ -18,6 +18,10 @@ const props = defineProps({
     stat: {
         type: Number
     },
+    withArmits: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const getBgColor = (val) => {
@@ -66,7 +70,7 @@ const getFontColor = (val) => {
 </script>
 
 <template>
-    <td v-if="arm" class="text-gray-400 p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
+    <td v-if="withArmits" class="text-gray-400 p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
         <div class="flex items-center justify-center gap-2">
             <div v-if="arm && arm !== setting && arm !== '0.00'" class="bg-red-500 rounded-full w-4 h-4 flex items-center justify-center font-semibold text-white text-[13px]">
                 !
