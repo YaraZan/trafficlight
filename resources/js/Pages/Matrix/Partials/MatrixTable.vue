@@ -223,16 +223,17 @@ function extractNumericPart(data) {
                         <ErrorIcon v-else />
                     </span>
                 </td>
-                <ARDCell :alarm="row.Alarm1" :arm="row.Arm1" :setting="row.Ref1" :diff="row.Dif1" :stat="row.Stat1"></ARDCell>
-                <ARDCell :alarm="row.Alarm10" :arm="row.Arm10" :setting="row.Ref10" :diff="row.Dif10" :stat="row.Stat10"></ARDCell>
-                <ARDCell :alarm="row.Alarm2" :setting="row.Ref2" :diff="row.Dif2" :stat="row.Stat2"></ARDCell>
-                <ARDCell :alarm="row.Alarm3" :setting="row.Ref3" :diff="row.Dif3" :stat="row.Stat3"></ARDCell>
-                <ARDCell :alarm="row.Alarm4" :setting="row.Ref4" :diff="row.Dif4" :stat="row.Stat4"></ARDCell>
-                <ARDCell :alarm="row.Alarm6" :setting="row.Ref6" :diff="row.Dif6" :stat="row.Stat6"></ARDCell>
-                <ARDCell :alarm="row.Alarm7" :setting="row.Ref7" :diff="row.Dif7" :stat="row.Stat7"></ARDCell>
-                <ARDCell :alarm="row.Alarm8" :setting="row.Ref8" :diff="row.Dif8" :stat="row.Stat8"></ARDCell>
-                <ARDCell :alarm="row.Alarm11" :setting="row.Ref11" :diff="row.Dif11" :stat="row.Stat11"></ARDCell>
-                <ARDCell :alarm="row.Alarm12" :setting="row.Ref12" :diff="row.Dif12" :stat="row.Stat12"></ARDCell>
+                <ARDCell :withArmits="true" :arm="row.Arm1" :setting="row.Ref1" :alarm="row.Alarm1" :diff="row.Dif1" :stat="row.Stat1"></ARDCell>
+                <ARDCell :withArmits="true" :arm="row.Arm10" :setting="row.Ref10" :alarm="row.Alarm10" :diff="row.Dif10" :stat="row.Stat10"></ARDCell>
+
+                <ARDCell :setting="row.Ref2" :alarm="row.Alarm2" :diff="row.Dif2" :stat="row.Stat2"></ARDCell>
+                <ARDCell :setting="row.Ref3" :alarm="row.Alarm3" :diff="row.Dif3" :stat="row.Stat3"></ARDCell>
+                <ARDCell :setting="row.Ref4" :alarm="row.Alarm4" :diff="row.Dif4" :stat="row.Stat4"></ARDCell>
+                <ARDCell :setting="row.Ref6" :alarm="row.Alarm6" :diff="row.Dif6" :stat="row.Stat6"></ARDCell>
+                <ARDCell :setting="row.Ref7" :alarm="row.Alarm7" :diff="row.Dif7" :stat="row.Stat7"></ARDCell>
+                <ARDCell :setting="row.Ref8" :alarm="row.Alarm8" :diff="row.Dif8" :stat="row.Stat8"></ARDCell>
+                <ARDCell :setting="row.Ref11" :alarm="row.Alarm11" :diff="row.Dif11" :stat="row.Stat11"></ARDCell>
+                <ARDCell :setting="row.Ref12" :alarm="row.Alarm12" :diff="row.Dif12" :stat="row.Stat12"></ARDCell>
             </tr>
         </tbody>
     </table>
