@@ -70,6 +70,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/api')->group(function () {
 
         Route::get('/control/{well_uuid}/categories', [ControlController::class, 'getCategoriesAndValues']);
+        Route::get('/control/{well_uuid}/categories/fact', [ControlController::class, 'getCategoriesAndFactValues']);
         Route::get('/control/{well_uuid}/claims', [ControlController::class, 'getUserClaims']);
         Route::post('/control/claims/create', [ControlController::class, 'createNewClaim'])->name('claim.create');
         Route::delete('/control/claims/delete', [ControlController::class, 'deleteClaim'])->name('claim.delete');

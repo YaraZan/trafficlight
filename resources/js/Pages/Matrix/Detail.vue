@@ -141,7 +141,7 @@ const fetchWellCategories = () => {
 
     categoriesLoading.value = true;
 
-    return axios.get(`/api/control/${props.item.public_id}/categories`)
+    return axios.get(`/api/control/${props.item.public_id}/categories/fact`)
         .then((response) => {
             categories.value = response.data;
         })
@@ -457,9 +457,10 @@ const controlWells = computed(() => page.props.auth.controlWells);
                     <div v-if="dnmData.length > 0" class="w-3/4 flex flex-col items-start border border-gray-200 dark:border-gray-700 rounded-xl">
                         <DnmChart :data="dnmData"/>
                         <div class="relative w-full mt-[20px]">
+
                             <div v-if="showAiReportWindow" class="absolute top-[110%] w-full">
-                                <div class="relative w-full bg-white rounded-lg shadow-lg dark:bg-gray-900 p-4 gap-[20px]
-                           flex flex-col border border-gray-200 dark:border-none">
+                                <div class="relative w-full bg-white rounded-lg shadow-lg dark:border-gray-700 dark:bg-gray-900 p-4 gap-[20px]
+                           flex flex-col border border-gray-200">
                                     <ClearIcon @click="showAiReportWindow = false" class="absolute top-[10px] right-[10px] cursor-pointer"/>
                                     <div class="flex items-center gap-[10px]">
                                         <DinamographLogo />
@@ -480,6 +481,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                     <Spinner class="fill-white" v-else />
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <div v-else class="flex flex-col gap-10 w-3/4 min-h-full items-center justify-center border border-gray-200 dark:border-gray-700 rounded-xl">
@@ -569,9 +571,9 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                 <span class="text-[14px] font-normal text-gray-800 dark:text-gray-400 max-w-[150px]">{{ category.CatName }}</span>
                             </div>
 
-                            <div class="flex flex-col items-end gap-4">
+                            <div class="flex flex-col items-end h-full justify-between">
                                 <code class="bg-gray-200 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[20px] font-semibold">
-                                    {{ category.CurrentValue }}
+                                    {{ category.FactValue }}
                                 </code>
                                 <div class="flex items-center gap-2">
                                     <span class="text-[14px] text-gray-400">АРМИТС</span>

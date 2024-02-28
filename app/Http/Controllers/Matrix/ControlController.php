@@ -54,6 +54,38 @@ class ControlController extends Controller
         return response()->json($categories);
     }
 
+    public function getCategoriesAndFactValues($well_uuid)
+    {
+        $categories = DB::table('ControlRef as cr')
+            ->join('Well as we', 'cr.Well_Id', '=', 'we.Id')
+            ->join('WellAlarm as wa', 'we.Id', '=', 'wa.Well_Id')
+            ->join('Category as ct', 'cr.Category_Id', '=', 'ct.Id')
+            ->select('ct.Id as CategoryId',
+                'ct.CatName as CatName',
+                'ct.CatNameShorted as CatNameShorted',
+                'wa.Id as WellAlarmId',
+                'ct.is_writable as IsWritable',
+                'cr.Ref1 as CurrentValue',
+                'cr.armits_ref as ArmitsValue'
+            )
+            ->where('we.public_id', '=', $well_uuid)
+            ->orderBy('IsWritable', 'desc')
+            ->orderBy('Category_Id')
+            ->get();
+
+        foreach ($categories as $category) {
+            $well_item =
+                DB::table('WellAlarm as wa')
+                    ->where('wa.Id', '=', $category->WellAlarmId)
+                    ->select('wa.Alarm' . $category->CategoryId . ' as FactValue')
+                    ->first();
+
+            $category->FactValue = $well_item->FactValue;
+        }
+
+        return response()->json($categories);
+    }
+
     public function getUserClaims($well_uuid)
     {
         $user = auth()->user();

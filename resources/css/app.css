@@ -9,8 +9,6 @@
     font-style: normal;
 }
 
-<M>
-
 @font-face {
     font-family: 'Montserrat';
     src: url('/fonts/Montserrat-Medium.ttf');
@@ -48,4 +46,47 @@
 
 .dark {
     color-scheme: dark;
+}
+
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F9FAFB;
+    border-radius: 100vw;
+    margin-block: 0.5em;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #E5E7EB;
+    border-radius: 100vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #D2D6DC;
+}
+
+
+
+.dark ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 100vw;
+    margin-block: 0.5em;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 100vw;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #4B5563;
 }
