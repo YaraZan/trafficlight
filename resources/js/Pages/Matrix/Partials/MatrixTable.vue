@@ -3,8 +3,8 @@ import ARDCell from '@/Components/ARDCell.vue';
 import ErrorIcon from '@/Components/Icons/ErrorIcon.vue';
 import DoneIcon from '@/Components/Icons/DoneIcon.vue';
 import WebwisuIcon from '@/Components/Icons/WebwisuIcon.vue';
-import { Link, router } from '@inertiajs/vue3';
-import WebwisuConnLostIcon from '@/Components/Icons/WebwisuConnLostIcon.vue';
+import { router } from '@inertiajs/vue3';
+import {A} from "flowbite-vue";
 
 const props = defineProps({
     data: {
@@ -38,10 +38,13 @@ function extractNumericPart(data) {
 
 <template>
     <table id="exportMatrix" class="w-full border-separate border-spacing-0">
-        <thead class="sticky z-[5] top-0 after: bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+        <thead class="sticky z-[5] top-0 after:bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
             <tr class="border bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700">
-                <th rowspan="2" class="items-center px-4 py-1 text-left">
+                <th rowspan="2" class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Связь</span>
+                </th>
+                <th rowspan="2" class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
+                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Обзор</span>
                 </th>
                 <th rowspan="2" class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">НГДУ</span>
@@ -67,7 +70,7 @@ function extractNumericPart(data) {
                 <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Число качаний, об/мин</span>
                 </th>
-                <th colspan="4" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
+                <th colspan="3" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Длина хода</span>
                 </th>
                 <th colspan="3" class="items-center px-4 py-1 text-center border-gray-200 dark:border-gray-700 border-l border-b">
@@ -110,9 +113,6 @@ function extractNumericPart(data) {
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">АРМИТС</span>
-                </th>
-                <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text font-semibold text-gray-800 dark:text-gray-300">Уставка</span>
                 </th>
                 <th class="items-center px-4 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <span class="text font-semibold text-gray-800 dark:text-gray-300">Факт</span>
@@ -197,7 +197,6 @@ function extractNumericPart(data) {
         <tbody class="h-full overflow-y-auto">
             <tr v-for="(row, index) in data" :key="index"
                 class="hover:bg-gray-50 dark:hover:bg-gray-900 dark:hover:bg-opacity-40 border-b border-gray-200 dark:border-gray-700"
-                v-on:dblclick="router.get(`/matrix/${row.public_id}`)"
              >
                 <th scope="row" class="relative px-4 py-2" :class="{ 'border-l border-red-500' : !row.Connect }">
                     <span v-if="row.Connect" class="text-[16px] font-semibold text-green-400">Есть</span>
@@ -209,31 +208,43 @@ function extractNumericPart(data) {
                     </a>
                 </th>
 
+                <td class="relative text-center border-l border-gray-200 dark:border-gray-700">
+                    <a :href="`/matrix/${row.public_id}`"
+                       target="_blank"
+                       class="group before:absolute before:w-full before:h-full flex items-center justify-center"
+                    >
+                        <svg class="w-5 h-5 stroke-gray-400 group-hover:stroke-green-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 17L17 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M7 7H17V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </td>
+
                 <td class="font-bold px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">
                     <span :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'">{{ extractNgdu(row.WellName) }}</span>
                 </td>
-                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'" class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">{{ extractNumericPart(row.ShopName) }}</td>
-                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'" class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">{{ extractWellNumber(row.WellName) }}</td>
-                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'" class="px-4 py-2 text-left border-l border-gray-200 dark:border-gray-700">{{ row.WellState }}</td>
-                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'" class="px-4 py-2 text-left border-l border-gray-200 dark:border-gray-700">{{ row.Date }}</td>
-                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'" class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">{{ row.SumErr ? row.SumErr : '-' }}</td>
+                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'" class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">{{ extractNumericPart(row.ShopName) }}</td>
+                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'" class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">{{ extractWellNumber(row.WellName) }}</td>
+                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'" class="px-4 py-2 text-left border-l border-gray-200 dark:border-gray-700">{{ row.WellState }}</td>
+                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'" class="px-4 py-2 text-left border-l border-gray-200 dark:border-gray-700">{{ row.Date }}</td>
+                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'" class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">{{ row.SumErr ? row.SumErr : '-' }}</td>
                 <td class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">
                     <span class="flex items-center justify-center">
                         <DoneIcon v-if="row.Ask" />
                         <ErrorIcon v-else />
                     </span>
                 </td>
-                <ARDCell :withArmits="true" :arm="row.Arm1" :setting="row.Ref1" :alarm="row.Alarm1" :diff="row.Dif1" :stat="row.Stat1"></ARDCell>
-                <ARDCell :withArmits="true" :arm="row.Arm10" :setting="row.Ref10" :alarm="row.Alarm10" :diff="row.Dif10" :stat="row.Stat10"></ARDCell>
+                <ARDCell :isConnected="row.Connect" :withArmits="true" :arm="row.Arm1" :setting="row.Ref1" :alarm="row.Alarm1" :diff="row.Dif1" :stat="row.Stat1"></ARDCell>
+                <ARDCell :isConnected="row.Connect" :withSetpoint="false" :withArmits="true" :arm="row.Arm10" :setting="row.Ref10" :alarm="row.Alarm10" :diff="row.Dif10" :stat="row.Stat10"></ARDCell>
 
-                <ARDCell :setting="row.Ref2" :alarm="row.Alarm2" :diff="row.Dif2" :stat="row.Stat2"></ARDCell>
-                <ARDCell :setting="row.Ref3" :alarm="row.Alarm3" :diff="row.Dif3" :stat="row.Stat3"></ARDCell>
-                <ARDCell :setting="row.Ref4" :alarm="row.Alarm4" :diff="row.Dif4" :stat="row.Stat4"></ARDCell>
-                <ARDCell :setting="row.Ref6" :alarm="row.Alarm6" :diff="row.Dif6" :stat="row.Stat6"></ARDCell>
-                <ARDCell :setting="row.Ref7" :alarm="row.Alarm7" :diff="row.Dif7" :stat="row.Stat7"></ARDCell>
-                <ARDCell :setting="row.Ref8" :alarm="row.Alarm8" :diff="row.Dif8" :stat="row.Stat8"></ARDCell>
-                <ARDCell :setting="row.Ref11" :alarm="row.Alarm11" :diff="row.Dif11" :stat="row.Stat11"></ARDCell>
-                <ARDCell :setting="row.Ref12" :alarm="row.Alarm12" :diff="row.Dif12" :stat="row.Stat12"></ARDCell>
+                <ARDCell :isConnected="row.Connect" :setting="row.Ref2" :alarm="row.Alarm2" :diff="row.Dif2" :stat="row.Stat2"></ARDCell>
+                <ARDCell :isConnected="row.Connect" :setting="row.Ref3" :alarm="row.Alarm3" :diff="row.Dif3" :stat="row.Stat3"></ARDCell>
+                <ARDCell :isConnected="row.Connect" :setting="row.Ref4" :alarm="row.Alarm4" :diff="row.Dif4" :stat="row.Stat4"></ARDCell>
+                <ARDCell :isConnected="row.Connect" :setting="row.Ref6" :alarm="row.Alarm6" :diff="row.Dif6" :stat="row.Stat6"></ARDCell>
+                <ARDCell :isConnected="row.Connect" :setting="row.Ref7" :alarm="row.Alarm7" :diff="row.Dif7" :stat="row.Stat7"></ARDCell>
+                <ARDCell :isConnected="row.Connect" :setting="row.Ref8" :alarm="row.Alarm8" :diff="row.Dif8" :stat="row.Stat8"></ARDCell>
+                <ARDCell :isConnected="row.Connect" :setting="row.Ref11" :alarm="row.Alarm11" :diff="row.Dif11" :stat="row.Stat11"></ARDCell>
+                <ARDCell :isConnected="row.Connect" :setting="row.Ref12" :alarm="row.Alarm12" :diff="row.Dif12" :stat="row.Stat12"></ARDCell>
             </tr>
         </tbody>
     </table>

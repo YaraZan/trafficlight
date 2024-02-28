@@ -21,40 +21,21 @@ const props = defineProps({
     withArmits: {
         type: Boolean,
         default: false
-    }
+    },
+    withSetpoint: {
+        type: Boolean,
+        default: true
+    },
+    isConnected: {
+        type: Boolean,
+        required: true
+    },
 });
 
-const getBgColor = (val) => {
-    let colorClass = '';
-
-    switch (val) {
-        case 0:
-            colorClass= 'bg-gray-100 dark:bg-gray-900 dark:bg-opacity-40';
-            break;
-
-        case 2:
-            colorClass= 'bg-orange-400';
-            break;
-
-        case 3:
-            colorClass= 'bg-red-500';
-            break;
-
-        default:
-            break;
-    }
-
-    return colorClass;
-};
-
 const getFontColor = (val) => {
-    let colorClass = 'text-gray-300 dark:text-gray-600';
+    let colorClass = 'text-gray-400';
 
     switch (val) {
-        case 1:
-            colorClass= 'text-gray-400';
-            break;
-
         case 2:
             colorClass= 'text-orange-400';
             break;
@@ -63,6 +44,8 @@ const getFontColor = (val) => {
             colorClass= 'text-red-500';
             break;
     }
+
+    if (!props.isConnected) colorClass = 'text-gray-300 dark:text-gray-600'
 
     return colorClass;
 };
@@ -80,7 +63,7 @@ const getFontColor = (val) => {
             <span v-else class="text-red-500">Пусто</span>
         </div>
     </td>
-    <td :class="getFontColor(stat)" class="p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
+    <td v-if="withSetpoint" :class="getFontColor(stat)" class="p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
         <span v-if="setting">{{ setting }}</span>
         <span v-else class="text-red-500">Пусто</span>
     </td>
