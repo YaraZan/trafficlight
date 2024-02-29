@@ -301,7 +301,7 @@ const viewAll = computed(() => page.props.auth.viewWells);
                     </template>
                 </Dropdown>
 
-                <button v-if="viewType !== 'grid'" @click="exportTableToExcel('xlsx')" size="md" class="hover:bg-opacity-80 border rounded-lg px-3 py-1 h-9 bg-green-600 border-green-500">
+                <button @click="exportTableToExcel('xlsx')" size="md" class="hover:bg-opacity-80 border rounded-lg px-3 py-1 h-9 bg-green-600 border-green-500">
                     <span class="font-semibold text-white">Excel</span>
                 </button>
 
