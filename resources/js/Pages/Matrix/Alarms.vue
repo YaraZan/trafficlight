@@ -205,6 +205,9 @@ watch(() => [dateFilters.value], () => {
                                 <span class="text font-semibold text-gray-800 dark:text-gray-300">Регистр</span>
                             </th>
                             <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700">
+                                <span class="text font-semibold text-gray-800 dark:text-gray-300">Расшифровка</span>
+                            </th>
+                            <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700">
                                 <span class="text font-semibold text-gray-800 dark:text-gray-300">Значение</span>
                             </th>
                         </tr>
@@ -213,6 +216,7 @@ watch(() => [dateFilters.value], () => {
                         <tr v-for="(row, index) in paginatedData" :key="index" class="border-b border-gray-200 dark:border-gray-700">
                             <th scope="row" class="font-normal text-gray-800 dark:text-gray-400 px-6 py-4 text-left">{{ row.Date }}</th>
                             <td class="font-normal text-gray-800 dark:text-gray-400 px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700">{{ row.RegDescript }}</td>
+                            <td class="font-normal text-gray-800 dark:text-gray-400 px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700">{{ row.BitName }}</td>
                             <td class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700">
                                 <span v-if="row.Value" class="py-1 px-2 bg-green-100 text-green-600 dark:bg-green-500 dark:text-white rounded-3xl">Да</span>
                                 <span v-else class="py-1 px-2 bg-red-100 text-red-600 dark:bg-red-500 dark:text-white rounded-3xl">Нет</span>
