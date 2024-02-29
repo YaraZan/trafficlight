@@ -499,7 +499,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             <span v-for="(item, index) in paginationSourceTypes"
                             :key="index"
                             @click="paginationSource = item"
-                            class="cursor-pointer rounded-lg p-2 text-gray-400 dark:text-gray-600 font-semibold text-[14px]"
+                            class="cursor-pointer rounded-lg p-2 text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
                             :class="{ 'bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">
                                 {{ item }}
                             </span>
@@ -580,7 +580,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                     <code v-if="category.ArmitsValue" class="bg-gray-200 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[16px] font-semibold">
                                         {{ category.ArmitsValue }}
                                     </code>
-                                    <span v-else class="text-[14px] text-red-500">Пусто</span>
+                                    <span v-else class="text-[14px] text-red-500 font-semibold">Пусто</span>
                                 </div>
                             </div>
                         </div>

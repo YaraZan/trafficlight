@@ -110,7 +110,7 @@ const currentPage = ref(data[props.startPage]);
 <template>
     <div class="flex flex-col w-[1200px] h-[800px] font-montserrat">
         <div class="flex p-2 border-b border-gray-200 dark:border-gray-700">
-            <span class="text-gray-800 dark:text-gray-300 text-[18px] font-semibold">Помощь 🛈</span>
+            <span class="text-gray-800 dark:text-gray-300 text-[18px] font-semibold">Помощь</span>
         </div>
         <div class="flex relative overflow-y-auto">
             <div class="fixed flex flex-col p-2 gap-[5px] border-r border-gray-200 dark:border-gray-700 w-[200px] h-full">

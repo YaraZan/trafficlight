@@ -45,7 +45,8 @@
 
 
 ## Скриншоты
-![App Screenshot](public/images/readme_scht_1.png)
+![App Screenshot](public/images/readme_scht_9.png)
+![App Screenshot](public/images/readme_scht_8.png)
 
 **Страница со всеми доступными скважинами**
 
@@ -82,14 +83,15 @@
 
 <br>
 
-![App Screenshot](public/images/readme_scht_4.png)
+![App Screenshot](public/images/readme_scht_7.png)
 
-**Вывод отчёта Динамографа** - 20.01.2024
+**Вывод отчёта Динамографа** - 29.02.2024
 
 - **В правой нижней части:** Отчёт, сформированный моделью машинного обучения
 [<b>Динамограф</b>](https://github.com/YaraZan/dinamograph-api). Анализ осуществляется над каждой выбранной
 динамограммой. Для достижения максимальной эффективности рекоммендуется выбрать несколько записей
 
+<br>
 
 ## Производство
 
