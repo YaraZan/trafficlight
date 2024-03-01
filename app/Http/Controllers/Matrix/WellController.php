@@ -24,6 +24,7 @@ class WellController extends Controller
                 ->join('Plc as pl', 'we.Plc_Id', '=', 'pl.Id')
                 ->join('Hd as h', 'we.Hd_Id', '=', 'h.Id')
                 ->select([
+                    'st.Id as WellState_Id',
                     'we.public_id',
                     'wa.Ngdu_Id',
                     'wa.Well_Id',
