@@ -63,6 +63,7 @@ const perPage = ref(20);
 const viewType = ref('table');
 const perPageOptions = [10, 20, 30, 'all'];
 
+const numberSort = ref(false);
 const ngduSort = ref(false);
 const shopSort = ref(false);
 const dateSort = ref(false);
@@ -105,7 +106,7 @@ function extractNumericPart(data) {
 }
 
 const paginatedData = computed(() => {
-    let data = props.data.matrix_data;
+    let data = filteredData.value;
 
     if (perPage.value == 'all') {
         return data;
@@ -122,7 +123,7 @@ const paginatedData = computed(() => {
 });
 
 const filteredData = computed(() => {
-    let data = paginatedData.value;
+    let data = props.data.matrix_data;
 
     switch (radioFilter.value) {
         case 'available':
@@ -157,6 +158,22 @@ const filteredData = computed(() => {
 
     if (ngduSort.value) {
         data = data.sort((a, b) => a.Ngdu_Id - b.Ngdu_Id);
+    }
+
+    if (numberSort.value) {
+        data = data.sort((a, b) => {
+            const numericA = parseInt(extractWellNumber(a.WellName), 10);
+            const numericB = parseInt(extractWellNumber(b.WellName), 10);
+
+            const nonNumericA = extractWellNumber(a.WellName).replace(/\d/g, '');
+            const nonNumericB = extractWellNumber(b.WellName).replace(/\d/g, '');
+
+            if (numericA !== numericB) {
+                return numericA - numericB;
+            } else {
+                return nonNumericA.localeCompare(nonNumericB);
+            }
+        });
     }
 
     if (searchFilter.value !== '') {
@@ -251,6 +268,11 @@ const handleShopCheckboxFilter = (shop) => {
 const changeView = (value) => {
     viewType.value = value;
 }
+
+const extractWellNumber = (string) => {
+    const elements = string.split('-');
+    return elements[elements.length - 1];
+};
 
 watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.value], () => {
 
@@ -409,7 +431,7 @@ const viewAll = computed(() => page.props.auth.viewWells);
             </div>
 
             <div v-if="viewType === 'grid'" class="z-10 mt-[125px] w-full h-full overflow-x-auto p-4">
-                <OperationsGrid v-if="filteredData.length" :data="filteredData"/>
+                <OperationsGrid v-if="paginatedData.length" :data="paginatedData"/>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 dark:border-gray-700 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
@@ -417,11 +439,12 @@ const viewAll = computed(() => page.props.auth.viewWells);
             </div>
             <div v-else class="mt-[120px] block max-h-[800px] overflow-y-auto">
                 <MatrixTable
+                    @sortByNumber="() => { numberSort = !numberSort }"
                     @sort-by-ngdu="() => { ngduSort = !ngduSort }"
                     @sort-by-shop="() => { shopSort = !shopSort }"
                     @sortByState="() => { stateSort = !stateSort }"
                     @sort-by-date="() => { dateSort = !dateSort }"
-                    v-if="filteredData.length" :data="filteredData"/>
+                    v-if="paginatedData.length" :data="paginatedData"/>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 dark:border-gray-700 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>

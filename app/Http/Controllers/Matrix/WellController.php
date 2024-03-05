@@ -42,6 +42,7 @@ class WellController extends Controller
                     'wa.SumErr',
                     'we.Ask',
                     "wa.Connect",
+                    'wa.qn_fak as QnFak',
                     'wa.Alarm1',
                     'wa.Alarm2',
                     'wa.Alarm3',
@@ -105,7 +106,8 @@ class WellController extends Controller
                 ->get();
 
                 $ngdu_data = Ngdu::with('shops')->get();
-        } else {
+        }
+        else {
             $user = auth()->user();
             $matrix_data = DB::table('WellAlarm as wa')
                 ->join('Well as we', 'wa.Well_Id', '=', 'we.Id')
@@ -219,6 +221,10 @@ class WellController extends Controller
             ])
             ->where('we.public_id', '=', $well_uuid)
             ->first();
+
+//            if (Gate::allows('control-wells')) {
+//                return Inertia::render('Matrix/DetailControl', ['item' => $well_data]);
+//            }
 
             return Inertia::render('Matrix/Detail', ['item' => $well_data]);
         }

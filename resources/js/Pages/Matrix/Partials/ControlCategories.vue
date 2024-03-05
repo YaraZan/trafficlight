@@ -18,7 +18,7 @@ const props = defineProps({
 });
 
 const currentPage = ref(1);
-const perPage = ref(9);
+const perPage = ref(6);
 const showCreatingClaimWindow = ref(false);
 
 const totalPages = computed(() => {
@@ -122,94 +122,58 @@ const openChangingWindow = (val, id) => {
 </script>
 
 <template>
-    <div class="w-2/3 flex flex-col gap-4 select-none">
+    <div
+        class="w-2/3 grid grid-cols-3 gap-[5px] p-4 max-h-[350px] overflow-y-auto">
+        <div v-for="(category, index) in categories"
+             @click="category.IsWritable ? openChangingWindow(category.CurrentValue, category.CategoryId) : {}"
+             :key="index"
+             class="relative h-[150px] flex items-end justify-between shadow-lg bg-white dark:bg-gray-800 p-4 rounded-[10px]"
+             :class="{ 'hover:outline hover:outline-1 hover:outline-green-400' : category.IsWritable }"
+        >
+            <LockedIcon v-if="!category.IsWritable" class="absolute top-4 right-4"/>
 
-        <div class="flex items-center justify-between">
+            <div class="flex flex-col h-full justify-between">
+                <span class="text-[18px] font-black text-gray-800 dark:text-white">{{ category.CatNameShorted }}</span>
+                <span class="text-[14px] font-normal text-gray-800 dark:text-gray-400 max-w-[150px]">{{ category.CatName }}</span>
+            </div>
 
-            <span class="text-gray-800 dark:text-white text-[18px] font-semibold">Параметры</span>
-
-            <ul class="flex items-center ml-auto -space-x-px h-9 text-sm md:ml-0">
-                <li>
-                    <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        <span class="sr-only">Пред.</span>
-                        <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                        </svg>
-                    </button>
-                </li>
-                <li v-for="page in visiblePages" :key="page">
-                    <button
-                        @click="setCurrentPage(page)"
-                        :class="{ 'font-bold text-green-600': currentPage === page }"
-                        class="flex items-center justify-center px-3 h-9 leading-tight text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                    >
-                        {{ page }}
-                    </button>
-                </li>
-                <li>
-                    <button @click="nextPage" :disabled="currentPage === totalPages" href="#" class="flex items-center justify-center px-3 h-9 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        <span class="sr-only">След.</span>
-                        <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                        </svg>
-                    </button>
-                </li>
-            </ul>
-        </div>
-
-        <div class="w-full grid grid-cols-3 gap-[5px]">
-            <div v-for="(category, index) in paginatedData"
-                 @click="category.IsWritable ? openChangingWindow(category.CurrentValue, category.CategoryId) : {}"
-                 :key="index"
-                 class="relative h-[150px] flex items-end justify-between bg-gray-100 dark:bg-gray-900 p-4 rounded-[10px]"
-                 :class="{ 'hover:outline hover:outline-1 hover:outline-green-400' : category.IsWritable }"
-            >
-                <LockedIcon v-if="!category.IsWritable" class="absolute top-4 right-4"/>
-
-                <div class="flex flex-col h-full justify-between">
-                    <span class="text-[18px] font-black text-gray-800 dark:text-white">{{ category.CatNameShorted }}</span>
-                    <span class="text-[14px] font-normal text-gray-800 dark:text-gray-400 max-w-[150px]">{{ category.CatName }}</span>
-                </div>
-
-                <div class="flex flex-col items-end gap-4">
-                    <code class="bg-gray-200 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[20px] font-semibold">
-                        {{ category.CurrentValue }}
-                    </code>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[14px] text-gray-400">АРМИТС</span>
-                        <span v-if="category.ArmitsValue" class="text-[16px] text-gray-800 dark:text-white">{{  category.ArmitsValue }}</span>
-                        <span v-else class="text-[14px] text-red-500">Пусто</span>
-                    </div>
+            <div class="flex flex-col items-end gap-4">
+                <code class="bg-gray-100 w-min dark:bg-gray-900 rounded-[10px] p-2 text-[20px] font-semibold">
+                    {{ category.CurrentValue }}
+                </code>
+                <div class="flex items-center gap-2">
+                    <span class="text-[14px] text-gray-400">АРМИТС</span>
+                    <span v-if="category.ArmitsValue" class="text-[16px] text-gray-800 dark:text-white">{{  category.ArmitsValue }}</span>
+                    <span v-else class="text-[14px] text-red-500">Пусто</span>
                 </div>
             </div>
-            <div v-if="paginatedData.length < perPage"
-                 v-for="(_, index) in Array.from({ length: perPage - paginatedData.length })"
-                 :key="index"
-                 class="group border border-dashed border-gray-300 dark:border-gray-700 rounded-lg flex flex-col justify-between p-5
-                 bg-opacity-60 h-[150px] relative">
-            </div>
         </div>
-
+        <div v-if="paginatedData.length < perPage"
+             v-for="(_, index) in Array.from({ length: perPage - paginatedData.length })"
+             :key="index"
+             class="group border border-dashed border-gray-300 dark:border-gray-700 rounded-lg flex flex-col justify-between p-5
+             bg-opacity-60 h-[150px] relative">
+        </div>
     </div>
 
-    <Modal :show="showCreatingClaimWindow" @close="closeModal">
-        <div class="select-none flex flex-col p-5 w-[400px] items-center gap-4">
-            <span class="text-[18px] text-gray-800 dark:text-white font-semibold">Изменение параметров</span>
-            <p class="p-4 bg-gray-50 dark:bg-gray-700 rounded-md text-[14px] text-normal text-gray-400">
-                * Примечание: Отправленные вами данные будут сформированы в заявку, и, по возможности
-                приняты или отклонены оператором.
-            </p>
-            <Input v-model="form.new_value" size="sm"
-                   class="w-full focus:ring-green-600 focus:border-green-500 ring-green-600 h-9" type="number" placeholder="Значение">
-            </Input>
+<Modal :show="showCreatingClaimWindow" @close="closeModal">
+    <div class="select-none flex flex-col p-5 w-[400px] items-center gap-4">
+        <span class="text-[18px] text-gray-800 dark:text-white font-semibold">Изменение параметров</span>
+        <p class="p-4 bg-gray-50 dark:bg-gray-700 rounded-md text-[14px] text-normal text-gray-400">
+            * Примечание: Отправленные вами данные будут сформированы в заявку, и, по возможности
+            приняты или отклонены оператором.
+        </p>
+        <Input v-model="form.new_value" size="sm"
+               class="w-full focus:ring-green-600 focus:border-green-500 ring-green-600 h-9" type="number" placeholder="Значение">
+        </Input>
 
-            <button
-                @click="creteNewClaim"
-                :disabled="form.processing"
-                class="w-full flex justify-center items-center h-[32px] gap-2 bg-green-600 px-4 py-2 border border-green-500 rounded-lg hover:bg-opacity-80">
-                <Spinner v-if="form.processing"/>
-                <span v-else class="text-white text-sm font-semibold">Отправить</span>
-            </button>
-        </div>
-    </Modal>
+        <button
+            @click="creteNewClaim"
+            :disabled="form.processing"
+            class="w-full flex justify-center items-center h-[32px] gap-2 bg-green-600 px-4 py-2 border border-green-500 rounded-lg hover:bg-opacity-80">
+            <Spinner v-if="form.processing"/>
+            <span v-else class="text-white text-sm font-semibold">Отправить</span>
+        </button>
+    </div>
+</Modal>
 </template>
