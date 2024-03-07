@@ -18,6 +18,10 @@ import DinamographLogo from "@/Components/Icons/DinamographLogo.vue";
 import {Spinner} from "flowbite-vue";
 import ClearIcon from "@/Components/Icons/ClearIcon.vue";
 import {encryptStorage} from "@/utils/storage.js";
+import DatePicker from "vue-datepicker-next";
+import 'vue-datepicker-next/index.css';
+import 'vue-datepicker-next/locale/ru.es';
+import CalendarIcon from "@/Components/Icons/CalendarIcon.vue";
 
 const props = defineProps({
     item: {
@@ -34,6 +38,7 @@ const paginatedData = ref([]);
 const aiError = ref('');
 const paginationSource = ref('Параметры')
 const paginationSourceTypes = ['Параметры', 'Динамограммы']
+const dateFilters = ref([]);
 
 const predictionsData = ref([]);
 
@@ -237,15 +242,39 @@ const perPage = ref(4);
 const totalPages = computed(() => {
 
   if (paginatedData.value.length > 0) {
-    return Math.ceil(dnmhData.value.length / perPage.value);
+    return Math.ceil(filteredDnmData.value.length / perPage.value);
   }
 
 });
 
+const filteredDnmData = computed(() => {
+    let data = dnmhData.value;
+
+    if (dateFilters.value && dateFilters.value.length === 2) {
+        const [startDate, endDate] = dateFilters.value;
+
+        data = data.filter(dataItem => {
+            const itemDate = new Date(dataItem.Dat);
+
+            const itemDateString = itemDate.toLocaleDateString();
+            const startDateString = startDate.toLocaleDateString();
+            const endDateString = endDate.toLocaleDateString();
+
+            return (
+                (itemDate >= startDate && itemDate <= endDate) ||
+                (itemDateString === startDateString) ||
+                (itemDateString === endDateString)
+            );
+        });
+    }
+
+    return data;
+})
+
 const paginateData = () => {
   const start = (currentPage.value - 1) * perPage.value;
   const end = start + perPage.value;
-  paginatedData.value = dnmhData.value.slice(start, end);
+  paginatedData.value = filteredDnmData.value.slice(start, end);
 };
 
 const setCurrentPage = (page) => {
@@ -349,7 +378,11 @@ const nextPageCategories = () => {
     }
 };
 
-watch(() => dnmhData.value, () => {
+const clearDate = () => {
+    dateFilters.value = [];
+};
+
+watch(() => [dnmhData.value, dateFilters.value], () => {
   paginateData();
 }, {deep: true});
 
@@ -493,7 +526,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
 
                 <div class="flex w-full flex-col gap-5">
 
-                    <div class="flex w-full items-center justify-between">
+                    <div class="flex w-full items-center gap-4">
 
                         <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1">
                             <span v-for="(item, index) in paginationSourceTypes"
@@ -505,7 +538,26 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             </span>
                         </div>
 
-                        <ul v-if="paginationSource === 'Параметры'" class="flex items-center -space-x-px h-9 text-sm">
+                        <date-picker v-if="paginationSource === 'Динамограммы'" class="flex relative h-9 w-56"
+                                     :editable="false"
+                                     placeholder="Дата"
+                                     input-class="w-full h-full dark:text-green-400 dark:bg-gray-700 bg-gray-50 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-green-500 focus:border-green-500 w-56 ring-green-600"
+                                     popup-class="rounded-lg p-2 relative dark:bg-gray-900 dark:border-gray-600"
+                                     v-model:value="dateFilters"
+                                     range
+                                     separator="-"
+                                     :onClear="clearDate"
+                        >
+                            <template #icon-calendar>
+                                <CalendarIcon />
+                            </template>
+
+                            <template #icon-clear>
+                                <ClearIcon />
+                            </template>
+                        </date-picker>
+
+                        <ul v-if="paginationSource === 'Параметры'" class="flex items-center -space-x-px h-9 text-sm ml-auto">
                             <li>
                                 <button @click="prevPageCategories" :disabled="currentPageCategories === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                     <span class="sr-only">Пред.</span>
@@ -532,7 +584,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                 </button>
                             </li>
                         </ul>
-                        <ul v-if="paginationSource === 'Динамограммы'" class="flex items-center -space-x-px h-9 text-sm">
+                        <ul v-if="paginationSource === 'Динамограммы'" class="flex items-center -space-x-px h-9 text-sm ml-auto">
                             <li>
                                 <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                     <span class="sr-only">Пред.</span>
@@ -563,7 +615,8 @@ const controlWells = computed(() => page.props.auth.controlWells);
                     </div>
 
                     <div v-if="paginationSource === 'Параметры'" class="w-full grid grid-cols-5 gap-[5px]">
-                        <div v-if="paginatedDataCategories.length" v-for="(category, index) in paginatedDataCategories"
+                        <div v-if="paginatedDataCategories.length"
+                             v-for="(category, index) in paginatedDataCategories"
                         :key="index"
                         class="flex h-[150px] items-center justify-between bg-gray-100 dark:bg-gray-900 p-4 rounded-lg">
                             <div class="flex flex-col h-full justify-between">

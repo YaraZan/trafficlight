@@ -8,6 +8,7 @@ import axios from "axios";
 import {computed, onMounted, ref} from "vue";
 import ControlCategories from "@/Pages/Matrix/Partials/ControlCategories.vue";
 import ControlClaims from "@/Pages/Matrix/Partials/ControlClaims.vue";
+import WellClaimHistory from "@/Pages/Matrix/Partials/WellClaimHistory.vue";
 
 const props = defineProps({
     item: {
@@ -18,9 +19,15 @@ const props = defineProps({
 
 const categories = ref([]);
 const claims = ref([]);
+const wellClaims = ref([]);
 
 const categoriesLoading = ref(false);
 const claimsLoading = ref(false);
+const wellClaimsLoading = ref(false);
+
+const paginationSource = ref('История')
+const paginationSourceTypes = ['История', 'Ваши заявки']
+
 const fetchUserClaims = () => {
 
     claimsLoading.value = true;
@@ -34,6 +41,21 @@ const fetchUserClaims = () => {
         })
         .finally(() => {
             claimsLoading.value = false;
+        });
+};
+const fetchWellClaims = () => {
+
+    wellClaimsLoading.value = true;
+
+    return axios.get(`/api/control/${props.item.public_id}/well-claims`)
+        .then((response) => {
+            wellClaims.value = response.data;
+        })
+        .catch((error) => {
+            console.error('Ошибка', error);
+        })
+        .finally(() => {
+            wellClaimsLoading.value = false;
         });
 };
 const fetchWellCategories = () => {
@@ -55,11 +77,13 @@ const fetchWellCategories = () => {
 onMounted(() => {
     fetchUserClaims()
     fetchWellCategories()
+    fetchWellClaims()
 })
 
 const handleChangedCategory = () => {
     fetchUserClaims()
     fetchWellCategories()
+    fetchWellClaims()
 }
 
 const countConfirmedClaims = (claims) => {
@@ -104,11 +128,11 @@ const countDeniedClaims = (claims) => {
 
         <div class="bg-white dark:bg-gray-800 relative w-full flex justify-center">
 
-            <div class="w-full flex flex-col gap-[10px]">
+            <div class="w-full flex flex-col p-4">
 
-                <div class="w-full flex p-4 gap-[10px]">
+                <div class="w-full flex p-4 rounded-[20px] bg-gray-100 dark:bg-gray-900 gap-[10px]">
 
-                    <div class="relative w-1/3 flex flex-col items-center justify-center rounded-[20px] bg-gray-100 dark:bg-gray-900 gap-4">
+                    <div class="relative w-1/3 flex flex-col items-center justify-center gap-4">
                         <OilWellAnimatedIcon/>
                         <code class="bg-gray-200 dark:bg-gray-800 rounded-[10px] p-2 text-[18px] font-semibold text-gray-800 dark:text-white">
                             {{ item.Name }}</code>
@@ -134,23 +158,42 @@ const countDeniedClaims = (claims) => {
 
                     <div v-else class="w-full grid grid-cols-3 gap-[5px]">
                         <div
-                            v-for="(_, index) in Array.from({ length: 9 })"
+                            v-for="(_, index) in Array.from({ length: 6 })"
                             :key="index"
-                            class="animate-pulse bg-gray-100 dark:bg-gray-900 rounded-lg flex flex-col justify-between p-5
+                            class="animate-pulse bg-white dark:bg-gray-800 rounded-lg flex flex-col justify-between p-5
                  bg-opacity-60 h-[150px] relative">
                     </div>
                     </div>
 
                 </div>
 
-                <ControlClaims v-if="!claimsLoading" @deleted="fetchUserClaims" :claims="claims"/>
+                <div class="w-full flex p-4 gap-10">
 
-                <div v-else
-                     v-for="(_, index) in Array.from({ length: 4 })"
-                     :key="index"
-                     class="animate-pulse bg-gray-100 dark:bg-gray-900 rounded-lg flex flex-col justify-between p-5
-                 h-[200px] relative">
+                    <WellClaimHistory v-if="!wellClaimsLoading" :claims="wellClaims"/>
+
+                    <div v-else class="w-1/2 grid-cols-1 grid-rows-4 gap-[5px]">
+                        <div
+                            v-for="(_, index) in Array.from({ length: 4 })"
+                            :key="index"
+                            class="animate-pulse bg-gray-100 dark:bg-gray-900 rounded-lg flex flex-col justify-between p-5
+                 relative">
+                        </div>
+                    </div>
+
+                    <ControlClaims v-if="!claimsLoading" @deleted="fetchUserClaims" :claims="claims"/>
+
+                    <div v-else class="w-1/2 grid-cols-1 grid-rows-4 gap-[5px]">
+                        <div
+                            v-for="(_, index) in Array.from({ length: 4 })"
+                            :key="index"
+                            class="animate-pulse bg-gray-100 dark:bg-gray-900 rounded-lg flex flex-col justify-between p-5
+                 relative">
+                        </div>
+                    </div>
+
                 </div>
+
+
             </div>
 
         </div>

@@ -88,33 +88,6 @@ const getStatusColor = (color) => {
     return statusColor
 }
 
-const emit = defineEmits(['deleted', 'cancelled']);
-
-const form = useForm({
-    claim_id: '',
-});
-
-const deleteClaim = () => {
-    form.delete(route('claim.delete'), {
-        onSuccess: () => {
-            form.reset();
-            showDeletingClaimWindow.value = false
-            emit('deleted');
-        },
-    });
-};
-
-const openDeletingWindow = (val) => {
-    selectedOnDeletionClaim.value = val
-    form.claim_id = val.Id
-
-    showDeletingClaimWindow.value = true;
-}
-
-const closeModal = () => {
-    showDeletingClaimWindow.value = false;
-};
-
 </script>
 
 <template>
@@ -122,7 +95,7 @@ const closeModal = () => {
 
         <div class="flex items-center justify-between">
 
-            <span class="text-gray-300 dark:text-gray-600 text-[13px] font-semibold">Ваши заявки</span>
+            <span class="text-gray-300 dark:text-gray-600 text-[13px] font-semibold">История изменений</span>
 
             <ul class="flex items-center ml-auto -space-x-px h-9 text-sm md:ml-0">
                 <li>
@@ -157,35 +130,49 @@ const closeModal = () => {
         <div class="grid grid-cols-1 grid-rows-4 gap-[5px]">
             <div v-for="(claim, index) in paginatedData"
                  :key="index"
-                 class="group bg-gray-100 dark:bg-gray-900 rounded-lg flex items-center justify-between p-5
-                 relative">
+                 class="h-full p-4 bg-white dark:bg-gray-900 border border-gray-200
+                 dark:border-gray-700
+                 rounded-lg flex items-center justify-between shadow-sm gap-10">
 
-                <div class="flex flex-col gap-2">
-                    <span class="text-gray-400 font-normal text-[13px]">{{ claim.Dat }}</span>
-                    <span class="text-[16px] text-gray-800 dark:text-white font-semibold">{{ claim.Comment }}</span>
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-4">
+                        <span class="text-[13px] text-gray-300 dark:text-gray-500 font-medium">{{ claim.UserName }}</span>
+                        <span class="select-none text-[13px] text-gray-300 dark:text-gray-500 font-medium">·</span>
+                        <span class="text-[13px] text-gray-300 dark:text-gray-500 font-medium">{{ claim.Dat }}</span>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <svg
+                            :class="claim.OldValue <= claim.Value
+                    ? 'fill-green-400' : 'fill-red-400 rotate-180'
+                    "
+                            class="w-5 h-5" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3.56699 0.75C3.75944 0.416666 4.24056 0.416667 4.43301 0.75L7.03109 5.25C7.22354 5.58333 6.98298 6 6.59808 6H1.40192C1.01702 6 0.776461 5.58333 0.968911 5.25L3.56699 0.75Z"/>
+                        </svg>
+                        <span class="text-[16px] text-gray-800 dark:text-white font-bold">{{ claim.CatName }}</span>
+                        <span class="text-[16px] text-gray-800 dark:text-white font-bold">{{ claim.OldValue }}</span>
+                        <span class="text-[16px] text-gray-800 dark:text-white font-bold">-></span>
+                        <span class="text-[16px] text-gray-800 dark:text-white font-bold">{{ claim.Value }}</span>
+                    </div>
                 </div>
 
-                <div class="absolute top-4 right-4 flex items-center justify-between">
-                    <span class="visible group-hover:hidden" :class="getStatusColor(claim.StatusName)">{{ claim.StatusName }}</span>
-                    <ClearIcon
-                        @click="openDeletingWindow(claim)"
-                        v-if="claim.StatusName === 'На рассмотрении'"
-                        class="hidden group-hover:block hover:cursor-pointer" />
-                </div>
+                <span class="text-[13px] font-semibold" :class="getStatusColor(claim.StatusName)">{{ claim.StatusName }}</span>
+
+
             </div>
             <div v-if="paginatedData.length < perPage"
                  v-for="(_, index) in Array.from({ length: perPage - paginatedData.length })"
                  :key="index"
                  class="group border border-dashed border-gray-300 dark:border-gray-700 rounded-lg flex flex-col justify-between p-5
-                  relative">
+                 relative">
             </div>
         </div>
     </div>
 
-    <div v-else class="w-full h-full flex flex-col gap-4 items-center justify-center mt-[120px] rounded-lg
+    <div v-else class="w-1/2 h-full flex flex-col gap-4 items-center justify-center mt-[120px] rounded-lg
         ">
         <NoDataIcon/>
-        <span class="text-[14px] text-gray-400 font-semibold">У вас ещё нет заявок</span>
+        <span class="text-[14px] text-gray-400 font-semibold">На скважине нет заявок</span>
     </div>
 
     <Modal :show="showDeletingClaimWindow" @close="closeModal">

@@ -101,6 +101,25 @@ class ControlController extends Controller
         return response()->json($user_claims);
     }
 
+    public function getWellClaims($well_uuid)
+    {
+        $well_claims = DB::table('RefClaim as rc')
+            ->join('Well as we', 'rc.Well_Id', '=', 'we.Id')
+            ->join('Category as ct', 'rc.Category_Id', '=', 'ct.Id')
+            ->join('users as usr', 'rc.User_Id', '=', 'usr.id')
+            ->join('RefClaimStatus as rfs', 'rc.RefClaimStatus_Id', '=', 'rfs.Id')
+            ->select(
+                'rc.*',
+                'rfs.RCStatusName as StatusName',
+                'usr.name as UserName',
+                'ct.CatName as CatName'
+            )
+            ->where('we.public_id', '=', $well_uuid)
+            ->get();
+
+        return response()->json($well_claims);
+    }
+
     public function createNewClaim(ClaimCreateRequest $request)
     {
         $user = auth()->user();
@@ -126,6 +145,7 @@ class ControlController extends Controller
         $refClaim->Dat = date('Y-m-d H:i:s.u');
         $refClaim->Category_Id = $request->input('category_id');
         $refClaim->RefClaimStatus_Id = 1;
+        $refClaim->OldValue = $request->input('old_value');
         $refClaim->Value = $request->input('new_value');
         $refClaim->save();
 

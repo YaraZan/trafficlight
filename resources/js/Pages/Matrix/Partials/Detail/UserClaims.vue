@@ -118,9 +118,9 @@ const closeModal = () => {
 </script>
 
 <template>
-    <div v-if="claims.length > 0" class="w-1/2 flex flex-col gap-4">
+    <div v-if="claims.length > 0" class="w-full flex flex-col gap-4">
 
-        <div class="flex items-center justify-between">
+        <div class="w-full flex items-center justify-between">
 
             <span class="text-gray-300 dark:text-gray-600 text-[13px] font-semibold">Ваши заявки</span>
 
@@ -154,10 +154,10 @@ const closeModal = () => {
 
         </div>
 
-        <div class="grid grid-cols-1 grid-rows-4 gap-[5px]">
+        <div class="w-full grid grid-cols-1 grid-rows-4 gap-[5px]">
             <div v-for="(claim, index) in paginatedData"
                  :key="index"
-                 class="group bg-gray-100 dark:bg-gray-900 rounded-lg flex items-center justify-between p-5
+                 class="group bg-white dark:bg-gray-900 rounded-lg flex items-center justify-between p-5
                  relative">
 
                 <div class="flex flex-col gap-2">

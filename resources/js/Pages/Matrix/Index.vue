@@ -63,6 +63,12 @@ const perPage = ref(20);
 const viewType = ref('table');
 const perPageOptions = [10, 20, 30, 'all'];
 
+const numberSort = ref(false);
+const ngduSort = ref(false);
+const shopSort = ref(false);
+const dateSort = ref(false);
+const stateSort = ref(false);
+
 const rememberFilters = useRemember({
     searchFilter
 })
@@ -72,21 +78,6 @@ const totalPages = computed(() => {
         return 1;
     }
     return Math.ceil(filteredData.value.length / perPage.value);
-});
-
-const paginatedData = computed(() => {
-    if (perPage.value == 'all') {
-        return filteredData.value;
-    }
-
-    const start = (currentPage.value - 1) * perPage.value;
-    const end = start + perPage.value;
-
-    if (!filteredData.value) {
-        return null;
-    }
-
-    return filteredData.value.slice(start, end);
 });
 
 const updateData = () => {
@@ -109,6 +100,28 @@ const nextPage = () => {
     }
 };
 
+function extractNumericPart(data) {
+    const match = data.match(/\d+/);
+    return match ? match[0] : null;
+}
+
+const paginatedData = computed(() => {
+    let data = filteredData.value;
+
+    if (perPage.value == 'all') {
+        return data;
+    }
+
+    const start = (currentPage.value - 1) * perPage.value;
+    const end = start + perPage.value;
+
+    if (!data) {
+        return null;
+    }
+
+    return data.slice(start, end);
+});
+
 const filteredData = computed(() => {
     let data = props.data.matrix_data;
 
@@ -129,6 +142,38 @@ const filteredData = computed(() => {
     if (props.data.ngdu_data) {
         data = data.filter(item => ngduFilters.value.includes(item.Ngdu_Id));
         data = data.filter(item => shopFilters.value.includes(item.Shop_Id));
+    }
+
+    if (dateSort.value) {
+        data = data.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+    }
+
+    if (stateSort.value) {
+        data = data.sort((a, b) => b.WellState_Id - a.WellState_Id);
+    }
+
+    if (shopSort.value) {
+        data = data.sort((a, b) => extractNumericPart(a.ShopName) - extractNumericPart(b.ShopName));
+    }
+
+    if (ngduSort.value) {
+        data = data.sort((a, b) => a.Ngdu_Id - b.Ngdu_Id);
+    }
+
+    if (numberSort.value) {
+        data = data.sort((a, b) => {
+            const numericA = parseInt(extractWellNumber(a.WellName), 10);
+            const numericB = parseInt(extractWellNumber(b.WellName), 10);
+
+            const nonNumericA = extractWellNumber(a.WellName).replace(/\d/g, '');
+            const nonNumericB = extractWellNumber(b.WellName).replace(/\d/g, '');
+
+            if (numericA !== numericB) {
+                return numericA - numericB;
+            } else {
+                return nonNumericA.localeCompare(nonNumericB);
+            }
+        });
     }
 
     if (searchFilter.value !== '') {
@@ -224,6 +269,11 @@ const changeView = (value) => {
     viewType.value = value;
 }
 
+const extractWellNumber = (string) => {
+    const elements = string.split('-');
+    return elements[elements.length - 1];
+};
+
 watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.value], () => {
 
     if (props.data.ngdu_data && ngduFilters.value.length !== props.data.ngdu_data.length) {
@@ -261,14 +311,15 @@ const viewAll = computed(() => page.props.auth.viewWells);
                         <button v-if="viewAll"
                                 :class="ngduFilters.length > 0 ? 'border-green-500 ring-1 ring-green-500 text-green-500' : ' border-gray-300 text-gray-800 dark:border-gray-600 dark:text-gray-400'"
                                 size="md" color="light"
-                                class="hover:bg-gray-100 dark:hover:bg-gray-700 border rounded-lg px-3 py-1 h-9"
+                                class="hover:bg-gray-100 dark:hover:bg-gray-700 border rounded-lg px-3 py-1
+                                 text-[13px] h-9 bg-white dark:bg-gray-800"
                         >
                             <span class="font-semibold">НГДУ</span>
                         </button>
                     </template>
 
                     <template #content>
-                        <div class="absolute p-2 left-0 z-10 bg-white dark:bg-gray-900 dark:border-gray-700 border border-gray-200 rounded-lg shadow min-w-[300px]">
+                        <div class="absolute p-2 left-0 z-10 bg-white dark:bg-gray-900  rounded-lg shadow min-w-[300px]">
                             <h6 class="font-medium text-sm text-gray-400">Выберите НГДУ</h6>
                             <ul class="mt-[10px] w-full flex flex-col">
                                 <li class="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
@@ -302,7 +353,7 @@ const viewAll = computed(() => page.props.auth.viewWells);
                 </Dropdown>
 
                 <button @click="exportTableToExcel('xlsx')" size="md" class="hover:bg-opacity-80 border rounded-lg px-3 py-1 h-9 bg-green-600 border-green-500">
-                    <span class="font-semibold text-white">Excel</span>
+                    <span class="font-semibold text-white text-[13px]">Excel</span>
                 </button>
 
                 <Input v-model="searchFilter" size="sm" class="focus:ring-green-600 focus:border-green-500 w-56 ring-green-600 h-9" type="text"  placeholder="Поиск" required="">
@@ -310,22 +361,22 @@ const viewAll = computed(() => page.props.auth.viewWells);
 
                 <div class="flex items-center gap-3">
                     <input checked v-model="radioFilter" id="all-radio" type="radio" name="filter" value="all" class="ring-0 focus:ring-0 text-green-500 dark:bg-gray-800 dark:border-gray-700 bg-gray-100 border-gray-300"/>
-                    <label for="all-radio" class="font-semibold text-sm text-gray-800 dark:text-gray-400">Все</label>
+                    <label for="all-radio" class="font-semibold text-[13px] text-gray-800 dark:text-gray-400">Все</label>
 
                     <input v-model="radioFilter" id="today-radio" type="radio" name="filter" value="available" class="ring-0 focus:ring-0 text-green-500 dark:bg-gray-800 dark:border-gray-700 bg-gray-100 border-gray-300"/>
-                    <label for="today-radio" class="font-semibold text-sm text-gray-800 dark:text-gray-400">Доступные</label>
+                    <label for="today-radio" class="font-semibold text-[13px] text-gray-800 dark:text-gray-400">Доступные</label>
 
                     <input v-model="radioFilter" id="earlier-radio" type="radio" name="filter" value="lost" class="ring-0 focus:ring-0 text-green-500 dark:bg-gray-800 dark:border-gray-700 bg-gray-100 border-gray-300"/>
-                    <label for="earlier-radio" class="font-semibold text-sm text-gray-800 dark:text-gray-400">Недоступные</label>
+                    <label for="earlier-radio" class="font-semibold text-[13px] text-gray-800 dark:text-gray-400">Недоступные</label>
                 </div>
 
                 <div class="flex w-full md:w-auto items-center justify-between gap-3 lg:ml-auto">
-                    <select v-model="perPage" @change="updateData" class="block p-2 text-sm font-semibold dark:hover:bg-opacity-80 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
+                    <select v-model="perPage" @change="updateData" class="block p-2 text-[13px] font-semibold dark:hover:bg-opacity-80 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-600 focus:border-green-600 cursor-pointer">
                         <option v-for="option in perPageOptions" :key="option" :value="option">
                             {{ option == 'all' ? 'Все записи' : `${option} записей` }}
                         </option>
                     </select>
-                    <ul class="flex items-center ml-auto -space-x-px h-9 text-sm md:ml-0">
+                    <ul class="flex items-center ml-auto -space-x-px h-9 text-[13px] md:ml-0">
                         <li>
                             <button @click="prevPage" :disabled="currentPage === 1" href="#" class="flex items-center justify-center px-3 h-9 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                 <span class="sr-only">Пред.</span>
@@ -377,9 +428,7 @@ const viewAll = computed(() => page.props.auth.viewWells);
                                 <GridIcon />
                             </button>
                         </li>
-
                     </ul>
-
             </div>
 
             <div v-if="viewType === 'grid'" class="z-10 mt-[125px] w-full h-full overflow-x-auto p-4">
@@ -390,7 +439,13 @@ const viewAll = computed(() => page.props.auth.viewWells);
                 </div>
             </div>
             <div v-else class="mt-[120px] block max-h-[800px] overflow-y-auto">
-                <MatrixTable v-if="paginatedData.length" :data="paginatedData"/>
+                <MatrixTable
+                    @sortByNumber="() => { numberSort = !numberSort }"
+                    @sort-by-ngdu="() => { ngduSort = !ngduSort }"
+                    @sort-by-shop="() => { shopSort = !shopSort }"
+                    @sortByState="() => { stateSort = !stateSort }"
+                    @sort-by-date="() => { dateSort = !dateSort }"
+                    v-if="paginatedData.length" :data="paginatedData"/>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 dark:border-gray-700 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>

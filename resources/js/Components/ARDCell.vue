@@ -53,9 +53,9 @@ const getFontColor = (val) => {
 </script>
 
 <template>
-    <td v-if="withArmits" class="text-gray-400 p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
+    <td v-if="withArmits" :class="getFontColor(arm)" class="text-gray-400 px-3 py-1 text-[13px] font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
         <div class="flex items-center justify-center gap-2">
-            <div v-if="arm && arm !== setting && arm !== '0.00'" class="bg-red-500 rounded-full w-4 h-4 flex items-center justify-center font-semibold text-white text-[13px]">
+            <div v-if="arm && arm !== setting && arm !== '0.00'" class="bg-red-500 rounded-full w-3 h-3 flex items-center justify-center font-semibold text-white text-[12px]">
                 !
             </div>
 
@@ -63,16 +63,16 @@ const getFontColor = (val) => {
             <span v-else class="text-red-500">Пусто</span>
         </div>
     </td>
-    <td v-if="withSetpoint" :class="getFontColor(stat)" class="p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
-        <span v-if="setting">{{ setting }}</span>
-        <span v-else class="text-red-500">Пусто</span>
+    <td v-if="withSetpoint" class="px-3 py-1 text-[13px] font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
+        <span v-if="setting" :class="getFontColor(stat)">{{ setting }}</span>
+        <span v-else class="text-gray-300 dark:text-gray-600">Пусто</span>
     </td>
-    <td :class="getFontColor(stat)" class="p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
-        <span v-if="alarm">{{ alarm }}</span>
-        <span v-else class="text-red-500">Пусто</span>
+    <td class="px-3 py-1 text-[13px] font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
+        <span v-if="alarm" :class="getFontColor(stat)">{{ alarm }}</span>
+        <span v-else class="text-gray-300 dark:text-gray-600">Пусто</span>
     </td>
-    <td :class="getFontColor(stat)" class="p-2 font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
-        <span v-if="diff">{{ diff }}</span>
-        <span v-else class="text-red-500">Пусто</span>
+    <td class="px-3 py-1 text-[13px] font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
+        <span v-if="diff" :class="getFontColor(stat)">{{ diff }}</span>
+        <span v-else class="text-gray-300 dark:text-gray-600">Пусто</span>
     </td>
 </template>
