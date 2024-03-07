@@ -311,7 +311,8 @@ const viewAll = computed(() => page.props.auth.viewWells);
                         <button v-if="viewAll"
                                 :class="ngduFilters.length > 0 ? 'border-green-500 ring-1 ring-green-500 text-green-500' : ' border-gray-300 text-gray-800 dark:border-gray-600 dark:text-gray-400'"
                                 size="md" color="light"
-                                class="hover:bg-gray-100 dark:hover:bg-gray-700 border rounded-lg px-3 py-1 text-[13px] h-9"
+                                class="hover:bg-gray-100 dark:hover:bg-gray-700 border rounded-lg px-3 py-1
+                                 text-[13px] h-9 bg-white dark:bg-gray-800"
                         >
                             <span class="font-semibold">НГДУ</span>
                         </button>

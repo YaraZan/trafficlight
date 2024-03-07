@@ -6,6 +6,7 @@ import WebwisuIcon from '@/Components/Icons/WebwisuIcon.vue';
 import { router } from '@inertiajs/vue3';
 import {A} from "flowbite-vue";
 import TableHeadSortIcon from "@/Components/Icons/TableHeadSortIcon.vue";
+import {value} from "lodash/seq.js";
 
 const props = defineProps({
     data: {
@@ -276,13 +277,13 @@ const emit = defineEmits(['sortByDate', 'sortByState', 'sortByShop', 'sortByNgdu
                     >{{ extractWellNumber(row.WellName) }}</td>
                 <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'"
                     class="font-semibold text-[12px] px-3 py-1 text-left border-l border-gray-200 dark:border-gray-700"
-                >{{ row.QnFak }}</td>
+                >{{ row.QnFak ? row.QnFak : 'Пусто' }}</td>
                 <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'"
                     class="font-semibold text-[13px] px-3 py-1 text-left border-l border-gray-200 dark:border-gray-700"
-                    >{{ row.WellState }}</td>
+                    >{{ row.WellState ? row.WellState : 'Пусто' }}</td>
                 <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'"
                     class="font-semibold text-[12px] px-3 py-1 text-left border-l border-gray-200 dark:border-gray-700"
-                    >{{ normalizeDate(row.Date) }}</td>
+                    >{{ row.Date ? normalizeDate(row.Date) : 'Пусто' }}</td>
                 <ARDCell :isConnected="row.Connect" :withArmits="true" :arm="row.Arm1" :setting="row.Ref1" :alarm="row.Alarm1" :diff="row.Dif1" :stat="row.Stat1"></ARDCell>
                 <ARDCell :isConnected="row.Connect" :withSetpoint="false" :withArmits="true" :arm="row.Arm10" :setting="row.Ref10" :alarm="row.Alarm10" :diff="row.Dif10" :stat="row.Stat10"></ARDCell>
 
@@ -294,7 +295,9 @@ const emit = defineEmits(['sortByDate', 'sortByState', 'sortByShop', 'sortByNgdu
                 <ARDCell :isConnected="row.Connect" :setting="row.Ref8" :alarm="row.Alarm8" :diff="row.Dif8" :stat="row.Stat8"></ARDCell>
                 <ARDCell :isConnected="row.Connect" :setting="row.Ref11" :alarm="row.Alarm11" :diff="row.Dif11" :stat="row.Stat11"></ARDCell>
                 <ARDCell :isConnected="row.Connect" :setting="row.Ref12" :alarm="row.Alarm12" :diff="row.Dif12" :stat="row.Stat12"></ARDCell>
-                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'" class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">{{ row.SumErr ? row.SumErr : '-' }}</td>
+                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'" class="px-4 py-2 text-center border-l border-gray-200 dark:border-gray-700">
+                    {{ row.SumErr ? row.SumErr : 'Пусто' }}
+                </td>
             </tr>
         </tbody>
     </table>
