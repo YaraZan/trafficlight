@@ -532,8 +532,8 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             <span v-for="(item, index) in paginationSourceTypes"
                             :key="index"
                             @click="paginationSource = item"
-                            class="cursor-pointer rounded-lg p-2 text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
-                            :class="{ 'bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">
+                            class="cursor-pointer rounded-lg p-2 text-gray-300 dark:text-gray-600 font-semibold text-[12px]"
+                            :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">
                                 {{ item }}
                             </span>
                         </div>
@@ -618,22 +618,27 @@ const controlWells = computed(() => page.props.auth.controlWells);
                         <div v-if="paginatedDataCategories.length"
                              v-for="(category, index) in paginatedDataCategories"
                         :key="index"
-                        class="flex h-[150px] items-center justify-between bg-gray-100 dark:bg-gray-900 p-4 rounded-lg">
+                        class="flex h-[150px] items-center justify-between bg-white border border-gray-100 dark:bg-gray-900
+                         shadow-md p-4 rounded-lg dark:border-gray-700">
                             <div class="flex flex-col h-full justify-between">
                                 <span class="text-[18px] font-black text-gray-800 dark:text-white">{{ category.CatNameShorted }}</span>
                                 <span class="text-[14px] font-normal text-gray-800 dark:text-gray-400 max-w-[150px]">{{ category.CatName }}</span>
                             </div>
 
                             <div class="flex flex-col items-end h-full justify-between">
-                                <code class="bg-gray-200 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[20px] font-semibold">
-                                    {{ category.FactValue }}
-                                </code>
                                 <div class="flex items-center gap-2">
-                                    <span class="text-[14px] text-gray-400">АРМИТС</span>
-                                    <code v-if="category.ArmitsValue" class="bg-gray-200 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[16px] font-semibold">
+                                    <span class="text-[16px] font-normal text-gray-300 dark:text-gray-600">Факт</span>
+                                    <code v-if="category.ArmitsValue" class="bg-gray-100 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[16px] font-semibold">
+                                        {{ category.FactValue }}
+                                    </code>
+                                    <span v-else class="text-[13px] text-red-500 font-semibold">Пусто</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[13px] font-normal text-gray-300 dark:text-gray-600">АРМИТС</span>
+                                    <code v-if="category.ArmitsValue" class="bg-gray-100 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[16px] font-semibold">
                                         {{ category.ArmitsValue }}
                                     </code>
-                                    <span v-else class="text-[14px] text-red-500 font-semibold">Пусто</span>
+                                    <span v-else class="text-[13px] text-red-500 font-semibold">Пусто</span>
                                 </div>
                             </div>
                         </div>

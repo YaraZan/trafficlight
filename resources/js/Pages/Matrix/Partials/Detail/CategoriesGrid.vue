@@ -10,7 +10,7 @@ const props = defineProps({
 });
 
 const currentPage = ref(1);
-const perPage = ref(8);
+const perPage = ref(4);
 
 const totalPages = computed(() => {
     return Math.ceil(props.categories.length / perPage.value);
@@ -72,7 +72,7 @@ const nextPage = () => {
 
         <div class="w-full flex items-center justify-between">
 
-            <span class="text-gray-300 dark:text-gray-600 text-[13px] font-semibold">Ваши заявки</span>
+            <span class="text-gray-300 dark:text-gray-600 text-[13px] font-semibold">Параметры скважины</span>
 
             <ul class="flex items-center ml-auto -space-x-px h-9 text-sm md:ml-0">
                 <li>
@@ -104,31 +104,43 @@ const nextPage = () => {
 
         </div>
 
-        <div class="grid grid-cols-4 grid-rows-2 gap-[5px]">
+        <div class="grid grid-cols-4 grid-rows-1 gap-[5px]">
             <div v-if="paginatedData.length"
                  v-for="(category, index) in paginatedData"
                  :key="index"
-                 class="flex items-center justify-between bg-white dark:bg-gray-900 p-4 rounded-lg">
+                 class="flex items-center justify-between bg-white dark:bg-gray-900 p-4 rounded-lg
+                border border-gray-200 shadow-sm">
                 <div class="flex flex-col h-full justify-between">
                     <span class="text-[18px] font-black text-gray-800 dark:text-white">{{ category.CatNameShorted }}</span>
                     <span class="text-[14px] font-normal text-gray-800 dark:text-gray-400 max-w-[150px]">{{ category.CatName }}</span>
                 </div>
 
-                <div class="flex flex-col items-end h-full justify-between">
-                    <code class="bg-gray-200 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[20px] font-semibold">
-                        {{ category.FactValue }}
-                    </code>
+                <div class="flex flex-col items-end h-full justify-between gap-2">
                     <div class="flex items-center gap-2">
-                        <span class="text-[14px] text-gray-400">АРМИТС</span>
-                        <code v-if="category.ArmitsValue" class="bg-gray-200 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[16px] font-semibold">
+                        <span class="text-[13px] text-gray-400">Факт</span>
+                        <code v-if="category.ArmitsValue" class="bg-gray-100 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[16px] font-semibold">
+                            {{ category.FactValue }}
+                        </code>
+                        <span v-else class="text-[13px] text-red-500 font-semibold">Пусто</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[13px] text-gray-400">Уставка</span>
+                        <code v-if="category.ArmitsValue" class="bg-gray-100 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[16px] font-semibold">
+                            {{ category.CurrentValue }}
+                        </code>
+                        <span v-else class="text-[13px] text-red-500 font-semibold">Пусто</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[13px] text-gray-400">АРМИТС</span>
+                        <code v-if="category.ArmitsValue" class="bg-gray-100 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[16px] font-semibold">
                             {{ category.ArmitsValue }}
                         </code>
-                        <span v-else class="text-[14px] text-red-500 font-semibold">Пусто</span>
+                        <span v-else class="text-[13px] text-red-500 font-semibold">Пусто</span>
                     </div>
                 </div>
             </div>
 
-            <SkeletonDnmhTable v-else />
+            <!-- v-else here -->
         </div>
 
     </div>

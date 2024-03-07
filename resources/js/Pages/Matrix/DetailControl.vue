@@ -410,7 +410,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
 
                 <div class="min-w-[35%] flex flex-col gap-2">
 
-                    <div class="w-full flex flex-col gap-5 rounded-lg bg-gray-100 dark:bg-gray-700 p-5">
+                    <div class="w-full flex flex-col gap-5 rounded-lg bg-white shadow-sm border border-gray-200 dark:bg-gray-700 p-5">
 
                         <div class="flex items-center gap-10">
                             <OilWellAnimatedIcon class="w-10 h-10"/>
@@ -440,7 +440,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                         <div></div>
                     </div>
 
-                    <div class="w-full flex flex-col gap-5 rounded-lg bg-gray-100 dark:bg-gray-700 p-5">
+                    <div class="w-full flex flex-col gap-5 rounded-lg bg-white shadow-sm border border-gray-200 dark:bg-gray-700 p-5">
 
                         <div class="self-center flex items-center gap-1">
                             <div v-for="(source, index) in paginationClaimsTypes"
@@ -448,8 +448,8 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                  @click="paginationClaimsSource = source"
                                  class="p-2 rounded-lg"
                                  :class="paginationClaimsSource === source ?
-                                 'bg-white shadow-sm text-gray-800 font-semibold' :
-                                  'text-gray-300 hover:bg-gray-50 cursor-pointer font-medium'"
+                                 'bg-white shadow-sm border border-gray-200 text-gray-800 font-semibold' :
+                                  'text-gray-300 hover:bg-gray-100 cursor-pointer font-medium'"
                             >
                                 <span class="text-[13px]">{{ source }}</span>
                             </div>
@@ -500,15 +500,17 @@ const controlWells = computed(() => page.props.auth.controlWells);
                         <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения в таблице ниже</span>
                     </div>
 
-                    <div class="w-full flex flex-col gap-5 rounded-lg bg-gray-100 dark:bg-gray-700 p-5">
+                    <div
+                        class="w-full flex flex-col gap-5 rounded-lg bg-white shadow-md
+                         border border-gray-200 dark:bg-gray-700 p-5">
                         <div class="self-center flex items-center gap-1">
                             <div v-for="(source, index) in paginationSourceTypes"
                                  :key="index"
                                  @click="paginationSource = source"
                                  class="p-2 rounded-lg"
                                  :class="paginationSource === source ?
-                                 'bg-white shadow-sm text-gray-800 font-semibold' :
-                                  'text-gray-300 hover:bg-gray-50 cursor-pointer font-medium'"
+                                 'bg-white shadow-sm border border-gray-200 text-gray-800 font-semibold' :
+                                  'text-gray-300 hover:bg-gray-100 cursor-pointer font-medium'"
                             >
                                 <span class="text-[13px]">{{ source }}</span>
                             </div>

@@ -157,7 +157,7 @@ const closeModal = () => {
         <div class="w-full grid grid-cols-1 grid-rows-4 gap-[5px]">
             <div v-for="(claim, index) in paginatedData"
                  :key="index"
-                 class="group bg-white dark:bg-gray-900 rounded-lg flex items-center justify-between p-5
+                 class="group bg-white border border-gray-200 shadow-sm dark:bg-gray-900 rounded-lg flex items-center justify-between p-5
                  relative">
 
                 <div class="flex flex-col gap-2">
