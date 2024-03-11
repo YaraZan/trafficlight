@@ -222,9 +222,9 @@ class WellController extends Controller
             ->where('we.public_id', '=', $well_uuid)
             ->first();
 
-//            if (Gate::allows('control-wells')) {
-//                return Inertia::render('Matrix/DetailControl', ['item' => $well_data]);
-//            }
+            if (Gate::allows('control-wells')) {
+                return Inertia::render('Matrix/DetailControl', ['item' => $well_data]);
+            }
 
             return Inertia::render('Matrix/Detail', ['item' => $well_data]);
         }

@@ -166,7 +166,9 @@ const closeModal = () => {
                 </div>
 
                 <div class="absolute top-4 right-4 flex items-center justify-between">
-                    <span class="visible group-hover:hidden" :class="getStatusColor(claim.StatusName)">{{ claim.StatusName }}</span>
+                    <span
+                        class="visible"
+                        :class="[getStatusColor(claim.StatusName), { 'group-hover:hidden' : claim.StatusName !== 'На рассмотрении' }]">{{ claim.StatusName }}</span>
                     <ClearIcon
                         @click="openDeletingWindow(claim)"
                         v-if="claim.StatusName === 'На рассмотрении'"

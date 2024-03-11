@@ -1,11 +1,18 @@
 <script setup>
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
-import { Link, Head, usePage } from '@inertiajs/vue3';
-import { ref, onMounted, computed } from 'vue';
+import HourArchIcon from '@/Components/Icons/HourArchIcon.vue';
+import AskStatsIcon from '@/Components/Icons/AskStatsIcon.vue';
+import AlarmIcon from '@/Components/Icons/AlarmIcon.vue';
+import DiagramsIcon from '@/Components/Icons/DiagramsIcon.vue';
+import {Link, Head, usePage} from '@inertiajs/vue3';
+import {ref, onMounted, computed} from 'vue';
 import axios from 'axios';
+import SkeletonDnmhTable from './Partials/SkeletonDnmhTable.vue';
 import DnmChart from './Partials/DnmChart.vue';
-import { watch } from 'vue';
+import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
+import EngineIcon from '@/Components/Icons/EngineIcon.vue';
+import {watch} from 'vue';
 import Dinamogram from '@/Components/Icons/Dinamogram.vue';
 import DinamographLogo from "@/Components/Icons/DinamographLogo.vue";
 import {Spinner} from "flowbite-vue";
@@ -15,10 +22,11 @@ import DatePicker from "vue-datepicker-next";
 import 'vue-datepicker-next/index.css';
 import 'vue-datepicker-next/locale/ru.es';
 import CalendarIcon from "@/Components/Icons/CalendarIcon.vue";
-import OilWellAnimatedIcon from "@/Components/Icons/OilWellAnimatedIcon.vue";
-import UserClaims from "@/Pages/Matrix/Partials/Detail/UserClaims.vue";
-import WellClaims from "@/Pages/Matrix/Partials/Detail/WellClaims.vue";
-import CategoriesGrid from "@/Pages/Matrix/Partials/Detail/CategoriesGrid.vue";
+import {fetchDnmData, fetchDnmhData, fetchWellCategories} from "@/Api/matrix.js";
+import DetailParams from "@/Pages/Matrix/Partials/DetailParams.vue";
+import DetailDinamograms from "@/Pages/Matrix/Partials/DetailDinamograms.vue";
+import DetailUserClaims from "@/Pages/Matrix/Partials/DetailUserClaims.vue";
+import DetailWellClaims from "@/Pages/Matrix/Partials/DetailWellClaims.vue";
 
 const props = defineProps({
     item: {
@@ -27,89 +35,27 @@ const props = defineProps({
     }
 });
 
-const dnmhData = ref([]);
-const dnmData = ref([]);
-const categoriesLoading = ref(false);
-const categories = ref([]);
-const paginatedData = ref([]);
-const aiError = ref('');
-const paginationSource = ref('Параметры')
-const paginationSourceTypes = ['Параметры', 'Динамограммы']
-const paginationClaimsSource = ref('История')
-const paginationClaimsTypes = ['История', 'Отправленные']
-const dateFilters = ref([]);
-
-const predictionsData = ref([]);
-
 const API_KEY = import.meta.env.VITE_API_KEY
 const DINAMOGRAPH_API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL
+
+const selectedDinamograms = ref([])
+
+const predictionsData = ref([]);
+const paginatedData = ref([]);
 
 const processingAiAnalysis = ref(false);
 const showAiReportWindow = ref(false);
 
-const claims = ref([]);
-const wellClaims = ref([]);
+const aiError = ref('');
 
-const claimsLoading = ref(false);
-const wellClaimsLoading = ref(false);
+const paginationSource = ref('Параметры')
+const paginationSourceTypes = ['Параметры', 'Динамограммы', 'Заявки']
 
-const fetchUserClaims = () => {
+const currentClaimType = ref('История')
+const claimTypes = ['История', 'Мои']
 
-    claimsLoading.value = true;
-
-    return axios.get(`/api/control/${props.item.public_id}/claims`)
-        .then((response) => {
-            claims.value = response.data;
-        })
-        .catch((error) => {
-            console.error('Ошибка', error);
-        })
-        .finally(() => {
-            claimsLoading.value = false;
-        });
-};
-const fetchWellClaims = () => {
-
-    wellClaimsLoading.value = true;
-
-    return axios.get(`/api/control/${props.item.public_id}/well-claims`)
-        .then((response) => {
-            wellClaims.value = response.data;
-        })
-        .catch((error) => {
-            console.error('Ошибка', error);
-        })
-        .finally(() => {
-            wellClaimsLoading.value = false;
-        });
-};
-
-onMounted(() => {
-    fetchUserClaims()
-    fetchWellCategories()
-    fetchWellClaims()
-})
-
-const handleChangedCategory = () => {
-    fetchUserClaims()
-    fetchWellCategories()
-    fetchWellClaims()
-}
-
-const countConfirmedClaims = (claims) => {
-    let count = 0;
-
-    claims.forEach(claim => claim.StatusName === 'Выполнено' && count++)
-
-    return count
-}
-
-const countDeniedClaims = (claims) => {
-    let count = 0;
-
-    claims.forEach(claim => claim.StatusName === 'Отклонено' && count++)
-
-    return count
+const handleSelectDnm = (value) => {
+    selectedDinamograms.value = value;
 }
 
 const getAiModelVersion = () => {
@@ -137,26 +83,6 @@ const getAiModelVersion = () => {
     })
 
 }
-
-const fetchDnmhData = () => {
-    return axios.get(`/api/dnmh/${props.item.public_id}`)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.error('Error fetching Dnmh data', error);
-        });
-};
-
-const fetchDnmData = (publicId) => {
-    return axios.get(`/api/dnm/${publicId}`)
-        .then((response) => {
-            return response.data;
-        })
-        .catch((error) => {
-            console.error('Error fetching Dnm data', error);
-        });
-};
 
 const fetchRawPrediction = async (data) => {
     processingAiAnalysis.value = true;
@@ -193,7 +119,7 @@ const make_ai_analysis = async () => {
     showAiReportWindow.value = true
     const predictionsArr = []
 
-    for (const dnm of dnmData.value) {
+    for (const dnm of selectedDinamograms.value) {
         await fetchRawPrediction(dnm.data)
             .then(res => {
                 predictionsArr.push({
@@ -206,189 +132,17 @@ const make_ai_analysis = async () => {
     predictionsData.value = predictionsArr
 }
 
-const fetchWellCategories = () => {
-
-    categoriesLoading.value = true;
-
-    return axios.get(`/api/control/${props.item.public_id}/categories/fact`)
-        .then((response) => {
-            categories.value = response.data;
-        })
-        .catch((error) => {
-            console.error('Ошибка', error);
-        })
-        .finally(() => {
-            categoriesLoading.value = false;
-        });
-};
-
-
-onMounted(() => {
-    fetchDnmhData()
-        .then((data) => {
-            if (data.length > 0) {
-                dnmhData.value = data;
-                paginateData();
-                selectDinamogram(dnmhData.value[0].public_id);
-            }
-        });
-    fetchWellCategories();
-});
-
 const extractWellNumber = (string) => {
     const elements = string.split('-');
     return elements[elements.length - 1];
 };
-
-const selectDinamogram = (publicId) => {
-    const existingDinamogramIndex = dnmData.value.findIndex((item) => item.public_id === publicId);
-
-    if (existingDinamogramIndex !== -1) {
-        // If the dinamogram already exists, remove it
-        dnmData.value.splice(existingDinamogramIndex, 1);
-
-        // Reassign colors based on their order for the first five dinamograms
-        for (let i = 0; i < dnmData.value.length; i++) {
-            if (i === 0) {
-                dnmData.value[i].color = 'green';
-            } else if (i === 1) {
-                dnmData.value[i].color = 'orange';
-            } else if (i === 2) {
-                dnmData.value[i].color = 'red';
-            } else if (i === 3) {
-                dnmData.value[i].color = 'blue';
-            } else {
-                dnmData.value[i].color = 'purple';
-            }
-        }
-    } else {
-        if (dnmData.value.length >= 5) {
-            // If there are already 5 dinamograms, remove the oldest one
-            dnmData.value.shift();
-        }
-
-        fetchDnmData(publicId)
-            .then((data) => {
-                const colorOptions = ['green', 'orange', 'red', 'blue', 'purple'];
-                const selectedColor = colorOptions[dnmData.value.length]; // Use the next available color
-
-                const dinamogram = {
-                    public_id: publicId,
-                    color: selectedColor,
-                    data: data,
-                };
-
-                dnmData.value.push(dinamogram);
-
-                // Reassign colors based on their order for the first five dinamograms
-                for (let i = 0; i < dnmData.value.length; i++) {
-                    if (i === 0) {
-                        dnmData.value[i].color = 'green';
-                    } else if (i === 1) {
-                        dnmData.value[i].color = 'orange';
-                    } else if (i === 2) {
-                        dnmData.value[i].color = 'red';
-                    } else if (i === 3) {
-                        dnmData.value[i].color = 'blue';
-                    } else {
-                        dnmData.value[i].color = 'purple';
-                    }
-                }
-            });
-    }
-};
-
-// Pagination
-
-const currentPage = ref(1);
-const perPage = ref(4);
-
-const totalPages = computed(() => {
-
-    if (paginatedData.value.length > 0) {
-        return Math.ceil(filteredDnmData.value.length / perPage.value);
-    }
-
-});
-
-const filteredDnmData = computed(() => {
-    let data = dnmhData.value;
-
-    if (dateFilters.value && dateFilters.value.length === 2) {
-        const [startDate, endDate] = dateFilters.value;
-
-        data = data.filter(dataItem => {
-            const itemDate = new Date(dataItem.Dat);
-
-            const itemDateString = itemDate.toLocaleDateString();
-            const startDateString = startDate.toLocaleDateString();
-            const endDateString = endDate.toLocaleDateString();
-
-            return (
-                (itemDate >= startDate && itemDate <= endDate) ||
-                (itemDateString === startDateString) ||
-                (itemDateString === endDateString)
-            );
-        });
-    }
-
-    return data;
-})
-
-const paginateData = () => {
-    const start = (currentPage.value - 1) * perPage.value;
-    const end = start + perPage.value;
-    paginatedData.value = filteredDnmData.value.slice(start, end);
-};
-
-const setCurrentPage = (page) => {
-    currentPage.value = page;
-    paginateData();
-};
-
-const prevPage = () => {
-    if (currentPage.value > 1) {
-        currentPage.value--;
-        paginateData();
-    }
-};
-
-const nextPage = () => {
-    if (currentPage.value < totalPages.value) {
-        currentPage.value++;
-        paginateData();
-    }
-};
-
-const visiblePages = computed(() => {
-    const totalVisiblePages = 5;
-    const pages = [];
-    let startPage;
-
-    if (totalPages.value <= totalVisiblePages) {
-        startPage = 1;
-    } else if (currentPage.value <= 2) {
-        startPage = 1;
-    } else if (currentPage.value >= totalPages.value - 2) {
-        startPage = totalPages.value - totalVisiblePages + 1;
-    } else {
-        startPage = currentPage.value - Math.floor(totalVisiblePages / 2);
-    }
-
-    for (let i = 0; i < totalVisiblePages && startPage <= totalPages.value; i++) {
-        pages.push(startPage);
-        startPage++;
-    }
-
-    return pages;
-});
 
 const page = usePage();
 const controlWells = computed(() => page.props.auth.controlWells);
 </script>
 
 <template>
-    <Head :title="item.Name" />
+    <Head :title="item.Name"/>
 
     <AuthorizedLayout>
         <template #nav>
@@ -404,125 +158,275 @@ const controlWells = computed(() => page.props.auth.controlWells);
             </Link>
         </template>
 
-        <div class="flex flex-col w-full p-4">
+        <div class="bg-white dark:bg-gray-800 relative w-full">
 
-            <div class="w-full flex gap-4">
+            <!-- Flex [-] -->
+            <div class="flex flex-col gap-5 p-8">
 
-                <div class="min-w-[35%] flex flex-col gap-2">
+                <!-- Flex [ | ] -->
+                <div class="flex w-full items-stretch gap-10">
 
-                    <div class="w-full flex flex-col gap-5 rounded-lg bg-white shadow-sm border border-gray-200 dark:bg-gray-700 p-5">
+                    <div class="flex flex-col gap-5 w-2/4">
 
-                        <div class="flex items-center gap-10">
-                            <OilWellAnimatedIcon class="w-10 h-10"/>
-
-                            <h3 class="text-[14px] font-semibold text-gray-800">{{ item.Name }}</h3>
+                        <div class="flex gap-5 items-center mt-2">
+                            <div
+                                :class="item.Connect ? 'bg-green-100 dark:bg-green-800 dark:bg-opacity-50' : 'bg-gray-100 dark:bg-gray-700'"
+                                class="w-5 h-5 rounded-full z-1 flex items-center justify-center cursor-pointer">
+                                <div
+                                    :class="item.Connect ? 'bg-green-300 dark:bg-green-400' : 'bg-gray-300 dark:bg-gray-600'"
+                                    class="w-1/2 h-1/2 rounded-full z-2"></div>
+                            </div>
+                            <span class="font-bold text-gray-800 dark:text-gray-300 text-lg">{{ item.Name }}</span>
                         </div>
 
-                        <div class="flex flex-col border border-gray-200 dark:border-gray-600 rounded-xl mt-2">
-                            <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-600">
+                        <div class="flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl mt-2">
+                            <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-700">
                                 <span class="text-[13px] text-gray-500 w-1/4">Номер</span>
-                                <span class="text-[14px] font-medium text-gray-800 dark:text-gray-400">{{ extractWellNumber(item.Name) }}</span>
+                                <span class="text-[14px] font-medium text-gray-800 dark:text-gray-400">{{
+                                        extractWellNumber(item.Name)
+                                    }}</span>
                             </div>
-                            <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-600">
+                            <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-700">
                                 <span class="text-[13px] text-gray-500 w-1/4">ПЛК</span>
-                                <span class="text-[14px] font-medium text-gray-800 dark:text-gray-400">{{ item.PlcName }}</span>
+                                <span class="text-[14px] font-medium text-gray-800 dark:text-gray-400">{{
+                                        item.PlcName
+                                    }}</span>
                             </div>
-                            <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-600">
+                            <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-700">
                                 <span class="text-[13px] text-gray-500 w-1/4">НГДУ</span>
-                                <span class="text-[14px] font-medium text-gray-800 dark:text-gray-400">{{ item.NgduName }}</span>
+                                <span class="text-[14px] font-medium text-gray-800 dark:text-gray-400">{{
+                                        item.NgduName
+                                    }}</span>
                             </div>
                             <div class="flex gap-2 p-3 items-center">
                                 <span class="text-[13px] text-gray-500 w-1/4">Цех</span>
-                                <span class="text-[14px] font-medium text-gray-800 dark:text-gray-400">{{ item.ShopName }}</span>
+                                <span class="text-[14px] font-medium text-gray-800 dark:text-gray-400">{{
+                                        item.ShopName
+                                    }}</span>
                             </div>
                         </div>
 
-                        <div></div>
-                    </div>
+                        <div class="grid grid-cols-3 gap-3 ">
+                            <Link :href="route('matrix.hourarch', item.public_id)">
+                                <div
+                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
+                                    <HourArchIcon/>
+                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Архивы</span>
+                                </div>
+                            </Link>
+                            <Link :href="route('matrix.askstats', item.public_id)">
+                                <div
+                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
+                                    <AskStatsIcon/>
+                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Опросы</span>
+                                </div>
+                            </Link>
+                            <Link :href="route('matrix.alarms', item.public_id)">
+                                <div
+                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
+                                    <AlarmIcon/>
+                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Аварии</span>
+                                </div>
+                            </Link>
 
-                    <div class="w-full flex flex-col gap-5 rounded-lg bg-white shadow-sm border border-gray-200 dark:bg-gray-700 p-5">
+                            <Link :href="route('matrix.diagrams', item.public_id)">
+                                <div
+                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
+                                    <DiagramsIcon/>
+                                    <span
+                                        class="text-sm font-semibold text-gray-800 dark:text-gray-300">Диаграммы</span>
+                                </div>
+                            </Link>
 
-                        <div class="self-center flex items-center gap-1">
-                            <div v-for="(source, index) in paginationClaimsTypes"
-                                 :key="index"
-                                 @click="paginationClaimsSource = source"
-                                 class="p-2 rounded-lg"
-                                 :class="paginationClaimsSource === source ?
-                                 'bg-white shadow-sm border border-gray-200 text-gray-800 font-semibold' :
-                                  'text-gray-300 hover:bg-gray-100 cursor-pointer font-medium'"
+                            <div
+                                class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700
+                                dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80
+                                cursor-pointer h-10"
+                                @click="make_ai_analysis"
                             >
-                                <span class="text-[13px]">{{ source }}</span>
+                                <DinamographLogo/>
+                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">AI анализ</span>
+                                <div class="flex items-center bg-purple-200 justify-center p-1 rounded-[5px]">
+                                    <span class="text-[11px] uppercase font-bold text-purple-800">бета</span>
+                                </div>
                             </div>
+
                         </div>
 
-                        <UserClaims v-if="!claimsLoading && paginationClaimsSource === 'Отправленные'" :claims="claims" />
-
-                        <WellClaims v-if="!wellClaimsLoading && paginationClaimsSource === 'История'" :claims="wellClaims" />
-
                     </div>
-                </div>
 
-                <div class="w-full flex flex-col gap-2">
-
-                    <div v-if="dnmData.length > 0"
-                         class="w-full h-[400px] flex flex-col items-start border border-gray-200 dark:border-gray-700 rounded-xl">
-                        <DnmChart :data="dnmData"/>
+                    <div v-if="selectedDinamograms.length > 0"
+                         class="w-3/4 h-[400px] flex flex-col items-start border border-gray-200 dark:border-gray-700 rounded-xl">
+                        <DnmChart :data="selectedDinamograms"/>
                         <div class="relative w-full mt-[20px]">
 
-                            <div v-if="showAiReportWindow" class="absolute top-[110%] w-full">
+                            <div v-if="showAiReportWindow" class="absolute top-[110%] w-full z-[99]">
                                 <div class="relative w-full bg-white rounded-lg shadow-lg dark:border-gray-700 dark:bg-gray-900 p-4 gap-[20px]
                            flex flex-col border border-gray-200">
-                                    <ClearIcon @click="showAiReportWindow = false" class="absolute top-[10px] right-[10px] cursor-pointer"/>
+                                    <ClearIcon @click="showAiReportWindow = false"
+                                               class="absolute top-[10px] right-[10px] cursor-pointer"/>
                                     <div class="flex items-center gap-[10px]">
-                                        <DinamographLogo />
+                                        <DinamographLogo/>
                                         <code class="text-gray-800 dark:text-white text-[14px]">Отчёт Динамографа</code>
                                     </div>
                                     <div v-if="!processingAiAnalysis && !aiError" class="flex flex-col gap-[15px] pl-2">
                                         <div v-for="(dnm, index) in predictionsData"
                                              :key="index"
                                              class="flex items-center gap-[10px]">
-                                            <div :style="{ 'background-color': dnm.color }" class="rounded-full w-[10px] h-[10px]"></div>
+                                            <div :style="{ 'background-color': dnm.color }"
+                                                 class="rounded-full w-[10px] h-[10px]"></div>
                                             <code>{{ dnm.prediction }}</code>
-                                            <span class="text-[13px] text-gray-400">{{ dnmhData.find(item => item.public_id === dnm.public_id).DnmAdress }}</span>
+                                            <span class="text-[13px] text-gray-400">{{
+                                                    selectedDinamograms.find(src => src.public_id === dnm.public_id).DnmAdress
+                                                }}</span>
                                         </div>
                                     </div>
                                     <div v-else-if="aiError">
                                         <code class="text-red-500">{{ aiError }}</code>
                                     </div>
-                                    <Spinner class="fill-white" v-else />
+                                    <Spinner class="fill-white" v-else/>
                                 </div>
                             </div>
 
                         </div>
                     </div>
-                    <div v-else class="flex flex-col gap-10 w-3/4 min-h-full items-center justify-center border border-gray-200 dark:border-gray-700 rounded-xl">
-                        <Dinamogram />
+                    <div v-else
+                         class="flex flex-col gap-10 w-3/4 h-[400px] items-center justify-center border border-gray-200 dark:border-gray-700 rounded-xl">
+                        <Dinamogram/>
                         <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения в таблице ниже</span>
                     </div>
 
-                    <div
-                        class="w-full flex flex-col gap-5 rounded-lg bg-white shadow-md
-                         border border-gray-200 dark:bg-gray-700 p-5">
-                        <div class="self-center flex items-center gap-1">
-                            <div v-for="(source, index) in paginationSourceTypes"
-                                 :key="index"
-                                 @click="paginationSource = source"
-                                 class="p-2 rounded-lg"
-                                 :class="paginationSource === source ?
-                                 'bg-white shadow-sm border border-gray-200 text-gray-800 font-semibold' :
-                                  'text-gray-300 hover:bg-gray-100 cursor-pointer font-medium'"
+                </div>
+
+                <DetailParams v-if="paginationSource === 'Параметры'" @created="() => { paginationSource = 'Заявки' }" :item="item">
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
+                        <div v-for="(item, index) in paginationSourceTypes"
+                             :key="index"
+                             class="flex items-center gap-2"
+                             @click="paginationSource = item">
+                                <span
+                                    class="p-2 cursor-pointer rounded-lg text-gray-300 dark:text-gray-600 font-semibold text-[12px]"
+                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
+                                        item
+                                    }}</span>
+                            <span
+                                v-if="index !== paginationSourceTypes.length - 1"
+                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
                             >
-                                <span class="text-[13px]">{{ source }}</span>
+                                    |
+                                </span>
+                        </div>
+                    </div>
+                </DetailParams>
+
+                <DetailDinamograms v-if="paginationSource === 'Динамограммы'" @select-dnm="handleSelectDnm" :item="item">
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
+                        <div v-for="(item, index) in paginationSourceTypes"
+                             :key="index"
+                             class="flex items-center gap-2"
+                             @click="paginationSource = item">
+                                <span
+                                    class="p-2 cursor-pointer rounded-lg text-gray-300 dark:text-gray-600 font-semibold text-[12px]"
+                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
+                                        item
+                                    }}</span>
+                            <span
+                                v-if="index !== paginationSourceTypes.length - 1"
+                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
+                            >
+                                    |
+                                </span>
+                        </div>
+                    </div>
+                </DetailDinamograms>
+
+                <DetailUserClaims
+                    v-if="paginationSource === 'Заявки' && currentClaimType === 'Мои'"
+                    :item="item">
+                    <template #claims-switcher>
+                        <div class="flex items-center gap-3">
+                            <div v-for="(claimType, index) in claimTypes"
+                                :key="index"
+                                 class="flex items-center gap-2"
+                            >
+                                <input
+                                    :checked="currentClaimType === claimType"
+                                    v-model="currentClaimType"
+                                    :id="`claim-type-${index}`"
+                                    type="radio"
+                                    :value="claimType"
+                                    class="ring-0 focus:ring-0 text-green-500 dark:bg-gray-800 dark:border-gray-700 bg-gray-100 border-gray-300"/>
+                                <label
+                                    :for="`claim-type-${index}`"
+                                    class="font-semibold text-[13px] text-gray-800 dark:text-gray-400"
+                                >{{ claimType }}</label>
                             </div>
                         </div>
-
-                        <CategoriesGrid v-if="!categoriesLoading && paginationSource === 'Параметры'" :categories="categories"/>
+                    </template>
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
+                        <div v-for="(item, index) in paginationSourceTypes"
+                             :key="index"
+                             class="flex items-center gap-2"
+                             @click="paginationSource = item">
+                                <span
+                                    class="p-2 cursor-pointer rounded-lg text-gray-300 dark:text-gray-600 font-semibold text-[12px]"
+                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
+                                        item
+                                    }}</span>
+                            <span
+                                v-if="index !== paginationSourceTypes.length - 1"
+                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
+                            >
+                                    |
+                                </span>
+                        </div>
                     </div>
+                </DetailUserClaims>
 
-                </div>
+                <DetailWellClaims
+                    v-if="paginationSource === 'Заявки' && currentClaimType === 'История'"
+                    :item="item">
+                    <template #claims-switcher>
+                        <div class="flex items-center gap-3">
+                            <div v-for="(claimType, index) in claimTypes"
+                                 :key="index"
+                                 class="flex items-center gap-2"
+                            >
+                                <input
+                                    :checked="currentClaimType === claimType"
+                                    v-model="currentClaimType"
+                                    :id="`claim-type-${index}`"
+                                    type="radio"
+                                    :value="claimType"
+                                    class="ring-0 focus:ring-0 text-green-500 dark:bg-gray-800 dark:border-gray-700 bg-gray-100 border-gray-300"/>
+                                <label
+                                    :for="`claim-type-${index}`"
+                                    class="font-semibold text-[13px] text-gray-800 dark:text-gray-400"
+                                >{{ claimType }}</label>
+                            </div>
+                        </div>
+                    </template>
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
+                        <div v-for="(item, index) in paginationSourceTypes"
+                             :key="index"
+                             class="flex items-center gap-2"
+                             @click="paginationSource = item">
+                                <span
+                                    class="p-2 cursor-pointer rounded-lg text-gray-300 dark:text-gray-600 font-semibold text-[12px]"
+                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
+                                        item
+                                    }}</span>
+                            <span
+                                v-if="index !== paginationSourceTypes.length - 1"
+                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
+                            >
+                                    |
+                                </span>
+                        </div>
+                    </div>
+                </DetailWellClaims>
+
             </div>
-
-
         </div>
     </AuthorizedLayout>
 </template>

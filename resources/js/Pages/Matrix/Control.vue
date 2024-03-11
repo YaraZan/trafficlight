@@ -167,7 +167,7 @@ const countDeniedClaims = (claims) => {
 
                 </div>
 
-                <div class="w-full flex p-4 gap-10">
+                <div class="w-full flex p-4 gap-4">
 
                     <WellClaimHistory v-if="!wellClaimsLoading" :claims="wellClaims"/>
 
