@@ -238,28 +238,31 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                 </div>
                             </Link>
 
-                            <div
-                                class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700
-                                dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80
-                                cursor-pointer h-10"
-                                @click="make_ai_analysis"
-                            >
-                                <DinamographLogo/>
-                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">AI анализ</span>
-                                <div class="flex items-center bg-purple-200 justify-center p-1 rounded-[5px]">
-                                    <span class="text-[11px] uppercase font-bold text-purple-800">бета</span>
-                                </div>
-                            </div>
+<!--                            <div-->
+<!--                                class="relative p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700-->
+<!--                                dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80-->
+<!--                                cursor-pointer h-10"-->
+<!--                                @click="make_ai_analysis"-->
+<!--                            >-->
+<!--                                <DinamographLogo class="w-5 h-5"/>-->
+<!--                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">AI анализ</span>-->
+
+<!--                                <div class="absolute right-2 flex items-center bg-purple-200 justify-center p-1 rounded-[5px]">-->
+<!--                                    <span class="text-[11px] uppercase font-bold text-purple-800">бета</span>-->
+<!--                                </div>-->
+<!--                            </div>-->
 
                         </div>
 
                     </div>
 
-                    <div v-if="selectedDinamograms.length > 0"
-                         class="w-3/4 h-[400px] flex flex-col items-start border border-gray-200 dark:border-gray-700 rounded-xl">
-                        <DnmChart :data="selectedDinamograms"/>
+                    <div class="w-3/4 h-[400px] flex flex-col items-start border border-gray-200 dark:border-gray-700 rounded-xl">
+                        <DnmChart v-if="selectedDinamograms.length > 0" :data="selectedDinamograms"/>
+                        <div v-else class="w-full h-full flex flex-col items-center justify-center gap-4">
+                            <Dinamogram/>
+                            <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения во вкладке "динамограммы"</span>
+                        </div>
                         <div class="relative w-full mt-[20px]">
-
                             <div v-if="showAiReportWindow" class="absolute top-[110%] w-full z-[99]">
                                 <div class="relative w-full bg-white rounded-lg shadow-lg dark:border-gray-700 dark:bg-gray-900 p-4 gap-[20px]
                            flex flex-col border border-gray-200">
@@ -276,6 +279,8 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                             <div :style="{ 'background-color': dnm.color }"
                                                  class="rounded-full w-[10px] h-[10px]"></div>
                                             <code>{{ dnm.prediction }}</code>
+
+                                            <!-- TODO: There should be `dnmhData` instead `selectedDinamograms` -->
                                             <span class="text-[13px] text-gray-400">{{
                                                     selectedDinamograms.find(src => src.public_id === dnm.public_id).DnmAdress
                                                 }}</span>
@@ -287,13 +292,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                     <Spinner class="fill-white" v-else/>
                                 </div>
                             </div>
-
                         </div>
-                    </div>
-                    <div v-else
-                         class="flex flex-col gap-10 w-3/4 h-[400px] items-center justify-center border border-gray-200 dark:border-gray-700 rounded-xl">
-                        <Dinamogram/>
-                        <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения в таблице ниже</span>
                     </div>
 
                 </div>

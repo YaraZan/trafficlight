@@ -188,8 +188,8 @@ const closeModal = () => {
             <div
                 v-for="(category, index) in paginatedData"
                 :key="index"
-                @click="category.IsWritable ? openChangingWindow(category.CurrentValue, category.CategoryId) : {}"
-                :class="{ 'hover:outline hover:outline-1 hover:outline-green-400' : category.IsWritable }"
+                @click="category.IsWritable && isControl ? openChangingWindow(category.CurrentValue, category.CategoryId) : {}"
+                :class="{ 'hover:outline hover:outline-1 hover:outline-green-400' : category.IsWritable && isControl }"
                 class="flex h-[150px] items-center justify-between bg-white border border-gray-100 dark:bg-gray-900
                          shadow-md p-4 rounded-lg dark:border-gray-700">
                 <div class="flex flex-col h-full justify-between">
