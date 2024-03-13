@@ -166,7 +166,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                 <!-- Flex [ | ] -->
                 <div class="flex w-full items-stretch gap-10">
 
-                    <div class="flex flex-col gap-5 w-2/4">
+                    <div :class="[{ 'w-full' : paginationSource !== 'Динамограммы' }]" class="w-2/4 h-[400px] flex flex-col gap-5 ">
 
                         <div class="flex gap-5 items-center mt-2">
                             <div
@@ -179,7 +179,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             <span class="font-bold text-gray-800 dark:text-gray-300 text-lg">{{ item.Name }}</span>
                         </div>
 
-                        <div class="flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl mt-2">
+                        <div class="min-w-[300px] flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl mt-2">
                             <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-700">
                                 <span class="text-[13px] text-gray-500 w-1/4">Номер</span>
                                 <span class="text-[14px] font-medium text-gray-800 dark:text-gray-400">{{
@@ -206,98 +206,104 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-3 ">
+                        <div class="w-full grid grid-cols-4 gap-3 h-full">
                             <Link :href="route('matrix.hourarch', item.public_id)">
-                                <div
-                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
-                                    <HourArchIcon/>
-                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Архивы</span>
+                                <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
+                                >
+                                    <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
+                                        <HourArchIcon/>
+                                    </div>
+
+                                    <span class="text-[13px] font-semibold text-gray-400">Архивы</span>
                                 </div>
                             </Link>
                             <Link :href="route('matrix.askstats', item.public_id)">
-                                <div
-                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
-                                    <AskStatsIcon/>
-                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Опросы</span>
+                                <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
+                                >
+                                    <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
+                                        <AskStatsIcon/>
+                                    </div>
+
+                                    <span class="text-[13px] font-semibold text-gray-400">Опросы</span>
                                 </div>
                             </Link>
                             <Link :href="route('matrix.alarms', item.public_id)">
-                                <div
-                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
-                                    <AlarmIcon/>
-                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Аварии</span>
+                                <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
+                                >
+                                    <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
+                                        <AlarmIcon/>
+                                    </div>
+
+                                    <span class="text-[13px] font-semibold text-gray-400">Аварии</span>
                                 </div>
                             </Link>
 
                             <Link :href="route('matrix.diagrams', item.public_id)">
-                                <div
-                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
-                                    <DiagramsIcon/>
-                                    <span
-                                        class="text-sm font-semibold text-gray-800 dark:text-gray-300">Диаграммы</span>
+                                <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
+                                >
+                                    <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
+                                        <DiagramsIcon/>
+                                    </div>
+
+                                    <span class="text-[13px] font-semibold text-gray-400">Диаграммы</span>
                                 </div>
                             </Link>
 
-<!--                            <div-->
-<!--                                class="relative p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700-->
-<!--                                dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80-->
-<!--                                cursor-pointer h-10"-->
-<!--                                @click="make_ai_analysis"-->
-<!--                            >-->
-<!--                                <DinamographLogo class="w-5 h-5"/>-->
-<!--                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">AI анализ</span>-->
-
-<!--                                <div class="absolute right-2 flex items-center bg-purple-200 justify-center p-1 rounded-[5px]">-->
-<!--                                    <span class="text-[11px] uppercase font-bold text-purple-800">бета</span>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
                         </div>
 
                     </div>
 
-                    <div class="w-3/4 h-[400px] flex flex-col items-start border border-gray-200 dark:border-gray-700 rounded-xl">
-                        <DnmChart v-if="selectedDinamograms.length > 0" :data="selectedDinamograms"/>
-                        <div v-else class="w-full h-full flex flex-col items-center justify-center gap-4">
-                            <Dinamogram/>
-                            <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения во вкладке "динамограммы"</span>
-                        </div>
-                        <div class="relative w-full mt-[20px]">
-                            <div v-if="showAiReportWindow" class="absolute top-[110%] w-full z-[99]">
-                                <div class="relative w-full bg-white rounded-lg shadow-lg dark:border-gray-700 dark:bg-gray-900 p-4 gap-[20px]
-                           flex flex-col border border-gray-200">
-                                    <ClearIcon @click="showAiReportWindow = false"
-                                               class="absolute top-[10px] right-[10px] cursor-pointer"/>
-                                    <div class="flex items-center gap-[10px]">
-                                        <DinamographLogo/>
-                                        <code class="text-gray-800 dark:text-white text-[14px]">Отчёт Динамографа</code>
-                                    </div>
-                                    <div v-if="!processingAiAnalysis && !aiError" class="flex flex-col gap-[15px] pl-2">
-                                        <div v-for="(dnm, index) in predictionsData"
-                                             :key="index"
-                                             class="flex items-center gap-[10px]">
-                                            <div :style="{ 'background-color': dnm.color }"
-                                                 class="rounded-full w-[10px] h-[10px]"></div>
-                                            <code>{{ dnm.prediction }}</code>
+                        <div
+                            v-if="paginationSource === 'Динамограммы'"
+                            class="w-3/4 h-[400px] flex flex-col items-start border border-gray-200 dark:border-gray-700 rounded-xl"
+                        >
+                            <DnmChart v-if="selectedDinamograms.length > 0" :data="selectedDinamograms"/>
 
-                                            <!-- TODO: There should be `dnmhData` instead `selectedDinamograms` -->
-                                            <span class="text-[13px] text-gray-400">{{
-                                                    selectedDinamograms.find(src => src.public_id === dnm.public_id).DnmAdress
-                                                }}</span>
+                            <div v-else class="w-full h-full flex flex-col items-center justify-center gap-4">
+                                <Dinamogram/>
+                                <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения во вкладке "динамограммы"</span>
+                            </div>
+                            <div class="relative w-full mt-[20px]">
+                                <div v-if="showAiReportWindow" class="absolute top-[110%] w-full z-[99]">
+                                    <div class="relative w-full bg-white rounded-lg shadow-lg dark:border-gray-700 dark:bg-gray-900 p-4 gap-[20px]
+                           flex flex-col border border-gray-200">
+                                        <ClearIcon @click="showAiReportWindow = false"
+                                                   class="absolute top-[10px] right-[10px] cursor-pointer"/>
+                                        <div class="flex items-center gap-[10px]">
+                                            <DinamographLogo/>
+                                            <code class="text-gray-800 dark:text-white text-[14px]">Отчёт Динамографа</code>
                                         </div>
+                                        <div v-if="!processingAiAnalysis && !aiError" class="flex flex-col gap-[15px] pl-2">
+                                            <div v-for="(dnm, index) in predictionsData"
+                                                 :key="index"
+                                                 class="flex items-center gap-[10px]">
+                                                <div :style="{ 'background-color': dnm.color }"
+                                                     class="rounded-full w-[10px] h-[10px]"></div>
+                                                <code>{{ dnm.prediction }}</code>
+
+                                                <!-- TODO: There should be `dnmhData` instead `selectedDinamograms` -->
+                                                <span class="text-[13px] text-gray-400">{{
+                                                        selectedDinamograms.find(src => src.public_id === dnm.public_id).DnmAdress
+                                                    }}</span>
+                                            </div>
+                                        </div>
+                                        <div v-else-if="aiError">
+                                            <code class="text-red-500">{{ aiError }}</code>
+                                        </div>
+                                        <Spinner class="fill-white" v-else/>
                                     </div>
-                                    <div v-else-if="aiError">
-                                        <code class="text-red-500">{{ aiError }}</code>
-                                    </div>
-                                    <Spinner class="fill-white" v-else/>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
                 </div>
 
-                <DetailParams v-if="paginationSource === 'Параметры'" @created="() => { paginationSource = 'Заявки' }" :item="item">
+                <DetailParams v-if="paginationSource === 'Параметры'" @created="() => { paginationSource = 'Заявки' }"
+                              :item="item">
                     <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
                         <div v-for="(item, index) in paginationSourceTypes"
                              :key="index"
@@ -318,25 +324,41 @@ const controlWells = computed(() => page.props.auth.controlWells);
                     </div>
                 </DetailParams>
 
-                <DetailDinamograms v-if="paginationSource === 'Динамограммы'" @select-dnm="handleSelectDnm" :item="item">
-                    <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
-                        <div v-for="(item, index) in paginationSourceTypes"
-                             :key="index"
-                             class="flex items-center gap-2"
-                             @click="paginationSource = item">
+                <DetailDinamograms v-if="paginationSource === 'Динамограммы'" @select-dnm="handleSelectDnm"
+                                   :item="item">
+                    <template class="flex items-center gap-2">
+                        <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
+                            <div v-for="(item, index) in paginationSourceTypes"
+                                 :key="index"
+                                 class="flex items-center gap-2"
+                                 @click="paginationSource = item">
                                 <span
                                     class="p-2 cursor-pointer rounded-lg text-gray-300 dark:text-gray-600 font-semibold text-[12px]"
                                     :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
                                         item
                                     }}</span>
-                            <span
-                                v-if="index !== paginationSourceTypes.length - 1"
-                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
-                            >
+                                <span
+                                    v-if="index !== paginationSourceTypes.length - 1"
+                                    class="text-[13px] font-light text-gray-300 dark:text-gray-600"
+                                >
                                     |
                                 </span>
+                            </div>
                         </div>
-                    </div>
+                        <div
+                            class="relative p-4 flex gap-3 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700
+                                dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80
+                                cursor-pointer h-10"
+                            @click="make_ai_analysis"
+                        >
+                            <DinamographLogo class="w-5 h-5"/>
+                            <span class="text-[13px] font-semibold text-gray-800 dark:text-gray-300">AI анализ</span>
+
+                            <div class="flex items-center bg-purple-200 justify-center p-1 rounded-[5px]">
+                                <span class="text-[11px] uppercase font-bold text-purple-800">бета</span>
+                            </div>
+                        </div>
+                    </template>
                 </DetailDinamograms>
 
                 <DetailUserClaims
@@ -345,7 +367,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                     <template #claims-switcher>
                         <div class="flex items-center gap-3">
                             <div v-for="(claimType, index) in claimTypes"
-                                :key="index"
+                                 :key="index"
                                  class="flex items-center gap-2"
                             >
                                 <input
@@ -429,3 +451,4 @@ const controlWells = computed(() => page.props.auth.controlWells);
         </div>
     </AuthorizedLayout>
 </template>
+

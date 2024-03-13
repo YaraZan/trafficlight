@@ -289,16 +289,16 @@ watch(() => [dnmData.value], () => {
                 <thead>
                 <tr class="border-b bg-gray-50 border-gray-200 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 ">
                     <th scope="col" class="px-6 py-4 text-left w-[50px]">
-                        <span class="text font-semibold text-gray-800"></span>
+                        <span class="text-[14px] font-semibold text-gray-800"></span>
                     </th>
                     <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
-                        <span class="text font-semibold text-gray-800 dark:text-gray-300">Дата</span>
+                        <span class="text-[14px] font-semibold text-gray-800 dark:text-gray-300">Дата</span>
                     </th>
                     <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
-                        <span class="text font-semibold text-gray-800 dark:text-gray-300">Опрос</span>
+                        <span class="text-[14px] font-semibold text-gray-800 dark:text-gray-300">Опрос</span>
                     </th>
                     <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
-                        <span class="text font-semibold text-gray-800 dark:text-gray-300">Наименование</span>
+                        <span class="text-[14px] font-semibold text-gray-800 dark:text-gray-300">Наименование</span>
                     </th>
                 </tr>
                 </thead>
@@ -314,9 +314,9 @@ watch(() => [dnmData.value], () => {
                             type="checkbox"
                         />
                     </th>
-                    <td class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">{{ row.Dat }}</td>
-                    <td class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.AskLong }}</td>
-                    <td class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.DnmAdress }}</td>
+                    <td class="text-[14px] font-normal border-l border-gray-200 dark:border-gray-700 text-gray-500 px-6 py-4 text-left">{{ row.Dat }}</td>
+                    <td class="text-[14px] px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.AskLong }}</td>
+                    <td class="text-[14px] px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.DnmAdress }}</td>
                 </tr>
                 </tbody>
             </table>

@@ -203,51 +203,52 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-3 ">
+                        <div class="grid grid-cols-4 gap-3 h-full">
                             <Link :href="route('matrix.hourarch', item.public_id)">
-                                <div
-                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
-                                    <HourArchIcon/>
-                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Архивы</span>
+                                <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-700"
+                                >
+                                    <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
+                                        <HourArchIcon/>
+                                    </div>
+
+                                    <span class="text-[13px] font-semibold text-gray-400">Архивы</span>
                                 </div>
                             </Link>
                             <Link :href="route('matrix.askstats', item.public_id)">
-                                <div
-                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
-                                    <AskStatsIcon/>
-                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Опросы</span>
+                                <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-700"
+                                >
+                                    <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
+                                        <AskStatsIcon/>
+                                    </div>
+
+                                    <span class="text-[13px] font-semibold text-gray-400">Опросы</span>
                                 </div>
                             </Link>
                             <Link :href="route('matrix.alarms', item.public_id)">
-                                <div
-                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
-                                    <AlarmIcon/>
-                                    <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Аварии</span>
+                                <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-700"
+                                >
+                                    <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
+                                        <AlarmIcon/>
+                                    </div>
+
+                                    <span class="text-[13px] font-semibold text-gray-400">Аварии</span>
                                 </div>
                             </Link>
 
                             <Link :href="route('matrix.diagrams', item.public_id)">
-                                <div
-                                    class="p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80 cursor-pointer h-10">
-                                    <DiagramsIcon/>
-                                    <span
-                                        class="text-sm font-semibold text-gray-800 dark:text-gray-300">Диаграммы</span>
+                                <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-700"
+                                >
+                                    <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
+                                        <DiagramsIcon/>
+                                    </div>
+
+                                    <span class="text-[13px] font-semibold text-gray-400">Диаграммы</span>
                                 </div>
                             </Link>
-
-<!--                            <div-->
-<!--                                class="relative p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700-->
-<!--                                dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80-->
-<!--                                cursor-pointer h-10"-->
-<!--                                @click="make_ai_analysis"-->
-<!--                            >-->
-<!--                                <DinamographLogo class="w-5 h-5"/>-->
-<!--                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">AI анализ</span>-->
-
-<!--                                <div class="absolute right-2 flex items-center bg-purple-200 justify-center p-1 rounded-[5px]">-->
-<!--                                    <span class="text-[11px] uppercase font-bold text-purple-800">бета</span>-->
-<!--                                </div>-->
-<!--                            </div>-->
 
                         </div>
 
@@ -319,24 +320,39 @@ const controlWells = computed(() => page.props.auth.controlWells);
                 </DetailParams>
 
                 <DetailDinamograms v-if="paginationSource === 'Динамограммы'" @select-dnm="handleSelectDnm" :item="item">
-                    <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
-                        <div v-for="(item, index) in paginationSourceTypes"
-                             :key="index"
-                             class="flex items-center gap-2"
-                             @click="paginationSource = item">
+                    <template class="flex items-center gap-2">
+                        <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
+                            <div v-for="(item, index) in paginationSourceTypes"
+                                 :key="index"
+                                 class="flex items-center gap-2"
+                                 @click="paginationSource = item">
                                 <span
                                     class="p-2 cursor-pointer rounded-lg text-gray-300 dark:text-gray-600 font-semibold text-[12px]"
                                     :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
                                         item
                                     }}</span>
-                            <span
-                                v-if="index !== paginationSourceTypes.length - 1"
-                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
-                            >
+                                <span
+                                    v-if="index !== paginationSourceTypes.length - 1"
+                                    class="text-[13px] font-light text-gray-300 dark:text-gray-600"
+                                >
                                     |
                                 </span>
+                            </div>
                         </div>
-                    </div>
+                        <div
+                            class="relative p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700
+                                dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80
+                                cursor-pointer h-10"
+                            @click="make_ai_analysis"
+                        >
+                            <DinamographLogo class="w-5 h-5"/>
+                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">AI анализ</span>
+
+                            <div class="flex items-center bg-purple-200 justify-center p-1 rounded-[5px]">
+                                <span class="text-[11px] uppercase font-bold text-purple-800">бета</span>
+                            </div>
+                        </div>
+                    </template>
                 </DetailDinamograms>
 
             </div>
