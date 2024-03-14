@@ -114,8 +114,6 @@ const totalPages = computed(() => {
   if (paginatedData.value.length > 0) {
     return Math.ceil(props.categories.length / perPage.value);
   }
-
-  return;
 });
 
 const paginateData = () => {
@@ -256,7 +254,7 @@ watch(() => hourArchData.value, () => {
                 <Chart v-if="filteredData.length > 0" :data="filteredData" />
                 <div v-else class="flex flex-col gap-10 w-full h-[500px] items-center justify-center border border-gray-200 dark:border-gray-700  rounded-xl">
                     <Dinamogram />
-                    <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения в таблице ниже</span>
+                    <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите параметры для отображения в таблице ниже</span>
                 </div>
 
                 <div class="flex flex-col w-full gap-3">
@@ -311,7 +309,7 @@ watch(() => hourArchData.value, () => {
                     <div class="w-full flex items-center gap-3">
 
                         <div class="border border-gray-200 dark:border-gray-700 rounded-xl w-full">
-                            <table v-if="paginatedData.length > 0" class="w-full" striped>
+                            <table v-if="paginatedData.length > 0" class="w-full">
                                 <thead>
                                     <tr class="border-b bg-gray-50 border-gray-200 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 ">
                                         <th scope="col" class="px-6 py-4 text-left w-[50px]">
@@ -331,18 +329,18 @@ watch(() => hourArchData.value, () => {
                                             <input
                                             @change="() => selectParam(row.public_id, row.CatName)"
                                             :value="row.public_id"
-                                            :checked="hourArchData.some((item) => item.public_id === row.public_id)"
-                                            :style="{ color: hourArchData.find((item) => item.public_id === row.public_id)?.color }"
+                                            :checked="hourArchData.some(src => src.public_id === row.public_id)"
+                                            :style="{ color: hourArchData.find(src => src.public_id === row.public_id)?.color }"
                                             class="bg-gray-100 text-gray-100 dark:text-gray-800 dark:bg-gray-800 dark:border-gray-700 focus:ring-gray-100 dark:focus:ring-gray-800  border-gray-300 rounded cursor-pointer"
                                             type="checkbox"
                                         />
                                         </th>
                                         <td class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">{{ row.CatName }}</td>
-                                        <td v-if="hourArchData.some((item) => item.public_id === row.public_id)" class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">
+                                        <td v-if="hourArchData.some(src => src.public_id === row.public_id)" class="font-normal border-l border-gray-200 dark:border-gray-700  text-gray-500 px-6 py-4 text-left">
                                             <!-- Toggle -->
                                             <label class="relative inline-flex items-center cursor-pointer">
                                                 <input
-                                                    :checked="hourArchData.find((item) => item.public_id === row.public_id)?.setpoint"
+                                                    :checked="hourArchData.find(src => src.public_id === row.public_id)?.setpoint"
                                                     @change="() => toggleSetpoint(row.public_id)"
                                                     type="checkbox"
                                                     value=""

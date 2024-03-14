@@ -438,7 +438,7 @@ const viewAll = computed(() => page.props.auth.viewWells);
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
                 </div>
             </div>
-            <div v-else class="mt-[120px] block max-h-[800px] overflow-y-auto">
+            <div v-else class="mt-[120px] block h-[800px] overflow-y-auto">
                 <MatrixTable
                     @sortByNumber="() => { numberSort = !numberSort }"
                     @sort-by-ngdu="() => { ngduSort = !ngduSort }"

@@ -92,8 +92,15 @@ class ControlController extends Controller
 
         $user_claims = DB::table('RefClaim as rc')
             ->join('Well as we', 'rc.Well_Id', '=', 'we.Id')
+            ->join('Category as ct', 'rc.Category_Id', '=', 'ct.Id')
+            ->join('users as usr', 'rc.User_Id', '=', 'usr.id')
             ->join('RefClaimStatus as rfs', 'rc.RefClaimStatus_Id', '=', 'rfs.Id')
-            ->select('rc.*', 'rfs.RCStatusName as StatusName')
+            ->select(
+                'rc.*',
+                'rfs.RCStatusName as StatusName',
+                'usr.name as UserName',
+                'ct.CatName as CatName'
+            )
             ->where('User_Id', '=', $user->id)
             ->where('we.public_id', '=', $well_uuid)
             ->get();
