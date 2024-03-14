@@ -296,7 +296,6 @@ const closeModal = () => {
         <div v-else>
             <div class="w-full flex flex-col gap-4 items-center justify-center mt-20">
                 <OilWellAnimatedIcon class="w-[100px] h-[100px]"/>
-                <span class="text-[18px] font-semibold text-green-500">Загрузка...</span>
             </div>
         </div>
 

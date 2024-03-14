@@ -37,6 +37,7 @@ const props = defineProps({
 
 const API_KEY = import.meta.env.VITE_API_KEY
 const DINAMOGRAPH_API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL
+const DEFAULT_AI_VERSION = import.meta.env.VITE_DEFAULT_AI_VERSION
 
 const selectedDinamograms = ref([])
 
@@ -58,38 +59,12 @@ const handleSelectDnm = (value) => {
     selectedDinamograms.value = value;
 }
 
-const getAiModelVersion = () => {
-
-    return axios.get(`${DINAMOGRAPH_API_URL}/v1/ai/models/`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${API_KEY}`
-        },
-    }).then(res => {
-        const aiModels = res.data.models
-
-        if (!aiModels.find(item => item.public_id === encryptStorage.getItem('aiv'))) {
-            encryptStorage.setItem('aiv', aiModels[0].public_id)
-        }
-
-        return axios.get(`${DINAMOGRAPH_API_URL}/v1/ai/models/${encryptStorage.getItem('aiv')}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Basic ${API_KEY}`
-            },
-        }).then(res => {
-            return res.data.name
-        })
-    })
-
-}
-
 const fetchRawPrediction = async (data) => {
     processingAiAnalysis.value = true;
 
     return axios.post(`${DINAMOGRAPH_API_URL}/v1/ai/predict/raw`, {
         raw_data: data,
-        model_name: await getAiModelVersion()
+        model_name: DEFAULT_AI_VERSION
     }, {
         headers: {
             'Content-Type': 'application/json',
@@ -259,7 +234,8 @@ const controlWells = computed(() => page.props.auth.controlWells);
 
                         <div
                             v-if="paginationSource === 'Динамограммы'"
-                            class="w-3/4 h-[400px] flex flex-col items-start border border-gray-200 dark:border-gray-700 rounded-xl"
+                            class="w-3/4 h-[400px] flex flex-col items-start border border-gray-200 dark:border-gray-700
+                            rounded-xl"
                         >
                             <DnmChart v-if="selectedDinamograms.length > 0" :data="selectedDinamograms"/>
 

@@ -37,6 +37,7 @@ const props = defineProps({
 
 const API_KEY = import.meta.env.VITE_API_KEY
 const DINAMOGRAPH_API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL
+const DEFAULT_AI_VERSION = import.meta.env.VITE_DEFAULT_AI_VERSION
 
 const selectedDinamograms = ref([])
 
@@ -55,38 +56,12 @@ const handleSelectDnm = (value) => {
     selectedDinamograms.value = value;
 }
 
-const getAiModelVersion = () => {
-
-    return axios.get(`${DINAMOGRAPH_API_URL}/v1/ai/models/`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${API_KEY}`
-        },
-    }).then(res => {
-        const aiModels = res.data.models
-
-        if (!aiModels.find(item => item.public_id === encryptStorage.getItem('aiv'))) {
-            encryptStorage.setItem('aiv', aiModels[0].public_id)
-        }
-
-        return axios.get(`${DINAMOGRAPH_API_URL}/v1/ai/models/${encryptStorage.getItem('aiv')}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Basic ${API_KEY}`
-            },
-        }).then(res => {
-            return res.data.name
-        })
-    })
-
-}
-
 const fetchRawPrediction = async (data) => {
     processingAiAnalysis.value = true;
 
     return axios.post(`${DINAMOGRAPH_API_URL}/v1/ai/predict/raw`, {
         raw_data: data,
-        model_name: await getAiModelVersion()
+        model_name: DEFAULT_AI_VERSION
     }, {
         headers: {
             'Content-Type': 'application/json',
@@ -163,7 +138,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                 <!-- Flex [ | ] -->
                 <div class="flex w-full items-stretch gap-10">
 
-                    <div class="flex flex-col gap-5 w-2/4">
+                    <div :class="[{ 'w-full' : paginationSource !== 'Динамограммы' }]" class="w-2/4 h-[400px] flex flex-col gap-5 ">
 
                         <div class="flex gap-5 items-center mt-2">
                             <div
@@ -176,7 +151,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             <span class="font-bold text-gray-800 dark:text-gray-300 text-lg">{{ item.Name }}</span>
                         </div>
 
-                        <div class="flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl mt-2">
+                        <div class="min-w-[300px] flex flex-col border border-gray-200 dark:border-gray-700 rounded-xl mt-2">
                             <div class="flex gap-2 p-3 items-center border-b border-gray-200 dark:border-gray-700">
                                 <span class="text-[13px] text-gray-500 w-1/4">Номер</span>
                                 <span class="text-[14px] font-medium text-gray-800 dark:text-gray-400">{{
@@ -203,10 +178,10 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-4 gap-3 h-full">
+                        <div class="w-full grid grid-cols-4 gap-3 h-full">
                             <Link :href="route('matrix.hourarch', item.public_id)">
                                 <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
-                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-700"
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
                                 >
                                     <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
                                         <HourArchIcon/>
@@ -217,7 +192,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             </Link>
                             <Link :href="route('matrix.askstats', item.public_id)">
                                 <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
-                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-700"
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
                                 >
                                     <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
                                         <AskStatsIcon/>
@@ -228,7 +203,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             </Link>
                             <Link :href="route('matrix.alarms', item.public_id)">
                                 <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
-                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-700"
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
                                 >
                                     <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
                                         <AlarmIcon/>
@@ -240,7 +215,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
 
                             <Link :href="route('matrix.diagrams', item.public_id)">
                                 <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
-                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-700"
+                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
                                 >
                                     <div class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
                                         <DiagramsIcon/>
@@ -254,8 +229,13 @@ const controlWells = computed(() => page.props.auth.controlWells);
 
                     </div>
 
-                    <div class="w-3/4 h-[400px] flex flex-col items-start border border-gray-200 dark:border-gray-700 rounded-xl">
+                    <div
+                        v-if="paginationSource === 'Динамограммы'"
+                        class="w-3/4 h-[400px] flex flex-col items-start border border-gray-200 dark:border-gray-700
+                            rounded-xl"
+                    >
                         <DnmChart v-if="selectedDinamograms.length > 0" :data="selectedDinamograms"/>
+
                         <div v-else class="w-full h-full flex flex-col items-center justify-center gap-4">
                             <Dinamogram/>
                             <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения во вкладке "динамограммы"</span>
@@ -295,9 +275,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
 
                 </div>
 
-                <DetailParams v-if="paginationSource === 'Параметры'"
-                              :is-control="false"
-                              @created="() => { paginationSource = 'Заявки' }"
+                <DetailParams v-if="paginationSource === 'Параметры'" :is-control="false" @created="() => { paginationSource = 'Заявки' }"
                               :item="item">
                     <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
                         <div v-for="(item, index) in paginationSourceTypes"
@@ -319,7 +297,8 @@ const controlWells = computed(() => page.props.auth.controlWells);
                     </div>
                 </DetailParams>
 
-                <DetailDinamograms v-if="paginationSource === 'Динамограммы'" @select-dnm="handleSelectDnm" :item="item">
+                <DetailDinamograms v-if="paginationSource === 'Динамограммы'" @select-dnm="handleSelectDnm"
+                                   :item="item">
                     <template class="flex items-center gap-2">
                         <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
                             <div v-for="(item, index) in paginationSourceTypes"
@@ -340,13 +319,13 @@ const controlWells = computed(() => page.props.auth.controlWells);
                             </div>
                         </div>
                         <div
-                            class="relative p-4 flex gap-5 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700
+                            class="relative p-4 flex gap-3 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700
                                 dark:border-gray-600 items-center hover:bg-gray-100 dark:hover:bg-opacity-80
                                 cursor-pointer h-10"
                             @click="make_ai_analysis"
                         >
                             <DinamographLogo class="w-5 h-5"/>
-                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">AI анализ</span>
+                            <span class="text-[13px] font-semibold text-gray-800 dark:text-gray-300">AI анализ</span>
 
                             <div class="flex items-center bg-purple-200 justify-center p-1 rounded-[5px]">
                                 <span class="text-[11px] uppercase font-bold text-purple-800">бета</span>
@@ -359,3 +338,4 @@ const controlWells = computed(() => page.props.auth.controlWells);
         </div>
     </AuthorizedLayout>
 </template>
+

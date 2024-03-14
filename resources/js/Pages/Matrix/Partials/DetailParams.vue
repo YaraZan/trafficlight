@@ -6,6 +6,7 @@ import NoDataIcon from "@/Components/Icons/NoDataIcon.vue";
 import {useForm} from "@inertiajs/vue3";
 import {Input, P, Spinner} from "flowbite-vue";
 import Modal from "@/Components/Modal.vue";
+import anime from "animejs";
 
 const props = defineProps({
     item: {
@@ -240,14 +241,13 @@ const closeModal = () => {
         <div v-else>
             <div class="w-full flex flex-col gap-4 items-center justify-center mt-20">
                 <OilWellAnimatedIcon class="w-[100px] h-[100px]"/>
-                <span class="text-[18px] font-semibold text-green-500">Загрузка...</span>
             </div>
         </div>
 
         <Modal :show="showCreatingClaimWindow" @close="closeModal">
             <div class="select-none flex flex-col p-5 w-[400px] items-center gap-4">
                 <span class="text-[18px] text-gray-800 dark:text-white font-semibold">Изменение параметров</span>
-                <p class="p-4 bg-gray-50 dark:bg-gray-700 rounded-md text-[14px] text-normal text-gray-400">
+                <p class="p-4 bg-gray-100 dark:bg-gray-900 rounded-md text-[14px] text-normal text-gray-400">
                     * Примечание: Отправленные вами данные будут сформированы в заявку, и, по возможности
                     приняты или отклонены оператором.
                 </p>
@@ -266,4 +266,3 @@ const closeModal = () => {
         </Modal>
     </div>
 </template>
-
