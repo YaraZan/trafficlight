@@ -45,12 +45,17 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return optional($this->role)->name == 'admin';
+        return optional($this->role)->name === 'admin';
     }
 
     public function isTrainer(): bool
     {
-        return optional($this->role)->name == 'trainer';
+        return $this->isAdmin() || optional($this->role)->name === 'trainer';
+    }
+
+    public function isClaimModerator(): bool
+    {
+        return $this->isAdmin() || optional($this->role)->name === 'Координатор изменений в работе скважины';
     }
 
     public function logs()

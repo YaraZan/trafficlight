@@ -60,7 +60,7 @@ function getColorBgClass(value) {
 </script>
 
 <template>
-    <div class="grid grid-cols-1 gap-[5px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+    <div class="grid grid-cols-1 gap-[10px] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
         <Link v-for="(row, index) in data" :key="index" :href="route('matrix.detail', row.public_id)">
             <div
                 class="group p-4 flex justify-between bg-white rounded-lg shadow border border-gray-200 min-h-[160px]

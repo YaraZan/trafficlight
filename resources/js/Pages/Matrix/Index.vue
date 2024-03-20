@@ -19,6 +19,7 @@ import axios from 'axios';
 import DropDownIcon from '@/Components/Icons/DropDownIcon.vue';
 
 import * as XLSX from 'xlsx';
+import {type} from "tailwind-scrollbar";
 
 const props = defineProps({
     data: {
@@ -33,7 +34,6 @@ onMounted(() => {
 
     searchFilter.value = rememberFilters.value.searchFilter;
 });
-
 function exportTableToExcel(type) {
     const data = document.getElementById('exportMatrix');
     const excelFile = XLSX.utils.table_to_book(data, { sheet: "sheet1" });
@@ -52,7 +52,6 @@ function exportTableToExcel(type) {
     XLSX.writeFile(excelFile, `Матрица_${nd}` + '.' + type);
 }
 
-
 const searchFilter = ref('');
 const radioFilter = ref('all');
 const ngduFilters = ref([]);
@@ -68,13 +67,15 @@ const ngduSort = ref(false);
 const shopSort = ref(false);
 const dateSort = ref(false);
 const stateSort = ref(false);
+const qnSort = ref(false);
+const qnLostSort = ref(false);
 
 const rememberFilters = useRemember({
     searchFilter
 })
 
 const totalPages = computed(() => {
-    if (perPage.value == 'all') {
+    if (perPage.value === 'all') {
         return 1;
     }
     return Math.ceil(filteredData.value.length / perPage.value);
@@ -108,7 +109,7 @@ function extractNumericPart(data) {
 const paginatedData = computed(() => {
     let data = filteredData.value;
 
-    if (perPage.value == 'all') {
+    if (perPage.value === 'all') {
         return data;
     }
 
@@ -160,6 +161,14 @@ const filteredData = computed(() => {
         data = data.sort((a, b) => a.Ngdu_Id - b.Ngdu_Id);
     }
 
+    if (qnSort.value) {
+        data = data.sort((a, b) => b.QnFak - a.QnFak);
+    }
+
+    if (qnLostSort.value) {
+        data = data.sort((a, b) => b.QnLost - a.QnLost);
+    }
+
     if (numberSort.value) {
         data = data.sort((a, b) => {
             const numericA = parseInt(extractWellNumber(a.WellName), 10);
@@ -177,7 +186,7 @@ const filteredData = computed(() => {
     }
 
     if (searchFilter.value !== '') {
-        data = data.filter(item => item.WellName.toLowerCase().includes(searchFilter.value.toLowerCase()));
+        data = data.filter(item => item.WellName.toLowerCase().indexOf(searchFilter.value.toLowerCase()) != -1)
     }
 
     return data;
@@ -208,7 +217,7 @@ const visiblePages = computed(() => {
 
 const selectAllNgduCheckboxes = () => {
 
-    if (ngduFilters.value.length == props.data.ngdu_data.length) {
+    if (ngduFilters.value.length === props.data.ngdu_data.length) {
         ngduFilters.value = [];
         shopFilters.value = [];
         return;
@@ -445,6 +454,8 @@ const viewAll = computed(() => page.props.auth.viewWells);
                     @sort-by-shop="() => { shopSort = !shopSort }"
                     @sortByState="() => { stateSort = !stateSort }"
                     @sort-by-date="() => { dateSort = !dateSort }"
+                    @sort-by-qn="() => { qnSort = !qnSort }"
+                    @sortByQnLost="() => { qnLostSort = !qnLostSort }"
                     v-if="paginatedData.length" :data="paginatedData"/>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 dark:border-gray-700 rounded-xl">
                     <NoDataIcon />

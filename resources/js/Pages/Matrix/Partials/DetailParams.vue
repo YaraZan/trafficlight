@@ -6,7 +6,6 @@ import NoDataIcon from "@/Components/Icons/NoDataIcon.vue";
 import {useForm} from "@inertiajs/vue3";
 import {Input, P, Spinner} from "flowbite-vue";
 import Modal from "@/Components/Modal.vue";
-import anime from "animejs";
 
 const props = defineProps({
     item: {

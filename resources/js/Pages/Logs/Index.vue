@@ -42,6 +42,10 @@ const getActionColor = (action) => {
         actionColor = 'text-orange-400'
     }
 
+    if (action.includes('УТВЕРЖДЕНО: ')) {
+        actionColor = 'text-purple-500'
+    }
+
     return actionColor;
 }
 

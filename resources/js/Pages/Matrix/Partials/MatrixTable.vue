@@ -43,7 +43,7 @@ function normalizeDate(dateSting) {
     return newDate.toLocaleDateString() + ' ' + newDate.getHours() + ':' + (newDate.getMinutes() === 0 ? '00' : newDate.getMinutes());
 }
 
-const emit = defineEmits(['sortByDate', 'sortByState', 'sortByShop', 'sortByNgdu', 'sortByNumber'])
+const emit = defineEmits(['sortByDate', 'sortByState', 'sortByShop', 'sortByNgdu', 'sortByNumber', 'sortByQn'])
 </script>
 
 <template>
@@ -84,7 +84,20 @@ const emit = defineEmits(['sortByDate', 'sortByState', 'sortByShop', 'sortByNgdu
                     </div>
                 </th>
                 <th rowspan="2" class="items-center px-3 py-1 text-center border-gray-200 dark:border-gray-700 border-l">
-                    <span class="text-[13px] font-semibold text-gray-800 dark:text-gray-300">Qн факт</span>
+                    <div class="flex gap-4 items-center justify-between w-full">
+                        <span class="text-[13px] font-semibold text-gray-800 dark:text-gray-300">Qн факт</span>
+                        <TableHeadSortIcon
+                            @click="emit('sortByQn')"
+                            class="cursor-pointer"  />
+                    </div>
+                </th>
+                <th rowspan="2" class="items-center px-3 py-1 text-center border-gray-200 dark:border-gray-700 border-l">
+                    <div class="flex gap-4 items-center justify-between w-full">
+                        <span class="text-[13px] font-semibold text-gray-800 dark:text-gray-300">Потери</span>
+                        <TableHeadSortIcon
+                            @click="emit('sortByQnLost')"
+                            class="cursor-pointer"  />
+                    </div>
                 </th>
                 <th rowspan="2" class="items-center px-3 py-1 text-left border-gray-200 dark:border-gray-700 border-l">
                     <div class="flex gap-4 items-center justify-between w-full">
@@ -278,6 +291,9 @@ const emit = defineEmits(['sortByDate', 'sortByState', 'sortByShop', 'sortByNgdu
                 <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'"
                     class="font-semibold text-[12px] px-3 py-1 text-left border-l border-gray-200 dark:border-gray-700"
                 >{{ row.QnFak ? row.QnFak : 'Пусто' }}</td>
+                <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'"
+                    class="font-semibold text-[12px] px-3 py-1 text-left border-l border-gray-200 dark:border-gray-700"
+                >{{ row.QnLost ? row.QnLost : 'Пусто' }}</td>
                 <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'"
                     class="font-semibold text-[13px] px-3 py-1 text-left border-l border-gray-200 dark:border-gray-700"
                     >{{ row.WellState ? row.WellState : 'Пусто' }}</td>
