@@ -8,6 +8,8 @@ import 'vue-datepicker-next/index.css';
 import 'vue-datepicker-next/locale/ru.es';
 import ClearIcon from "@/Components/Icons/ClearIcon.vue";
 import CalendarIcon from "@/Components/Icons/CalendarIcon.vue";
+import {Spinner} from "flowbite-vue";
+import {useForm} from "@inertiajs/vue3";
 
 const props = defineProps({
     item: {
@@ -22,12 +24,30 @@ const claimsLoading = ref(false);
 
 const dateFilters = ref([]);
 
+const form = useForm({
+    claim_id: '',
+});
+
+const trackClaim = () => {
+    form.post(route('claim.track'), {
+        onSuccess: () => {
+            form.reset();
+            fetchUserClaims(props.item.public_id);
+        },
+    });
+};
+
+const handleTrackClaim = (id) => {
+    form.claim_id = id;
+
+    trackClaim();
+}
 
 const fetchUserClaims = (publicId) => {
 
     claimsLoading.value = true;
 
-    return axios.get(`/api/control/${publicId}/well-claims`)
+    return axios.get(`/api/control/${publicId}/well-claims-untracked`)
         .then((response) => {
             claims.value = response.data;
         })
@@ -125,22 +145,6 @@ const nextPage = () => {
     }
 };
 
-const getStatusColor = (color) => {
-    let statusColor = 'text-gray-400'
-    switch (color) {
-        case 'Выполнено':
-            statusColor = 'text-green-500'
-            break
-        case 'Утверждено':
-            statusColor = 'text-orange-500'
-            break
-        case 'Отклонено':
-            statusColor = 'text-red-500'
-            break
-    }
-
-    return statusColor
-}
 
 const clearDate = () => {
     dateFilters.value = [];
@@ -240,8 +244,13 @@ const clearDate = () => {
                     </div>
                 </div>
 
-                <span :class="getStatusColor(claim.StatusName)" class="absolute top-4 right-4 text-[13px] font-medium">{{ claim.StatusName }}</span>
-                <span class="absolute top-4 left-4 text-[13px] text-gray-300 dark:text-gray-500 font-medium">{{ claim.UserName }}</span>
+                <span class="absolute top-4 left-4 text-[13px] text-gray-400 dark:text-gray-500 font-medium">{{ claim.UserName }}</span>
+
+                <button
+                    @click.prevent="handleTrackClaim(claim.Id)"
+                    class="absolute top-4 right-4 flex gap-2 bg-green-600 px-4 py-2 border border-green-500 rounded-lg text-white text-sm font-semibold hover:bg-opacity-80">
+                    Утвердить
+                </button>
             </div>
             <div v-if="paginatedData.length < perPage"
                  v-for="(_, index) in Array.from({ length: perPage - paginatedData.length })"

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\ClaimCreated;
+use App\Events\ClaimTracked;
 use App\Listeners\ClaimCreatedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use App\Events\UserAction;
+use App\Listeners\ClaimTrackedListener;
 use App\Listeners\LoginSuccessfull;
 use App\Listeners\LogoutSuccessfull;
 
@@ -34,6 +36,9 @@ class EventServiceProvider extends ServiceProvider
         ClaimCreated::class => [
             ClaimCreatedListener::class,
         ],
+        ClaimTracked::class => [
+            ClaimTrackedListener::class,
+        ]
     ];
 
     /**

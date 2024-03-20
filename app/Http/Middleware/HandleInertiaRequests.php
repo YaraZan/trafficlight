@@ -34,10 +34,11 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
-                'isAdmin' => $request->user() ? $request->user()->isAdmin() : null,
-                'isTrainer' => $request->user() ? $request->user()->isTrainer() : null,
-                'viewWells' => $request->user() ? $request->user()->viewAllWells() : null,
-                'controlWells' => $request->user() ? $request->user()->canEdit() : null,
+                'isAdmin' => $request->user() ? $request->user()->isAdmin() : false,
+                'isTrainer' => $request->user() ? $request->user()->isTrainer() : false,
+                'isClaimModerator' => $request->user() ? $request->user()->isClaimModerator() : false,
+                'viewWells' => $request->user() ? $request->user()->viewAllWells() : false,
+                'controlWells' => $request->user() ? $request->user()->canEdit() : false,
             ],
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),

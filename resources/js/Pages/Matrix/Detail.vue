@@ -8,25 +8,15 @@ import DiagramsIcon from '@/Components/Icons/DiagramsIcon.vue';
 import {Link, Head, usePage} from '@inertiajs/vue3';
 import {ref, onMounted, computed} from 'vue';
 import axios from 'axios';
-import SkeletonDnmhTable from './Partials/SkeletonDnmhTable.vue';
 import DnmChart from './Partials/DnmChart.vue';
-import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
-import EngineIcon from '@/Components/Icons/EngineIcon.vue';
-import {watch} from 'vue';
 import Dinamogram from '@/Components/Icons/Dinamogram.vue';
 import DinamographLogo from "@/Components/Icons/DinamographLogo.vue";
 import {Spinner} from "flowbite-vue";
 import ClearIcon from "@/Components/Icons/ClearIcon.vue";
-import {encryptStorage} from "@/utils/storage.js";
-import DatePicker from "vue-datepicker-next";
 import 'vue-datepicker-next/index.css';
 import 'vue-datepicker-next/locale/ru.es';
-import CalendarIcon from "@/Components/Icons/CalendarIcon.vue";
-import {fetchDnmData, fetchDnmhData, fetchWellCategories} from "@/Api/matrix.js";
 import DetailParams from "@/Pages/Matrix/Partials/DetailParams.vue";
 import DetailDinamograms from "@/Pages/Matrix/Partials/DetailDinamograms.vue";
-import DetailUserClaims from "@/Pages/Matrix/Partials/DetailUserClaims.vue";
-import DetailWellClaims from "@/Pages/Matrix/Partials/DetailWellClaims.vue";
 
 const props = defineProps({
     item: {
@@ -68,23 +58,23 @@ const fetchRawPrediction = async (data) => {
             'Authorization': `Basic ${API_KEY}`
         },
     })
-        .then(response => {
-            const res = response.data
+    .then(response => {
+        const res = response.data
 
-            return `${res.split('_').join(' ')}`
-        })
-        .catch(error => {
-            aiError.value = 'Ошибка при составлении отчёта. Повторите попытку позже.'
+        return `${res.split('_').join(' ')}`
+    })
+    .catch(error => {
+        aiError.value = 'Ошибка при составлении отчёта. Повторите попытку позже.'
 
-            setTimeout(() => {
-                aiError.value = ''
+        setTimeout(() => {
+            aiError.value = ''
 
-                showAiReportWindow.value = false
-            }, 5000)
-        })
-        .finally(() => {
-            processingAiAnalysis.value = false;
-        })
+            showAiReportWindow.value = false
+        }, 5000)
+    })
+    .finally(() => {
+        processingAiAnalysis.value = false;
+    })
 }
 
 const make_ai_analysis = async () => {

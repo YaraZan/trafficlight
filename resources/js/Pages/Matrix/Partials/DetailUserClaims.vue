@@ -157,6 +157,9 @@ const getStatusColor = (color) => {
         case 'Выполнено':
             statusColor = 'text-green-500'
             break
+        case 'Утверждено':
+            statusColor = 'text-orange-500'
+            break
         case 'Отклонено':
             statusColor = 'text-red-500'
             break

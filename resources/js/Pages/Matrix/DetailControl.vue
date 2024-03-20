@@ -27,6 +27,7 @@ import DetailParams from "@/Pages/Matrix/Partials/DetailParams.vue";
 import DetailDinamograms from "@/Pages/Matrix/Partials/DetailDinamograms.vue";
 import DetailUserClaims from "@/Pages/Matrix/Partials/DetailUserClaims.vue";
 import DetailWellClaims from "@/Pages/Matrix/Partials/DetailWellClaims.vue";
+import DetailClaimsUntracked from "@/Pages/Matrix/Partials/DetailClaimsUntracked.vue";
 
 const props = defineProps({
     item: {
@@ -34,6 +35,8 @@ const props = defineProps({
         required: true,
     }
 });
+
+const user = usePage().props.auth
 
 const API_KEY = import.meta.env.VITE_API_KEY
 const DINAMOGRAPH_API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL
@@ -53,7 +56,7 @@ const paginationSource = ref('Параметры')
 const paginationSourceTypes = ['Параметры', 'Динамограммы', 'Заявки']
 
 const currentClaimType = ref('История')
-const claimTypes = ['История', 'Мои']
+const claimTypes = ['История', 'Мои', user.isClaimModerator ? 'Утверждение' : null].filter(Boolean);
 
 const handleSelectDnm = (value) => {
     selectedDinamograms.value = value;
@@ -286,7 +289,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                              class="flex items-center gap-2"
                              @click="paginationSource = item">
                                 <span
-                                    class="p-2 cursor-pointer rounded-lg text-gray-300 dark:text-gray-600 font-semibold text-[12px]"
+                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
                                     :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
                                         item
                                     }}</span>
@@ -309,7 +312,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                  class="flex items-center gap-2"
                                  @click="paginationSource = item">
                                 <span
-                                    class="p-2 cursor-pointer rounded-lg text-gray-300 dark:text-gray-600 font-semibold text-[12px]"
+                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
                                     :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
                                         item
                                     }}</span>
@@ -366,7 +369,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                              class="flex items-center gap-2"
                              @click="paginationSource = item">
                                 <span
-                                    class="p-2 cursor-pointer rounded-lg text-gray-300 dark:text-gray-600 font-semibold text-[12px]"
+                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
                                     :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
                                         item
                                     }}</span>
@@ -409,7 +412,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                              class="flex items-center gap-2"
                              @click="paginationSource = item">
                                 <span
-                                    class="p-2 cursor-pointer rounded-lg text-gray-300 dark:text-gray-600 font-semibold text-[12px]"
+                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
                                     :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
                                         item
                                     }}</span>
@@ -422,6 +425,48 @@ const controlWells = computed(() => page.props.auth.controlWells);
                         </div>
                     </div>
                 </DetailWellClaims>
+
+                <DetailClaimsUntracked v-if="paginationSource === 'Заявки' && currentClaimType === 'Утверждение'"
+                                       :item="item">
+                    <template #claims-switcher>
+                        <div class="flex items-center gap-3">
+                            <div v-for="(claimType, index) in claimTypes"
+                                 :key="index"
+                                 class="flex items-center gap-2"
+                            >
+                                <input
+                                    :checked="currentClaimType === claimType"
+                                    v-model="currentClaimType"
+                                    :id="`claim-type-${index}`"
+                                    type="radio"
+                                    :value="claimType"
+                                    class="ring-0 focus:ring-0 text-green-500 dark:bg-gray-800 dark:border-gray-700 bg-gray-100 border-gray-300"/>
+                                <label
+                                    :for="`claim-type-${index}`"
+                                    class="font-semibold text-[13px] text-gray-800 dark:text-gray-400"
+                                >{{ claimType }}</label>
+                            </div>
+                        </div>
+                    </template>
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
+                        <div v-for="(item, index) in paginationSourceTypes"
+                             :key="index"
+                             class="flex items-center gap-2"
+                             @click="paginationSource = item">
+                                <span
+                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
+                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
+                                        item
+                                    }}</span>
+                            <span
+                                v-if="index !== paginationSourceTypes.length - 1"
+                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
+                            >
+                                    |
+                                </span>
+                        </div>
+                    </div>
+                </DetailClaimsUntracked>
 
             </div>
         </div>

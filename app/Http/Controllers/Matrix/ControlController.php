@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Matrix;
 
 use App\Events\ClaimCreated;
+use App\Events\ClaimTracked;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Matrix\ClaimCreateRequest;
 use App\Http\Requests\Matrix\ClaimDeleteRequest;
@@ -125,6 +126,42 @@ class ControlController extends Controller
             ->get();
 
         return response()->json($well_claims);
+    }
+
+    public function getWellUntrackedClaims($well_uuid)
+    {
+        $well_claims = DB::table('RefClaim as rc')
+            ->join('Well as we', 'rc.Well_Id', '=', 'we.Id')
+            ->join('Category as ct', 'rc.Category_Id', '=', 'ct.Id')
+            ->join('users as usr', 'rc.User_Id', '=', 'usr.id')
+            ->join('RefClaimStatus as rfs', 'rc.RefClaimStatus_Id', '=', 'rfs.Id')
+            ->select(
+                'rc.*',
+                'rfs.RCStatusName as StatusName',
+                'usr.name as UserName',
+                'ct.CatName as CatName'
+            )
+            ->where('we.public_id', '=', $well_uuid)
+            ->where('rfs.Id', '=', 1)
+            ->get();
+
+        return response()->json($well_claims);
+    }
+
+    public function trackClaim(Request $request)
+    {
+        $claim_id = $request->input('claim_id');
+
+        $claim_status = DB::table('RefClaimStatus as rcs')
+            ->where('RCStatusName', '=', 'Утверждено')->first();
+
+        $claim = RefClaim::where('Id', '=', $claim_id)->first();
+
+        $claim->RefClaimStatus_Id = $claim_status->Id;
+
+        $claim->save();
+
+        event(new ClaimTracked($claim->Comment));
     }
 
     public function createNewClaim(ClaimCreateRequest $request)
