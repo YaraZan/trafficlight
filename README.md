@@ -45,8 +45,8 @@
 
 
 ## Скриншоты
-![App Screenshot](public/images/readme_scht_9.png)
-![App Screenshot](public/images/readme_scht_8.png)
+![App Screenshot](public/images/readme_11.png)
+![App Screenshot](public/images/readme_12.png)
 
 **Страница со всеми доступными скважинами**
 
@@ -56,7 +56,8 @@
 
 <br>
 
-![App Screenshot](public/images/readme_scht_6.png)
+![App Screenshot](public/images/readme_13.png)
+![App Screenshot](public/images/readme_14.png)
 
 **Детальная страница скважины**
 
@@ -66,7 +67,7 @@
 
 <br>
 
-![App Screenshot](public/images/readme_scht_5.png)
+![App Screenshot](public/images/readme_15.png)
 
 **Управление скважиной**
 
@@ -83,7 +84,7 @@
 
 <br>
 
-![App Screenshot](public/images/readme_scht_7.png)
+![App Screenshot](public/images/readme_16.png)
 
 **Вывод отчёта Динамографа** - 29.02.2024
 
