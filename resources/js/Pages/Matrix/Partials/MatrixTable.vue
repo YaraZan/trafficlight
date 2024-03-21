@@ -85,7 +85,7 @@ const emit = defineEmits(['sortByDate', 'sortByState', 'sortByShop', 'sortByNgdu
                 </th>
                 <th rowspan="2" class="items-center px-3 py-1 text-center border-gray-200 dark:border-gray-700 border-l">
                     <div class="flex gap-4 items-center justify-between w-full">
-                        <span class="text-[13px] font-semibold text-gray-800 dark:text-gray-300">Qн факт</span>
+                        <span class="text-[13px] font-semibold text-gray-800 dark:text-gray-300">Нефть факт</span>
                         <TableHeadSortIcon
                             @click="emit('sortByQn')"
                             class="cursor-pointer"  />
@@ -93,7 +93,7 @@ const emit = defineEmits(['sortByDate', 'sortByState', 'sortByShop', 'sortByNgdu
                 </th>
                 <th rowspan="2" class="items-center px-3 py-1 text-center border-gray-200 dark:border-gray-700 border-l">
                     <div class="flex gap-4 items-center justify-between w-full">
-                        <span class="text-[13px] font-semibold text-gray-800 dark:text-gray-300">Потери</span>
+                        <span class="text-[13px] font-semibold text-gray-800 dark:text-gray-300">Нефть отклонение</span>
                         <TableHeadSortIcon
                             @click="emit('sortByQnLost')"
                             class="cursor-pointer"  />
