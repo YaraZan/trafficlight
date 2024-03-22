@@ -24,7 +24,7 @@ const dnmDataLoading = ref(false);
 
 const dateFilters = ref([]);
 
-const emit = defineEmits(['selectDnm'])
+const emit = defineEmits(['selectDnm', 'selectDnmh'])
 
 const fetchDnmhData = (publicId) => {
     dnmhDataLoading.value = true;
@@ -213,8 +213,9 @@ watch(() => [dnmhData.value, dateFilters.value], () => {
 }, { deep: true });
 
 
-watch(() => [dnmData.value], () => {
+watch(() => [dnmData.value, dnmhData.value], () => {
     emit('selectDnm', dnmData.value)
+    emit('selectDnmh', dnmhData.value)
 }, { deep: true })
 </script>
 
