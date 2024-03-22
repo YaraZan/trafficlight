@@ -276,8 +276,6 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                                     <code>{{ dnm.prediction }}</code>
                                                 </div>
 
-
-
                                             </div>
                                         </div>
                                         <div v-else-if="aiError">
