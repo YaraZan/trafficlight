@@ -84,9 +84,9 @@
 
 <br>
 
-![App Screenshot](public/images/readme_16.png)
+![App Screenshot](public/images/readme_17.png)
 
-**Вывод отчёта Динамографа** - 29.02.2024
+**Вывод отчёта Динамографа**
 
 - **В правой нижней части:** Отчёт, сформированный моделью машинного обучения
 [<b>Динамограф</b>](https://github.com/YaraZan/dinamograph-api). Анализ осуществляется над каждой выбранной

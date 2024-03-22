@@ -43,6 +43,7 @@ const DINAMOGRAPH_API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL
 const DEFAULT_AI_VERSION = import.meta.env.VITE_DEFAULT_AI_VERSION
 
 const selectedDinamograms = ref([])
+const selectedDnmh = ref([])
 
 const predictionsData = ref([]);
 const paginatedData = ref([]);
@@ -60,6 +61,10 @@ const claimTypes = ['История', 'Мои', user.isClaimModerator ? 'Утв�
 
 const handleSelectDnm = (value) => {
     selectedDinamograms.value = value;
+}
+
+const handleSelectDnmh = (value) => {
+    selectedDnmh.value = value;
 }
 
 const fetchRawPrediction = async (data) => {
@@ -235,8 +240,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
 
                     </div>
 
-                        <div
-                            v-if="paginationSource === 'Динамограммы'"
+                    <div v-if="paginationSource === 'Динамограммы'"
                             class="w-3/4 h-[400px] flex flex-col items-start border border-gray-200 dark:border-gray-700
                             rounded-xl"
                         >
@@ -247,6 +251,7 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                 <span class="text-gray-300 font-regular max-w-[400px] text-center">Выберите динамограмму для отображения во вкладке "динамограммы"</span>
                             </div>
                             <div class="relative w-full mt-[20px]">
+
                                 <div v-if="showAiReportWindow" class="absolute top-[110%] w-full z-[99]">
                                     <div class="relative w-full bg-white rounded-lg shadow-lg dark:border-gray-700 dark:bg-gray-900 p-4 gap-[20px]
                            flex flex-col border border-gray-200">
@@ -259,15 +264,20 @@ const controlWells = computed(() => page.props.auth.controlWells);
                                         <div v-if="!processingAiAnalysis && !aiError" class="flex flex-col gap-[15px] pl-2">
                                             <div v-for="(dnm, index) in predictionsData"
                                                  :key="index"
-                                                 class="flex items-center gap-[10px]">
+                                                 class="flex items-center gap-10"
+                                            >
                                                 <div :style="{ 'background-color': dnm.color }"
                                                      class="rounded-full w-[10px] h-[10px]"></div>
-                                                <code>{{ dnm.prediction }}</code>
 
-                                                <!-- TODO: There should be `dnmhData` instead `selectedDinamograms` -->
-                                                <span class="text-[13px] text-gray-400">{{
-                                                        selectedDinamograms.find(src => src.public_id === dnm.public_id).DnmAdress
-                                                    }}</span>
+                                                <div class="flex flex-col gap-1">
+                                                    <span class="text-[13px] text-gray-400">{{
+                                                            selectedDnmh.find(src => src.public_id === dnm.public_id).DnmAdress
+                                                        }}</span>
+                                                    <code>{{ dnm.prediction }}</code>
+                                                </div>
+
+
+
                                             </div>
                                         </div>
                                         <div v-else-if="aiError">
@@ -303,7 +313,9 @@ const controlWells = computed(() => page.props.auth.controlWells);
                     </div>
                 </DetailParams>
 
-                <DetailDinamograms v-if="paginationSource === 'Динамограммы'" @select-dnm="handleSelectDnm"
+                <DetailDinamograms v-if="paginationSource === 'Динамограммы'"
+                                   @select-dnmh="handleSelectDnmh"
+                                   @select-dnm="handleSelectDnm"
                                    :item="item">
                     <template class="flex items-center gap-2">
                         <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">

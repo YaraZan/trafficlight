@@ -49,7 +49,7 @@ const drawChart = (datasets) => {
       return {
         ...d,
         R: parseFloat(d.R),
-        X: parseTime(d.X), // Parse the X field as a date
+        X: new Date(d.X), // Parse the X field as a date
         Y: parseFloat(d.Y),
       };
     });
@@ -130,7 +130,7 @@ const drawChart = (datasets) => {
       .enter()
       .append('circle')
       .attr('class', 'fact') // <-- Add 'fact' class
-      .attr('cx', (d) => xScale(d.X.getTime()))
+      .attr('cx', (d) => xScale(d.X))
       .attr('cy', (d) => yScale(d.Y))
       .attr('r', 2)
       .attr('fill', dataset.color)
@@ -150,7 +150,7 @@ const drawChart = (datasets) => {
 
         tooltip.style('display', 'block');
         tooltip.html(`
-        <div class="flex items-center gap-2 text-gray-800 dark:text-gray-300">
+        <div class="flex items-center gap-2 text-gray-800 dark:text-gray-300 z-[99]">
           <div class="w-2 h-2 rounded-full" style="background-color: ${dataset.color}"></div>
           ${dataset.paramName}: <b>${d.Y}</b>, Дата: <b>${d.X.toLocaleString()}</b>
         </div>
@@ -189,7 +189,7 @@ const drawChart = (datasets) => {
         .enter()
         .append('circle')
         .attr('class', 'setpoint') // <-- Add 'setpoint' class
-        .attr('cx', (d) => xScale(d.X.getTime()))
+        .attr('cx', (d) => xScale(d.X))
         .attr('cy', (d) => yScale(d.Y))
         .attr('r', 2)
         .attr('fill', dataset.color)
@@ -210,7 +210,7 @@ const drawChart = (datasets) => {
 
           tooltip.style('display', 'block');
           tooltip.html(`
-          <div class="flex items-center gap-2 text-gray-800 dark:text-gray-300">
+          <div class="flex items-center gap-2 text-gray-800 dark:text-gray-300 z-[99]">
             <div class="w-2 h-2 rounded-full" style="background-color: ${dataset.color}"></div>
             Уставка: <b>${d.Y}</b>, Дата: <b>${d.X.toLocaleString()}</b>
           </div>
