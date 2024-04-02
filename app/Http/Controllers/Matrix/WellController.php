@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Matrix;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Matrix\MoveWellRequest;
 use App\Models\Ngdu;
 use App\Models\User;
 use App\Models\Well;
+use App\Models\WellClaim;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -287,14 +289,31 @@ class WellController extends Controller
             ->orderBy('wa.Dif3', 'desc')
             ->where('we.public_id', '=', $well_uuid)
             ->first();
-
 //            if (Gate::allows('control-wells')) {
 //                return Inertia::render('Matrix/DetailControl', ['item' => $well_data]);
 //            }
-
             return Inertia::render('Matrix/Detail', ['item' => $well_data]);
         }
 
         return Inertia::render('Errors/NotAuthorized');
+    }
+
+    public function createMoveWellClaim(MoveWellRequest $request) {
+        $user = auth()->user();
+
+        $well_from = Well::where('public_id', $request->input('well_uuid'))->first();
+
+        $refClaim = new WellClaim();
+        $refClaim->well_id_disconn = $well_from->Id;
+        $refClaim->well_id_conn = $request->input('well_id_conn');
+        $refClaim->user_id = $user->id;
+        $refClaim->comment = $request->input('comment') ? $request->input('comment') : null;
+        $refClaim->roadheight = $request->input('roadheight') ? $request->input('roadheight') : 2000;
+        $refClaim->dat = date('Y-m-d H:i:s.u');
+        $refClaim->save();
+    }
+
+    public function getAllWells() {
+        return Well::all();
     }
 }

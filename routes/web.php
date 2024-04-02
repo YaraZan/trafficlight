@@ -79,6 +79,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/control/claims/create', [ControlController::class, 'createNewClaim'])->name('claim.create');
         Route::delete('/control/claims/delete', [ControlController::class, 'deleteClaim'])->name('claim.delete');
 
+        Route::get('/well/all', [WellController::class, 'getAllWells'])->name('well.all');
+        Route::post('/well/move-well', [WellController::class, 'createMoveWellClaim'])->name('well.move');
+
         Route::get('/dnmh/{public_id}', [DnmhController::class, 'index']);
         Route::get('/dnm/{public_id}', [DnmhController::class, 'show']);
 

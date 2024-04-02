@@ -8,26 +8,17 @@ import DiagramsIcon from '@/Components/Icons/DiagramsIcon.vue';
 import {Link, Head, usePage} from '@inertiajs/vue3';
 import {ref, onMounted, computed} from 'vue';
 import axios from 'axios';
-import SkeletonDnmhTable from './Partials/SkeletonDnmhTable.vue';
 import DnmChart from './Partials/DnmChart.vue';
-import NoDataIcon from '@/Components/Icons/NoDataIcon.vue';
-import EngineIcon from '@/Components/Icons/EngineIcon.vue';
-import {watch} from 'vue';
 import Dinamogram from '@/Components/Icons/Dinamogram.vue';
 import DinamographLogo from "@/Components/Icons/DinamographLogo.vue";
 import {Spinner} from "flowbite-vue";
 import ClearIcon from "@/Components/Icons/ClearIcon.vue";
-import {encryptStorage} from "@/utils/storage.js";
-import DatePicker from "vue-datepicker-next";
-import 'vue-datepicker-next/index.css';
-import 'vue-datepicker-next/locale/ru.es';
-import CalendarIcon from "@/Components/Icons/CalendarIcon.vue";
-import {fetchDnmData, fetchDnmhData, fetchWellCategories} from "@/Api/matrix.js";
 import DetailParams from "@/Pages/Matrix/Partials/DetailParams.vue";
 import DetailDinamograms from "@/Pages/Matrix/Partials/DetailDinamograms.vue";
 import DetailUserClaims from "@/Pages/Matrix/Partials/DetailUserClaims.vue";
 import DetailWellClaims from "@/Pages/Matrix/Partials/DetailWellClaims.vue";
 import DetailClaimsUntracked from "@/Pages/Matrix/Partials/DetailClaimsUntracked.vue";
+import MoveWell from "@/Pages/Matrix/Partials/MoveWell.vue";
 
 const props = defineProps({
     item: {
@@ -44,18 +35,13 @@ const DEFAULT_AI_VERSION = import.meta.env.VITE_DEFAULT_AI_VERSION
 
 const selectedDinamograms = ref([])
 const selectedDnmh = ref([])
-
 const predictionsData = ref([]);
 const paginatedData = ref([]);
-
 const processingAiAnalysis = ref(false);
 const showAiReportWindow = ref(false);
-
 const aiError = ref('');
-
 const paginationSource = ref('Параметры')
 const paginationSourceTypes = ['Параметры', 'Динамограммы', user.controlWells ? 'Заявки' : null].filter(Boolean);
-
 const currentClaimType = ref('История')
 const claimTypes = ['История', 'Мои', user.isClaimModerator ? 'Утверждение' : null].filter(Boolean);
 
@@ -121,6 +107,7 @@ const extractWellNumber = (string) => {
 };
 
 const page = usePage();
+
 </script>
 
 <template>
@@ -160,6 +147,8 @@ const page = usePage();
                                     class="w-1/2 h-1/2 rounded-full z-2"></div>
                             </div>
                             <span class="font-bold text-gray-800 dark:text-gray-300 text-lg">{{ item.Name }}</span>
+
+                            <MoveWell :well="item" />
                         </div>
 
                         <div

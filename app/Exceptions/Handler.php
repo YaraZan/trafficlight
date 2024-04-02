@@ -47,10 +47,10 @@ class Handler extends ExceptionHandler
                         ->toResponse($request)
                         ->setStatusCode($response->status());
 
-                case 500:
+/*                 case 500:
                     return Inertia::render('Errors/ServerError')
                         ->toResponse($request)
-                        ->setStatusCode($response->status());
+                        ->setStatusCode($response->status()); */
 
                 default:
                     return $response;
