@@ -7,6 +7,7 @@ use App\Http\Controllers\Matrix\AskStatsController;
 use App\Http\Controllers\Matrix\WellController;
 use App\Http\Controllers\Matrix\WellAlarmsController;
 use App\Http\Controllers\Matrix\HeadHourController;
+use App\Http\Controllers\Matrix\MoveWellController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -78,6 +79,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/control/claims/track', [ControlController::class, 'trackClaim'])->name('claim.track');
         Route::post('/control/claims/create', [ControlController::class, 'createNewClaim'])->name('claim.create');
         Route::delete('/control/claims/delete', [ControlController::class, 'deleteClaim'])->name('claim.delete');
+
+        Route::get('/well-claim/all-by-well/{well_uuid}', [MoveWellController::class, 'allByWell'])->name('well-claim.allByWell');
+        Route::get('/well-claim/all-by-user/{well_uuid}', [MoveWellController::class, 'allByUser'])->name('well-claim.allByUser');
+        Route::post('/well-claim/move-well', [MoveWellController::class, 'create'])->name('well-claim.create');
+        Route::delete('/well-claim/delete', [MoveWellController::class, 'delete'])->name('well-claim.delete');
 
         Route::get('/dnmh/{public_id}', [DnmhController::class, 'index']);
         Route::get('/dnm/{public_id}', [DnmhController::class, 'show']);

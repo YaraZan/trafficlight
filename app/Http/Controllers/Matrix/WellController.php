@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Matrix;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Matrix\MoveWellRequest;
 use App\Models\Ngdu;
 use App\Models\User;
 use App\Models\Well;
+use App\Models\WellClaim;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -287,14 +289,16 @@ class WellController extends Controller
             ->orderBy('wa.Dif3', 'desc')
             ->where('we.public_id', '=', $well_uuid)
             ->first();
-
 //            if (Gate::allows('control-wells')) {
 //                return Inertia::render('Matrix/DetailControl', ['item' => $well_data]);
 //            }
-
             return Inertia::render('Matrix/Detail', ['item' => $well_data]);
         }
 
         return Inertia::render('Errors/NotAuthorized');
+    }
+
+    public function getAllWells() {
+        return Well::all();
     }
 }

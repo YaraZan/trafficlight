@@ -15,41 +15,6 @@ const props = defineProps({
     },
 });
 
-// const DINAMOGRAPH_API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL;
-// const API_KEY =import.meta.env.VITE_DINAMOGRAPH_API_KEY;
-//
-// const aiModels = ref([])
-//
-// const processingLoadData = ref(false)
-//
-// const getAiModels = () => {
-//     processingLoadData.value = true
-//
-//     return axios.get(`${DINAMOGRAPH_API_URL}/v1/ai/models`, {
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Authorization': `Basic ${API_KEY}`
-//         },
-//     })
-//     .then(response => {
-//         aiModels.value = response.data.models;
-//     })
-//     .catch(error => {
-//         processingLoadData.value = false;
-//     })
-//     .finally(() => {
-//         processingLoadData.value = false;
-//     })
-// }
-//
-// const handleChangeAiModelVersion = (version) => {
-//     encryptStorage.setItem('aiv', version)
-// }
-//
-// onMounted(() => {
-//     getAiModels()
-// })
-
 </script>
 
 <template>
