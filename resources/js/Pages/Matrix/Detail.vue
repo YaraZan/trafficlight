@@ -18,7 +18,8 @@ import DetailDinamograms from "@/Pages/Matrix/Partials/DetailDinamograms.vue";
 import DetailUserClaims from "@/Pages/Matrix/Partials/DetailUserClaims.vue";
 import DetailWellClaims from "@/Pages/Matrix/Partials/DetailWellClaims.vue";
 import DetailClaimsUntracked from "@/Pages/Matrix/Partials/DetailClaimsUntracked.vue";
-import MoveWell from "@/Pages/Matrix/Partials/MoveWell.vue";
+import DetailMoveWell from "@/Pages/Matrix/Partials/DetailMoveWell.vue";
+import DetailMoveWellUser from "@/Pages/Matrix/Partials/DetailMoveWellUser.vue";
 
 const props = defineProps({
     item: {
@@ -41,9 +42,11 @@ const processingAiAnalysis = ref(false);
 const showAiReportWindow = ref(false);
 const aiError = ref('');
 const paginationSource = ref('Параметры')
-const paginationSourceTypes = ['Параметры', 'Динамограммы', user.controlWells ? 'Заявки' : null].filter(Boolean);
+const paginationSourceTypes = ['Параметры', 'Динамограммы', user.controlWells ? 'Заявки' : null, 'Перемещение'].filter(Boolean);
 const currentClaimType = ref('История')
-const claimTypes = ['История', 'Мои', user.isClaimModerator ? 'Утверждение' : null].filter(Boolean);
+const claimTypes = ['Мои', 'История', user.isClaimModerator ? 'Утверждение' : null].filter(Boolean);
+const moveWellClaimTypes = ['Мои', 'История'];
+const currentMoveWellClaimType = ref('История')
 
 const handleSelectDnm = (value) => {
     selectedDinamograms.value = value;
@@ -147,8 +150,6 @@ const page = usePage();
                                     class="w-1/2 h-1/2 rounded-full z-2"></div>
                             </div>
                             <span class="font-bold text-gray-800 dark:text-gray-300 text-lg">{{ item.Name }}</span>
-
-                            <MoveWell :well="item" />
                         </div>
 
                         <div
@@ -346,8 +347,7 @@ const page = usePage();
                     </template>
                 </DetailDinamograms>
 
-                <DetailUserClaims
-                    v-if="paginationSource === 'Заявки' && currentClaimType === 'Мои'"
+                <DetailUserClaims v-if="paginationSource === 'Заявки' && currentClaimType === 'Мои'"
                     :item="item">
                     <template #claims-switcher>
                         <div class="flex items-center gap-3">
@@ -389,8 +389,7 @@ const page = usePage();
                     </div>
                 </DetailUserClaims>
 
-                <DetailWellClaims
-                    v-if="paginationSource === 'Заявки' && currentClaimType === 'История'"
+                <DetailWellClaims v-if="paginationSource === 'Заявки' && currentClaimType === 'История'"
                     :item="item">
                     <template #claims-switcher>
                         <div class="flex items-center gap-3">
@@ -433,7 +432,8 @@ const page = usePage();
                 </DetailWellClaims>
 
                 <DetailClaimsUntracked v-if="paginationSource === 'Заявки' && currentClaimType === 'Утверждение'"
-                                       :item="item">
+                    :item="item"
+                >
                     <template #claims-switcher>
                         <div class="flex items-center gap-3">
                             <div v-for="(claimType, index) in claimTypes"
@@ -473,6 +473,92 @@ const page = usePage();
                         </div>
                     </div>
                 </DetailClaimsUntracked>
+
+                <DetailMoveWell v-if="paginationSource === 'Перемещение'  && currentMoveWellClaimType === 'История'"
+                    :item="item"
+                >
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
+                        <div v-for="(item, index) in paginationSourceTypes"
+                             :key="index"
+                             class="flex items-center gap-2"
+                             @click="paginationSource = item">
+                                <span
+                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
+                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
+                                        item
+                                    }}</span>
+                            <span
+                                v-if="index !== paginationSourceTypes.length - 1"
+                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
+                            >
+                                    |
+                                </span>
+                        </div>
+                    </div>
+                    <template #claims-switcher>
+                        <div class="flex items-center gap-3">
+                            <div v-for="(claimType, index) in moveWellClaimTypes"
+                                 :key="index"
+                                 class="flex items-center gap-2"
+                            >
+                                <input
+                                    :checked="currentMoveWellClaimType === claimType"
+                                    v-model="currentMoveWellClaimType"
+                                    :id="`claim-type-${index}`"
+                                    type="radio"
+                                    :value="claimType"
+                                    class="ring-0 focus:ring-0 text-green-500 dark:bg-gray-800 dark:border-gray-700 bg-gray-100 border-gray-300"/>
+                                <label
+                                    :for="`claim-type-${index}`"
+                                    class="font-semibold text-[13px] text-gray-800 dark:text-gray-400"
+                                >{{ claimType }}</label>
+                            </div>
+                        </div>
+                    </template>
+                </DetailMoveWell>
+
+                <DetailMoveWellUser v-if="paginationSource === 'Перемещение'  && currentMoveWellClaimType === 'Мои'"
+                    :item="item"
+                >
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
+                        <div v-for="(item, index) in paginationSourceTypes"
+                             :key="index"
+                             class="flex items-center gap-2"
+                             @click="paginationSource = item">
+                                <span
+                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
+                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
+                                        item
+                                    }}</span>
+                            <span
+                                v-if="index !== paginationSourceTypes.length - 1"
+                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
+                            >
+                                    |
+                                </span>
+                        </div>
+                    </div>
+                    <template #claims-switcher>
+                        <div class="flex items-center gap-3">
+                            <div v-for="(claimType, index) in moveWellClaimTypes"
+                                 :key="index"
+                                 class="flex items-center gap-2"
+                            >
+                                <input
+                                    :checked="currentMoveWellClaimType === claimType"
+                                    v-model="currentMoveWellClaimType"
+                                    :id="`claim-type-${index}`"
+                                    type="radio"
+                                    :value="claimType"
+                                    class="ring-0 focus:ring-0 text-green-500 dark:bg-gray-800 dark:border-gray-700 bg-gray-100 border-gray-300"/>
+                                <label
+                                    :for="`claim-type-${index}`"
+                                    class="font-semibold text-[13px] text-gray-800 dark:text-gray-400"
+                                >{{ claimType }}</label>
+                            </div>
+                        </div>
+                    </template>
+                </DetailMoveWellUser>
 
             </div>
         </div>

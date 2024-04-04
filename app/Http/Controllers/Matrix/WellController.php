@@ -298,21 +298,6 @@ class WellController extends Controller
         return Inertia::render('Errors/NotAuthorized');
     }
 
-    public function createMoveWellClaim(MoveWellRequest $request) {
-        $user = auth()->user();
-
-        $well_from = Well::where('public_id', $request->input('well_uuid'))->first();
-
-        $refClaim = new WellClaim();
-        $refClaim->well_id_disconn = $well_from->Id;
-        $refClaim->well_id_conn = $request->input('well_id_conn');
-        $refClaim->user_id = $user->id;
-        $refClaim->comment = $request->input('comment') ? $request->input('comment') : null;
-        $refClaim->roadheight = $request->input('roadheight') ? $request->input('roadheight') : 2000;
-        $refClaim->dat = date('Y-m-d H:i:s.u');
-        $refClaim->save();
-    }
-
     public function getAllWells() {
         return Well::all();
     }
