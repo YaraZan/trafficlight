@@ -11,6 +11,7 @@ import AnalyticsIcon from '@/Components/Icons/AnalyticsIcon.vue';
 import Logo from '@/Components/Logo.vue';
 import AdminPanelIcon from '@/Components/Icons/AdminPanelIcon.vue';
 import SettingsIcon from '@/Components/Icons/SettingsIcon.vue';
+import HelpIcon from '@/Components/Icons/HelpIcon.vue';
 import UsersIcon from '@/Components/Icons/UsersIcon.vue';
 import RolesIcon from '@/Components/Icons/RolesIcon.vue';
 import LogsIcon from '@/Components/Icons/LogsIcon.vue';
@@ -50,7 +51,7 @@ onMounted(() => {
             encryptStorage.setItem('aiv', models[0])
         })
     }
-})
+});
 
 </script>
 
@@ -61,7 +62,7 @@ onMounted(() => {
         <nav
             :class="$slots.subAside ? 'ml-[250px]' : 'ml-[50px]'"
             class="fixed flex items-center w-[calc(100%-50px)] border-b border-gray-200
-            dark:border-gray-700 bg-white dark:bg-gray-800 h-[51px] z-10 px-4" v-if="$slots.nav">
+            dark:border-gray-700 bg-white dark:bg-gray-800 h-[51px] z-10 px-4">
 
             <slot name="nav" />
 
@@ -81,7 +82,7 @@ onMounted(() => {
                     <Logo></Logo>
                 </Link>
             </div>
-            <div class="py-[10px] px-[5px] flex flex-col gap-[10px] w-full h-full">
+            <div class="relative py-[10px] px-[5px] flex flex-col gap-[10px] w-full h-full">
                 <NavLink v-if="isAdmin" :href="route('users')" :active="$page.component.includes('Users/')"><UsersIcon></UsersIcon></NavLink>
                 <NavLink v-if="isAdmin" :href="route('roles')" :active="$page.component.includes('Roles/')"><RolesIcon></RolesIcon></NavLink>
                 <NavLink v-if="isAdmin" :href="route('logs')" :active="$page.component.includes('Logs/')"><LogsIcon></LogsIcon></NavLink>
@@ -89,8 +90,15 @@ onMounted(() => {
                 <div v-if="isAdmin" class="border-b border-gray-200 dark:border-gray-700 w-full"></div>
 
                 <NavLink :href="route('matrix')" :active="$page.component.includes('Matrix/')"><MatrixIcon></MatrixIcon></NavLink>
-                <NavLink  :href="route('alarms')" :active="$page.component.includes('Alarms/')"><AlarmIcon></AlarmIcon></NavLink>
+                <NavLink :href="route('alarms')" :active="$page.component.includes('Alarms/')"><AlarmIcon></AlarmIcon></NavLink>
                 <NavLink :href="route('settings')" :active="$page.component.includes('Settings/')"><SettingsIcon /></NavLink>
+
+                <Link class="absolute bottom-20" :href="route('docs.matrix')">
+                    <div class="bg-green-500 rounded-lg h-8 w-8 flex items-center justify-center hover:bg-green-600">
+                        <HelpIcon />
+                    </div>
+                </Link>
+
             </div>
 
         </aside>

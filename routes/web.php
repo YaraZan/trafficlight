@@ -65,6 +65,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/dinamograph', function () { return redirect('/dinamograph/training'); })->name('dinamograph');
     Route::get('/dinamograph/training', [TrainingController::class, 'index'])->name('dinamograph.training');
+
+    Route::prefix('/docs')->group(function () {
+        Route::get('/matrix', function () { return Inertia::render('Docs/Matrix'); ; })->name('docs.matrix');
+        Route::get('/detail', function () { return Inertia::render('Docs/Detail'); ; })->name('docs.detail');
+    });
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
