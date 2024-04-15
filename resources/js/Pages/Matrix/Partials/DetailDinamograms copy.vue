@@ -125,7 +125,7 @@ onUnmounted(() => {
 })
 
 const currentPage = ref(1);
-const perPage = ref(6);
+const perPage = ref(4);
 
 const totalPages = computed(() => {
 
@@ -216,7 +216,7 @@ watch(() => [dnmhData.value, dateFilters.value], () => {
 watch(() => [dnmData.value, dnmhData.value], () => {
     emit('selectDnm', dnmData.value)
     emit('selectDnmh', dnmhData.value)
-}, { deep: true });
+}, { deep: true })
 </script>
 
 <template>
@@ -285,22 +285,42 @@ watch(() => [dnmData.value, dnmhData.value], () => {
 
         </div>
 
-        <div v-if="!dnmhDataLoading && paginatedData.length > 0" class="w-full grid grid-cols-6 grid-rows-1 gap-[5px]">
-            <div v-for="(dnm, index) in paginatedData" :key="index"
-                @click="() => selectDinamogram(dnm.public_id)"
-                :style="{ 'border-color': dnmData.find(src => src.public_id === dnm.public_id)?.color }"
-                :class="{ 'border-2' : dnmData.find(src => src.public_id === dnm.public_id) }"
-                class="min-h-[200px] flex flex-col bg-white dark:bg-gray-900 shadow-sm p-4 rounded-lg gap-8 border border-gray-200
-                dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 cursor-pointer">
-                <span class="text-sm text-gray-800 dark:text-white font-semibold">{{ dnm.DnmAdress }}</span>
-
-                <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-400 font-normal">Опрос:</span>
-                    <span class="text-sm text-gray-800 dark:text-white font-semibold">{{ dnm.AskLong }}</span>
-                </div>
-
-                <span class="text-sm text-gray-400 dark:text-gray-600 font-normal mt-auto">{{ dnm.Dat }}</span>
-            </div>
+        <div v-if="!dnmhDataLoading && paginatedData.length > 0" class="w-full overflow-x-auto overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-xl">
+            <table class="w-full">
+                <thead>
+                <tr class="border-b bg-gray-50 border-gray-200 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 ">
+                    <th scope="col" class="px-6 py-4 text-left w-[50px]">
+                        <span class="text-[14px] font-semibold text-gray-800"></span>
+                    </th>
+                    <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                        <span class="text-[14px] font-semibold text-gray-800 dark:text-gray-300">Дата</span>
+                    </th>
+                    <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                        <span class="text-[14px] font-semibold text-gray-800 dark:text-gray-300">Опрос</span>
+                    </th>
+                    <th scope="col" class="px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 ">
+                        <span class="text-[14px] font-semibold text-gray-800 dark:text-gray-300">Наименование</span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(row, index) in paginatedData" :key="index" class="border-b border-gray-200 dark:border-gray-700">
+                    <th scope="row" class="font-normal text-gray-500 px-6 py-4 text-left border-b border-gray-200 dark:border-gray-700">
+                        <input
+                            @change="() => selectDinamogram(row.public_id)"
+                            :value="row.public_id"
+                            :checked="dnmData.some(src => src.public_id === row.public_id)"
+                            :style="{ color: dnmData.find(src => src.public_id === row.public_id)?.color }"
+                            class="bg-gray-100 text-gray-100 dark:text-gray-800 dark:bg-gray-800 dark:border-gray-700 focus:ring-gray-100 dark:focus:ring-gray-800  border-gray-300 rounded cursor-pointer"
+                            type="checkbox"
+                        />
+                    </th>
+                    <td class="text-[14px] font-normal border-l border-gray-200 dark:border-gray-700 text-gray-500 px-6 py-4 text-left">{{ row.Dat }}</td>
+                    <td class="text-[14px] px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.AskLong }}</td>
+                    <td class="text-[14px] px-6 py-4 text-left border-l border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-400">{{ row.DnmAdress }}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
         <div v-else-if="!dnmhDataLoading">

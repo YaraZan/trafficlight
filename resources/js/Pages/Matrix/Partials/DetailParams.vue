@@ -250,7 +250,7 @@ const closeModal = () => {
                     * Примечание: Отправленные вами данные будут сформированы в заявку, и, по возможности
                     приняты или отклонены оператором.
                 </p>
-                <Input v-model="form.new_value" size="sm"
+                <Input v-model="form.new_value" size="sm" min="0"
                        class="w-full focus:ring-green-600 focus:border-green-500 ring-green-600 h-9" type="number" placeholder="Значение">
                 </Input>
 

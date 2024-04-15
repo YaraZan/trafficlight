@@ -92,13 +92,7 @@ onMounted(() => {
                 <NavLink :href="route('matrix')" :active="$page.component.includes('Matrix/')"><MatrixIcon></MatrixIcon></NavLink>
                 <NavLink :href="route('alarms')" :active="$page.component.includes('Alarms/')"><AlarmIcon></AlarmIcon></NavLink>
                 <NavLink :href="route('settings')" :active="$page.component.includes('Settings/')"><SettingsIcon /></NavLink>
-
-                <Link class="absolute bottom-20" :href="route('docs.matrix')">
-                    <div class="bg-green-500 rounded-lg h-8 w-8 flex items-center justify-center hover:bg-green-600">
-                        <HelpIcon />
-                    </div>
-                </Link>
-
+                <NavLink :href="route('docs.matrix')" :active="$page.component.includes('Docs/')"><HelpIcon /></NavLink>
             </div>
 
         </aside>
