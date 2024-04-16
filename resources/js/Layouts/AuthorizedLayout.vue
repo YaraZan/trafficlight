@@ -11,6 +11,7 @@ import AnalyticsIcon from '@/Components/Icons/AnalyticsIcon.vue';
 import Logo from '@/Components/Logo.vue';
 import AdminPanelIcon from '@/Components/Icons/AdminPanelIcon.vue';
 import SettingsIcon from '@/Components/Icons/SettingsIcon.vue';
+import HelpIcon from '@/Components/Icons/HelpIcon.vue';
 import UsersIcon from '@/Components/Icons/UsersIcon.vue';
 import RolesIcon from '@/Components/Icons/RolesIcon.vue';
 import LogsIcon from '@/Components/Icons/LogsIcon.vue';
@@ -21,36 +22,13 @@ import DarkThemeIcon from '@/Components/Icons/DarkThemeIcon.vue';
 import Modal from '@/Components/Modal.vue';
 import Help from '@/Components/Help.vue';
 import {encryptStorage} from "@/utils/storage.js";
+import NewDocs from '@/Components/banners/NewDocs.vue';
 
 const page = usePage();
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
 const isAdmin = computed(() => page.props.auth.isAdmin);
 const isTrainer = computed(() => page.props.auth.isTrainer);
-
-const readingHelpSurvey = ref(false);
-const closeModal = () => {
-    readingHelpSurvey.value = false;
-};
-
-const DINAMOGRAPH_API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL;
-const API_KEY =import.meta.env.VITE_DINAMOGRAPH_API_KEY;
-
-onMounted(() => {
-    if (encryptStorage.getItem('aiv') === undefined) {
-        axios.get(`${DINAMOGRAPH_API_URL}/v1/ai/models`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Basic ${API_KEY}`
-            },
-        })
-        .then(response => {
-            const models = response.data.models;
-
-            encryptStorage.setItem('aiv', models[0])
-        })
-    }
-})
 
 </script>
 
@@ -61,7 +39,7 @@ onMounted(() => {
         <nav
             :class="$slots.subAside ? 'ml-[250px]' : 'ml-[50px]'"
             class="fixed flex items-center w-[calc(100%-50px)] border-b border-gray-200
-            dark:border-gray-700 bg-white dark:bg-gray-800 h-[51px] z-10 px-4" v-if="$slots.nav">
+            dark:border-gray-700 bg-white dark:bg-gray-800 h-[51px] z-10 px-4">
 
             <slot name="nav" />
 
@@ -81,7 +59,7 @@ onMounted(() => {
                     <Logo></Logo>
                 </Link>
             </div>
-            <div class="py-[10px] px-[5px] flex flex-col gap-[10px] w-full h-full">
+            <div class="relative py-[10px] px-[5px] flex flex-col gap-[10px] w-full h-full">
                 <NavLink v-if="isAdmin" :href="route('users')" :active="$page.component.includes('Users/')"><UsersIcon></UsersIcon></NavLink>
                 <NavLink v-if="isAdmin" :href="route('roles')" :active="$page.component.includes('Roles/')"><RolesIcon></RolesIcon></NavLink>
                 <NavLink v-if="isAdmin" :href="route('logs')" :active="$page.component.includes('Logs/')"><LogsIcon></LogsIcon></NavLink>
@@ -89,8 +67,9 @@ onMounted(() => {
                 <div v-if="isAdmin" class="border-b border-gray-200 dark:border-gray-700 w-full"></div>
 
                 <NavLink :href="route('matrix')" :active="$page.component.includes('Matrix/')"><MatrixIcon></MatrixIcon></NavLink>
-                <NavLink  :href="route('alarms')" :active="$page.component.includes('Alarms/')"><AlarmIcon></AlarmIcon></NavLink>
+                <NavLink :href="route('alarms')" :active="$page.component.includes('Alarms/')"><AlarmIcon></AlarmIcon></NavLink>
                 <NavLink :href="route('settings')" :active="$page.component.includes('Settings/')"><SettingsIcon /></NavLink>
+                <NavLink :href="route('docs.matrix')" :active="$page.component.includes('Docs/')"><HelpIcon /></NavLink>
             </div>
 
         </aside>
@@ -104,10 +83,6 @@ onMounted(() => {
             bg-gray-200 dark:bg-black cursor-pointer hover:bg-green-500 dark:hover:bg-green-500">
             <span class="text-gray-800 dark:text-white group-hover:text-white">?</span>
         </div>
-
-        <Modal custom-styles="mt-5" :show="readingHelpSurvey" @close="closeModal">
-            <Help />
-        </Modal>
 
         <!-- Page Content -->
         <main>

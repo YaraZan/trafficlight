@@ -65,6 +65,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/dinamograph', function () { return redirect('/dinamograph/training'); })->name('dinamograph');
     Route::get('/dinamograph/training', [TrainingController::class, 'index'])->name('dinamograph.training');
+
+
+    Route::get('/docs/matrix', function () { return redirect('/docs/matrix/table'); })->name('docs.matrix');
+    Route::get('/docs/well', function () { return redirect('/docs/well/dinamograms'); })->name('docs.well');
+
+    Route::prefix('/docs')->group(function () {
+        Route::prefix('/matrix')->group(function () {
+            Route::get('/table', function () { return Inertia::render('Docs/MatrixPage/Table');})->name('docs.matrix.table');
+            Route::get('/filters', function () { return Inertia::render('Docs/MatrixPage/Filters');})->name('docs.matrix.filters');
+        });
+        Route::prefix('/well')->group(function () {
+            Route::get('/dinamograms', function () { return Inertia::render('Docs/Well/Dinamograms'); })->name('docs.well.dinamograms');
+            Route::get('/alarms', function () { return Inertia::render('Docs/Well/Alarms');})->name('docs.well.alarms');
+            Route::get('/archive', function () { return Inertia::render('Docs/Well/Archive');})->name('docs.well.archive');
+            Route::get('/parameters', function () { return Inertia::render('Docs/Well/Parameters');})->name('docs.well.parameters');
+            Route::get('/claims', function () { return Inertia::render('Docs/Well/Claims');})->name('docs.well.claims');
+            Route::get('/diagrams', function () { return Inertia::render('Docs/Well/Diagrams'); })->name('docs.well.diagrams');
+            Route::get('/asklong', function () { return Inertia::render('Docs/Well/AskLong');})->name('docs.well.asklong');
+        });
+    });
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

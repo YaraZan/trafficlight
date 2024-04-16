@@ -335,14 +335,14 @@ const clearDate = () => {
 
                 <div class="w-full flex flex-col gap-2">
                     <span class="text-[13px] text-gray-800 dark:text-white font-semibold">Идентификатор АРМИТС</span>
-                    <Input v-model="form.well_id_conn"
+                    <Input v-model="form.well_id_conn" min="0"
                         class="w-full focus:ring-green-600 focus:border-green-500 ring-green-600 h-9" type="number" placeholder="Значение">
                     </Input>
                 </div>
 
                 <div class="w-full flex flex-col gap-2">
                     <span class="text-[13px] text-gray-800 dark:text-white font-semibold">Вес колонны штанг (Опционально)</span>
-                    <Input v-model="form.roadheight"
+                    <Input v-model="form.roadheight" min="0"
                         class="w-full focus:ring-green-600 focus:border-green-500 ring-green-600 h-9" type="number" placeholder="Значение">
                     </Input>
                 </div>
