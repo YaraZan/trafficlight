@@ -81,6 +81,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/archive', function () { return Inertia::render('Docs/Well/Archive');})->name('docs.well.archive');
             Route::get('/parameters', function () { return Inertia::render('Docs/Well/Parameters');})->name('docs.well.parameters');
             Route::get('/claims', function () { return Inertia::render('Docs/Well/Claims');})->name('docs.well.claims');
+            Route::get('/diagrams', function () { return Inertia::render('Docs/Well/Diagrams'); })->name('docs.well.diagrams');
+            Route::get('/asklong', function () { return Inertia::render('Docs/Well/AskLong');})->name('docs.well.asklong');
         });
     });
 });

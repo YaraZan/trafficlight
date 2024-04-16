@@ -34,14 +34,24 @@
                             Заявки
                         </span>
                     </Link>
+                    <Link :href="route('docs.well.diagrams')">
+                        <span class="text-gray-500 hover:text-green-500 dark:hover:text-green-500 text-sm font-medium" :class="{ 'text-green-500 dark:text-green-500' : $page.component.includes('Docs/Well/Diagrams') }">
+                            Диаграммы
+                        </span>
+                    </Link>
+                    <Link :href="route('docs.well.alarms')">
+                        <span class="text-gray-500 hover:text-green-500 dark:hover:text-green-500 text-sm font-medium" :class="{ 'text-green-500 dark:text-green-500' : $page.component.includes('Docs/Well/Alarms') }">
+                            Аварии
+                        </span>
+                    </Link>
                     <Link :href="route('docs.well.archive')">
                         <span class="text-gray-500 hover:text-green-500 dark:hover:text-green-500 text-sm font-medium" :class="{ 'text-green-500 dark:text-green-500' : $page.component.includes('Docs/Well/Archive') }">
                             Архивы
                         </span>
                     </Link>
-                    <Link :href="route('docs.well.alarms')">
-                        <span class="text-gray-500 hover:text-green-500 dark:hover:text-green-500 text-sm font-medium" :class="{ 'text-green-500 dark:text-green-500' : $page.component.includes('Docs/Well/Alarms') }">
-                            Тревоги
+                    <Link :href="route('docs.well.asklong')">
+                        <span class="text-gray-500 hover:text-green-500 dark:hover:text-green-500 text-sm font-medium" :class="{ 'text-green-500 dark:text-green-500' : $page.component.includes('Docs/Well/AskLong') }">
+                            Опросы
                         </span>
                     </Link>
                 </div>

@@ -183,7 +183,7 @@ const page = usePage();
                         <div class="w-full grid grid-cols-4 gap-3 h-full">
                             <Link :href="route('matrix.hourarch', item.public_id)">
                                 <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
-                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
+                                    hover:border dark:hover:border hover:border-gray-300 dark:hover:border-gray-500 dark:bg-gray-900"
                                 >
                                     <div
                                         class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
@@ -195,7 +195,7 @@ const page = usePage();
                             </Link>
                             <Link :href="route('matrix.askstats', item.public_id)">
                                 <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
-                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
+                                    hover:border dark:hover:border hover:border-gray-300 dark:hover:border-gray-500 dark:bg-gray-900"
                                 >
                                     <div
                                         class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
@@ -207,7 +207,7 @@ const page = usePage();
                             </Link>
                             <Link :href="route('matrix.alarms', item.public_id)">
                                 <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
-                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
+                                    hover:border dark:hover:border hover:border-gray-300 dark:hover:border-gray-500 dark:bg-gray-900"
                                 >
                                     <div
                                         class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">
@@ -220,7 +220,7 @@ const page = usePage();
 
                             <Link :href="route('matrix.diagrams', item.public_id)">
                                 <div class="h-full flex flex-col gap-2 items-center justify-center bg-gray-100 rounded-lg
-                                    hover:bg-opacity-70 dark:hover:bg-opacity-70 dark:bg-gray-900"
+                                    hover:border dark:hover:border hover:border-gray-300 dark:hover:border-gray-500 dark:bg-gray-900"
                                 >
                                     <div
                                         class="h-12 w-12 flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-md">

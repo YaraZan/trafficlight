@@ -23,7 +23,7 @@ import Navigation from '../Navigation.vue';
                         <h4 class="text-[24px] font-semibold text-gray-700 dark:text-gray-200">Фильтр по НГДУ</h4>
                         <p class="text-sm font-normal text-gray-600 dark:text-gray-200 leading-6 text-justify">
                             Предоставляет возможность фильтровать скважины по НГДУ, а также по цехам, принадлежащим данному НГДУ.
-                            Поставьте или уберите галочки на НГДУ и цехах для изменений списка. По умолчанию выбраны все НГДУ и цеха доступные пользователю.
+                            Поставьте или уберите галочки на НГДУ и цехах для изменений списка. По умолчанию выбраны все НГДУ и цеха доступные пользователю
                         </p>
                     </div>
                     <img class="w-full rounded-xl shadow-lg" src="/images/docs/docs-3.png" alt="Таблица скважин">
@@ -35,7 +35,7 @@ import Navigation from '../Navigation.vue';
                         <h4 class="text-[24px] font-semibold text-gray-700 dark:text-gray-200">Фильтр по названию</h4>
                         <p class="text-sm font-normal text-gray-600 dark:text-gray-200 leading-6 text-justify">
                             Предоставляет возможность фильтровать скважины по названию.
-                            Поиск работает как на полное название скважины, так и на номера c НГДУ отдельно.
+                            Поиск работает как на полное название скважины, так и на номера c НГДУ отдельно
                         </p>
                     </div>
                     <img class="w-full rounded-xl shadow-lg" src="/images/docs/docs-4.png" alt="Таблица скважин">
@@ -47,7 +47,7 @@ import Navigation from '../Navigation.vue';
                         <h4 class="text-[24px] font-semibold text-gray-700 dark:text-gray-200">Фильтр по связи</h4>
                         <p class="text-sm font-normal text-gray-600 dark:text-gray-400 leading-6 text-justify">
                             Предоставляет возможность фильтровать скважины по наличию связи с ними.
-                            По умолчанию отображены все скважины вперемешку.
+                            По умолчанию отображены все скважины вперемешку
                         </p>
                     </div>
                     <img class="w-full rounded-xl shadow-lg" src="/images/docs/docs-5.png" alt="Таблица скважин">

@@ -22,36 +22,13 @@ import DarkThemeIcon from '@/Components/Icons/DarkThemeIcon.vue';
 import Modal from '@/Components/Modal.vue';
 import Help from '@/Components/Help.vue';
 import {encryptStorage} from "@/utils/storage.js";
+import NewDocs from '@/Components/banners/NewDocs.vue';
 
 const page = usePage();
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
 const isAdmin = computed(() => page.props.auth.isAdmin);
 const isTrainer = computed(() => page.props.auth.isTrainer);
-
-const readingHelpSurvey = ref(false);
-const closeModal = () => {
-    readingHelpSurvey.value = false;
-};
-
-const DINAMOGRAPH_API_URL = import.meta.env.VITE_DINAMOGRAPH_API_URL;
-const API_KEY =import.meta.env.VITE_DINAMOGRAPH_API_KEY;
-
-onMounted(() => {
-    if (encryptStorage.getItem('aiv') === undefined) {
-        axios.get(`${DINAMOGRAPH_API_URL}/v1/ai/models`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Basic ${API_KEY}`
-            },
-        })
-        .then(response => {
-            const models = response.data.models;
-
-            encryptStorage.setItem('aiv', models[0])
-        })
-    }
-});
 
 </script>
 
@@ -106,10 +83,6 @@ onMounted(() => {
             bg-gray-200 dark:bg-black cursor-pointer hover:bg-green-500 dark:hover:bg-green-500">
             <span class="text-gray-800 dark:text-white group-hover:text-white">?</span>
         </div>
-
-        <Modal custom-styles="mt-5" :show="readingHelpSurvey" @close="closeModal">
-            <Help />
-        </Modal>
 
         <!-- Page Content -->
         <main>
