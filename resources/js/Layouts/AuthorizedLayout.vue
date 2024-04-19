@@ -78,12 +78,6 @@ const isTrainer = computed(() => page.props.auth.isTrainer);
             <slot name="subAside" />
         </aside>
 
-        <div v-on:click="readingHelpSurvey = !readingHelpSurvey" class="group fixed z-40 bottom-4 right-4
-            rounded-full w-[24px] h-[24px] p-[4px] flex items-center justify-center
-            bg-gray-200 dark:bg-black cursor-pointer hover:bg-green-500 dark:hover:bg-green-500">
-            <span class="text-gray-800 dark:text-white group-hover:text-white">?</span>
-        </div>
-
         <!-- Page Content -->
         <main>
             <div :class="$slots.subAside ? 'ml-[250px]' : 'ml-[50px]'" class="mt-[50px]">

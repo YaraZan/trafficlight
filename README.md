@@ -56,8 +56,8 @@
 
 <br>
 
-![App Screenshot](public/images/readme_13.png)
-![App Screenshot](public/images/readme_14.png)
+![App Screenshot](public/images/readme_18.png)
+![App Screenshot](public/images/readme_19.png)
 
 **Детальная страница скважины**
 
@@ -84,7 +84,7 @@
 
 <br>
 
-![App Screenshot](public/images/readme_17.png)
+![App Screenshot](public/images/readme_20.png)
 
 **Вывод отчёта Динамографа**
 
