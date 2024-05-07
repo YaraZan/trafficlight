@@ -182,7 +182,7 @@ class WellController extends Controller
                 ->orderBy('wa.Dif1', 'desc')
                 ->orderBy('wa.Dif2', 'desc')
                 ->orderBy('wa.Dif3', 'desc')
-                ->where('wa.Ngdu_Id', '=', $user->ngdu_id)
+                ->where('we.Ngdu_Id', '=', $user->ngdu_id)
                 ->get();
 
                 $ngdu_data = null;
@@ -289,9 +289,7 @@ class WellController extends Controller
             ->orderBy('wa.Dif3', 'desc')
             ->where('we.public_id', '=', $well_uuid)
             ->first();
-//            if (Gate::allows('control-wells')) {
-//                return Inertia::render('Matrix/DetailControl', ['item' => $well_data]);
-//            }
+
             return Inertia::render('Matrix/Detail', ['item' => $well_data]);
         }
 

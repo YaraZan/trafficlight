@@ -20,6 +20,7 @@ import DetailWellClaims from "@/Pages/Matrix/Partials/DetailWellClaims.vue";
 import DetailClaimsUntracked from "@/Pages/Matrix/Partials/DetailClaimsUntracked.vue";
 import DetailMoveWell from "@/Pages/Matrix/Partials/DetailMoveWell.vue";
 import DetailMoveWellUser from "@/Pages/Matrix/Partials/DetailMoveWellUser.vue";
+import DetailNavigationTabMenu from './Partials/DetailNavigationTabMenu.vue';
 
 const props = defineProps({
     item: {
@@ -110,6 +111,10 @@ const extractWellNumber = (string) => {
 };
 
 const page = usePage();
+
+const changePaginationSource = (val) => {
+    paginationSource.value = val;
+};
 
 </script>
 
@@ -289,22 +294,7 @@ const page = usePage();
                               @created="() => { paginationSource = 'Заявки' }"
                               :item="item">
                     <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
-                        <div v-for="(item, index) in paginationSourceTypes"
-                             :key="index"
-                             class="flex items-center gap-2"
-                             @click="paginationSource = item">
-                                <span
-                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
-                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
-                                        item
-                                    }}</span>
-                            <span
-                                v-if="index !== paginationSourceTypes.length - 1"
-                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
-                            >
-                                    |
-                                </span>
-                        </div>
+                        <DetailNavigationTabMenu :pagination-source-types="paginationSourceTypes" :current-source-type="paginationSource" @select="changePaginationSource" />
                     </div>
                 </DetailParams>
 
@@ -314,22 +304,7 @@ const page = usePage();
                                    :item="item">
                     <template class="flex items-center gap-2">
                         <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
-                            <div v-for="(item, index) in paginationSourceTypes"
-                                 :key="index"
-                                 class="flex items-center gap-2"
-                                 @click="paginationSource = item">
-                                <span
-                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
-                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
-                                        item
-                                    }}</span>
-                                <span
-                                    v-if="index !== paginationSourceTypes.length - 1"
-                                    class="text-[13px] font-light text-gray-300 dark:text-gray-600"
-                                >
-                                    |
-                                </span>
-                            </div>
+                            <DetailNavigationTabMenu :pagination-source-types="paginationSourceTypes" :current-source-type="paginationSource" @select="changePaginationSource" />
                         </div>
                         <div
                             class="relative p-4 flex gap-3 bg-white rounded-lg shadow border border-gray-200 dark:bg-gray-700
@@ -370,22 +345,7 @@ const page = usePage();
                         </div>
                     </template>
                     <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
-                        <div v-for="(item, index) in paginationSourceTypes"
-                             :key="index"
-                             class="flex items-center gap-2"
-                             @click="paginationSource = item">
-                                <span
-                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
-                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
-                                        item
-                                    }}</span>
-                            <span
-                                v-if="index !== paginationSourceTypes.length - 1"
-                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
-                            >
-                                    |
-                                </span>
-                        </div>
+                        <DetailNavigationTabMenu :pagination-source-types="paginationSourceTypes" :current-source-type="paginationSource" @select="changePaginationSource" />
                     </div>
                 </DetailUserClaims>
 
@@ -412,22 +372,7 @@ const page = usePage();
                         </div>
                     </template>
                     <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
-                        <div v-for="(item, index) in paginationSourceTypes"
-                             :key="index"
-                             class="flex items-center gap-2"
-                             @click="paginationSource = item">
-                                <span
-                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
-                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
-                                        item
-                                    }}</span>
-                            <span
-                                v-if="index !== paginationSourceTypes.length - 1"
-                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
-                            >
-                                    |
-                                </span>
-                        </div>
+                        <DetailNavigationTabMenu :pagination-source-types="paginationSourceTypes" :current-source-type="paginationSource" @select="changePaginationSource" />
                     </div>
                 </DetailWellClaims>
 
@@ -455,22 +400,7 @@ const page = usePage();
                         </div>
                     </template>
                     <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
-                        <div v-for="(item, index) in paginationSourceTypes"
-                             :key="index"
-                             class="flex items-center gap-2"
-                             @click="paginationSource = item">
-                                <span
-                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
-                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
-                                        item
-                                    }}</span>
-                            <span
-                                v-if="index !== paginationSourceTypes.length - 1"
-                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
-                            >
-                                    |
-                                </span>
-                        </div>
+                        <DetailNavigationTabMenu :pagination-source-types="paginationSourceTypes" :current-source-type="paginationSource" @select="changePaginationSource" />
                     </div>
                 </DetailClaimsUntracked>
 
@@ -478,22 +408,7 @@ const page = usePage();
                     :item="item"
                 >
                     <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
-                        <div v-for="(item, index) in paginationSourceTypes"
-                             :key="index"
-                             class="flex items-center gap-2"
-                             @click="paginationSource = item">
-                                <span
-                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
-                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
-                                        item
-                                    }}</span>
-                            <span
-                                v-if="index !== paginationSourceTypes.length - 1"
-                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
-                            >
-                                    |
-                                </span>
-                        </div>
+                        <DetailNavigationTabMenu :pagination-source-types="paginationSourceTypes" :current-source-type="paginationSource" @select="changePaginationSource" />
                     </div>
                     <template #claims-switcher>
                         <div class="flex items-center gap-3">
@@ -520,24 +435,7 @@ const page = usePage();
                 <DetailMoveWellUser v-if="paginationSource === 'Перемещение'  && currentMoveWellClaimType === 'Мои'"
                     :item="item"
                 >
-                    <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
-                        <div v-for="(item, index) in paginationSourceTypes"
-                             :key="index"
-                             class="flex items-center gap-2"
-                             @click="paginationSource = item">
-                                <span
-                                    class="p-2 cursor-pointer rounded-lg text-gray-400 dark:text-gray-600 font-semibold text-[12px]"
-                                    :class="{ 'bg-white shadow-sm dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-opacity-80' : paginationSource === item }">{{
-                                        item
-                                    }}</span>
-                            <span
-                                v-if="index !== paginationSourceTypes.length - 1"
-                                class="text-[13px] font-light text-gray-300 dark:text-gray-600"
-                            >
-                                    |
-                                </span>
-                        </div>
-                    </div>
+                    <DetailNavigationTabMenu :pagination-source-types="paginationSourceTypes" :current-source-type="paginationSource" @select="changePaginationSource" />
                     <template #claims-switcher>
                         <div class="flex items-center gap-3">
                             <div v-for="(claimType, index) in moveWellClaimTypes"
