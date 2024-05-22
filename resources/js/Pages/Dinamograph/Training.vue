@@ -115,7 +115,7 @@ const filtredData = computed(() => {
     }
 
     return data
-})
+});
 
 </script>
 

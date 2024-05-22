@@ -284,7 +284,6 @@ const extractWellNumber = (string) => {
 };
 
 watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.value], () => {
-
     if (props.data.ngdu_data && ngduFilters.value.length !== props.data.ngdu_data.length) {
         selectAllNgdus.value = false;
     } else {
@@ -313,7 +312,6 @@ const viewAll = computed(() => page.props.auth.viewWells);
 
         <div v-if="data.matrix_data.length" class="bg-white dark:bg-gray-800 relative w-full">
             <div class="fixed top-[51px] z-10 bg-white dark:bg-gray-800 flex flex-col items-start justify-between gap-3 p-4 w-[calc(100%-50px)] md:flex-row md:items-center md:gap-3">
-
 
                 <Dropdown align="bottom" width="48">
                     <template #trigger>

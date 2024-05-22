@@ -87,5 +87,4 @@ class User extends Authenticatable
     {
         return optional($this->role)->canEdit;
     }
-
 }

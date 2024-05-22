@@ -32,6 +32,10 @@ class AuthServiceProvider extends ServiceProvider
             return $user->viewAllWells();
         });
 
+        Gate::define('view-confirm-claims', function (User $user) {
+            return $user->isClaimModerator();
+        });
+
         Gate::define('control-wells', function (User $user) {
             return $user->canEdit();
         });

@@ -23,6 +23,7 @@ import Modal from '@/Components/Modal.vue';
 import Help from '@/Components/Help.vue';
 import {encryptStorage} from "@/utils/storage.js";
 import NewDocs from '@/Components/banners/NewDocs.vue';
+import ClaimsIcon from '@/Components/Icons/ClaimsIcon.vue';
 
 const page = usePage();
 const isDark = useDark();
@@ -67,6 +68,7 @@ const isTrainer = computed(() => page.props.auth.isTrainer);
                 <div v-if="isAdmin" class="border-b border-gray-200 dark:border-gray-700 w-full"></div>
 
                 <NavLink :href="route('matrix')" :active="$page.component.includes('Matrix/')"><MatrixIcon></MatrixIcon></NavLink>
+                <NavLink :href="route('claims')" :active="$page.component.includes('Claims/')"><ClaimsIcon></ClaimsIcon></NavLink>
                 <NavLink :href="route('alarms')" :active="$page.component.includes('Alarms/')"><AlarmIcon></AlarmIcon></NavLink>
                 <NavLink :href="route('settings')" :active="$page.component.includes('Settings/')"><SettingsIcon /></NavLink>
                 <NavLink :href="route('docs.matrix')" :active="$page.component.includes('Docs/')"><HelpIcon /></NavLink>
