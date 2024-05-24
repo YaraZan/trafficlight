@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^10.5.0",
-    "chart.js": "^4.4.0",
+    "chart.js": "^4.4.3",
     "crypto-js": "^4.1.1",
     "d3": "^7.8.5",
     "encrypt-storage": "^2.12.22",
@@ -31,6 +31,7 @@
     "lodash": "^4.17.21",
     "primevue": "^3.37.0",
     "tailwind-scrollbar": "^3.0.5",
+    "u": "^0.1.0",
     "v-click-outside": "^3.2.0",
     "vue-click-outside": "^1.1.0",
     "vue-datepicker-next": "^1.0.3",

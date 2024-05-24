@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white rounded-md shadow border border-gray-200 dark:border-gray-700 dark:bg-gray-900 p-5 hover:border-green-400 dark:hover:border-green-400">
+    <div class="p-5 flex flex-col justify-between bg-white rounded-md shadow border border-gray-200 dark:border-gray-700 dark:bg-gray-900 hover:border-green-400 dark:hover:border-green-400">
 
         <div class="w-full flex flex-col gap-4">
             <div class="flex items-center gap-2">
@@ -14,18 +14,14 @@
             </div>
 
             <Link class="w-max" :href="route('matrix.detail', claim.WellPublicId)">
-                <span class="text-[14px] text-green-500 font-semibold">{{ claim.WellName }}</span>
+                <span class="text-[14px] text-green-500 hover:text-green-800 font-semibold">{{ claim.WellName }}</span>
             </Link>
-
-            <div class="w-full flex items-center justify-between gap-4">
-                <span class="text-[14px] text-gray-800 dark:text-gray-300 font-normal">{{ claim.UserName }}</span>
-                <span class="text-[14px] text-gray-400 font-normal">{{ claim.Dat }}</span>
-            </div>
         </div>
 
-
-
-
+        <div class="w-full flex items-center justify-between gap-4">
+            <span class="text-[14px] text-gray-800 dark:text-gray-300 font-normal">{{ claim.UserName }}</span>
+            <span class="text-[14px] text-gray-400 font-normal">{{ claim.Dat }}</span>
+        </div>
     </div>
 </template>
 

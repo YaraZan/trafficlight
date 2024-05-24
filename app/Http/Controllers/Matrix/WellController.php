@@ -296,7 +296,31 @@ class WellController extends Controller
         return Inertia::render('Errors/NotAuthorized');
     }
 
-    public function getAllWells() {
-        return Well::all();
+    public function all() {
+        $wells = DB::table('Well as we')
+        ->join('Ngdu as n', 'we.Ngdu_Id', '=', 'n.Id')
+        ->select('we.*', 'n.NgduName as NgduName', 'we.Name as WellName', 'we.Id as WellId')->get();
+
+        return response()->json($wells);
     }
+
+    public function get(int $amount) {
+        $wells = DB::table('Well as we')
+        ->join('Ngdu as n', 'we.Ngdu_Id', '=', 'n.Id')
+        ->select('we.Id as WellId', 'n.NgduName as NgduName', 'we.Name as WellName', 'we.Id as WellId')
+        ->paginate($amount);
+
+        return response()->json($wells);
+    }
+
+    public function getByName(string $name) {
+        $wells = DB::table('Well as we')
+            ->join('Ngdu as n', 'we.Ngdu_Id', '=', 'n.Id')
+            ->select('we.Id as WellId', 'n.NgduName as NgduName', 'we.Name as WellName', 'we.Id as WellId')
+            ->whereRaw('UPPER("we"."Name") LIKE UPPER(?)', ['%' . $name . '%'])
+            ->get();
+
+        return response()->json($wells);
+    }
+
 }
