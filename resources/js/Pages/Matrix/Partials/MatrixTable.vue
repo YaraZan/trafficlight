@@ -289,11 +289,17 @@ const emit = defineEmits(['sortByDate', 'sortByState', 'sortByShop', 'sortByNgdu
                     class="font-semibold text-[13px] px-3 py-1 text-center border-l border-gray-200 dark:border-gray-700"
                     >{{ extractWellNumber(row.WellName) }}</td>
                 <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'"
-                    class="font-semibold text-[12px] px-3 py-1 text-left border-l border-gray-200 dark:border-gray-700"
-                >{{ row.QnFak ? row.QnFak : 'Пусто' }}</td>
+                    class="font-semibold text-[12px] px-3 py-1 text-center border-l border-gray-200 dark:border-gray-700"
+                >
+                    <span v-if="row.QnFak" class="text-gray-300 dark:text-gray-600">{{ row.QnFak }}</span>
+                    <span v-else class="text-gray-300 dark:text-gray-600">Пусто</span>
+                </td>
                 <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'"
-                    class="font-semibold text-[12px] px-3 py-1 text-left border-l border-gray-200 dark:border-gray-700"
-                >{{ row.QnLost ? row.QnLost : 'Пусто' }}</td>
+                    class="font-semibold text-[12px] px-3 py-1 text-center border-l border-gray-200 dark:border-gray-700"
+                >
+                    <span v-if="row.QnLost" class="text-gray-300 dark:text-gray-600">{{ row.QnLost }}</span>
+                    <span v-else class="text-gray-300 dark:text-gray-600">Пусто</span>
+                </td>
                 <td :class="row.Connect ? 'text-gray-800 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'"
                     class="font-semibold text-[13px] px-3 py-1 text-left border-l border-gray-200 dark:border-gray-700"
                     >{{ row.WellState ? row.WellState : 'Пусто' }}</td>

@@ -1,19 +1,19 @@
 <template>
     <div class="w-full px-4 py-8 flex flex-col gap-4 border-b border-gray-200">
         <span class="text-sm text-gray-800 font-semibold">Скважины</span>
+
         <div class="relative flex flex-col gap-4 h-full">
             <!-- Dropdown -->
             <div @click="showWellsDropdown = !showWellsDropdown"
                 class="px-3 py-2 flex items-center justify-between bg-white border-gray-300 shadow dark:bg-gray-900 dark:border-gray-700
                 border rounded-xl hover:border-green-400">
-                    <span class="text-sm text-gray-800 font-semibold">Выберите</span>
-<!--                <div class="flex items-center gap-2 max-w-[calc(100%-8px)] overflow-x-scroll h-full no-scrollbar"></div> -->
+                    <span class="text-sm text-gray-800 font-semibold select-none">Выберите</span>
                     <svg class="fill-none w-6 h-6 stroke-gray-800" xmlns="http://www.w3.org/2000/svg">
                         <path d="M6.09961 9.6687L12.0996 15.6687L18.0996 9.6687" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
             </div>
             <!-- Content -->
-            <div class="top-[105%] absolute w-full flex flex-col gap-4 p-8 bg-white border border-gray-300 rounded-lg">
+            <div v-show="showWellsDropdown" class="top-[105%] absolute w-full flex flex-col gap-4 p-8 bg-white border border-gray-300 rounded-lg select-none">
                 <input
                 v-model="wellNameInput"
                 :disabled="wellsLoading"

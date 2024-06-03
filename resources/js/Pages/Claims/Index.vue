@@ -10,59 +10,122 @@
             </Link>
         </template>
 
-        <div class="flex p-4 w-full gap-[10px] h-[calc(100vh-90px)]">
+        <div class="w-full relative flex flex-col h-[calc(100vh-90px)]">
 
-            <!-- Aside -->
-            <ClaimsAside v-if="!claimsLoading" :claims="claims" />
-            <div v-else class="border border-dashed border-gray-300 dark:border-gray-700 w-full p-10 flex flex-col items-center justify-center gap-16 rounded-lg" >
-
+            <!-- Filters -->
+            <div class="fixed p-4 shadow dark:border-b z-50 w-full border-t border-gray-200 dark:border-gray-700 flex items-center gap-4 bg-white dark:bg-gray-800">
+                <NgduFilter @change="handleChangeNgdu" />
+                <StatusFilter @change="handleChangeStatus" />
             </div>
 
-            <!-- Claims -->
-            <div class="w-2/3 flex flex-col gap-[10px] h-full">
-                <div class="w-full flex items-center gap-4">
-                    <ClaimsFilters />
+            <!-- Claims body -->
+            <template v-if="!claimsLoading && claims.length > 0">
+                <div class="p-4 w-full flex flex-col gap-4 items-center justify-center mt-24">
+                    <div class="relative w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-[10px] pr-5 overflow-y-scroll no-scrollbar">
+                        <NewClaimCard @click="showCreateNewClaimWindow = !showCreateNewClaimWindow" />
+                        <ClaimCard v-for="(claim, index) in claims" :key="index" :claim="claim" />
+                    </div>
+                    <div class="w-full flex flex-col py-10 items-center justify-center">
+                        <LoadMoreClaims @click="loadMoreClaims" />
+                    </div>
                 </div>
-                <div v-if="!claimsLoading" class="relative w-full grid grid-cols-3 gap-[10px] pr-5 h-full overflow-y-scroll no-scrollbar">
-                    <NewClaimCard />
-                    <ClaimCard v-for="(claim, index) in claims" :key="index" :claim="claim" />
-                </div>
-                <div v-else class="p-10 w-2/3 flex items-center justify-center">
-                    <OilWellAnimatedGray class="w-20 h-20" />
-                </div>
-                <div class="w-1/3 flex flex-col"></div>
-            </div>
+            </template>
 
+            <!-- No data -->
+            <NoData v-else-if="!claimsLoading && claims.length === 0">
+                <NewClaimCard />
+            </NoData>
+
+            <!-- Loading -->
+            <div v-else class="p-10 w-full h-[calc(100%-50px)] flex items-center justify-center">
+                <Spinner class="fill-gray-400 w-10 h-10" />
+            </div>
         </div>
+
+        <Modal :custom-styles="'mt-10'" :show="showCreateNewClaimWindow" @close="showCreateNewClaimWindow = false">
+            <CreateNewClaimWindow />
+        </Modal>
+        <Modal :show="showEditClaimWindow" @close="showEditClaimWindow = false">
+
+        </Modal>
     </AuthorizedLayout>
 </template>
 
 <script setup>
 import {Head, Link} from '@inertiajs/vue3';
+import { Spinner } from 'flowbite-vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
-import ClaimsAside from './Partials/ClaimsAside.vue';
+import LoadMoreClaims from './Partials/LoadMoreClaims.vue';
 import ClaimCard from './Partials/ClaimCard.vue';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import axios from 'axios';
-import OilWellAnimatedGray from '@/Components/Icons/OilWellAnimatedGray.vue';
 import NewClaimCard from './Partials/NewClaimCard.vue';
-import ClaimsFilters from './Partials/ClaimsFilters.vue';
+import NoData from './Partials/NoData.vue';
+import NgduFilter from './Partials/NgduFilter.vue';
+import StatusFilter from './Partials/StatusFilter.vue';
+import Modal from '@/Components/Modal.vue';
+import CreateNewClaimWindow from './Partials/CreateNewClaimWindow.vue';
+
+const SKIP_INIT = 0;
+const AMOUNT_INIT = 5;
 
 const claims = ref([]);
-const claimsLoading = ref(true);
+const skip = ref(SKIP_INIT);
+const amount = ref(AMOUNT_INIT);
+const claimsLoading = ref(false);
+const showCreateNewClaimWindow = ref(false);
+const showEditClaimWindow = ref(false);
 
-onMounted(() => {
-    axios.get('/api/claims/all')
+/* Filter refs */
+const ngduFilters = ref([]);
+const statusFilters = ref([]);
+
+/* Change handlers */
+function handleChangeNgdu(ngdus) {
+    ngduFilters.value = ngdus;
+}
+
+function handleChangeStatus(statuses) {
+    statusFilters.value = statuses;
+}
+
+/* Helper funcs */
+function loadClaims() {
+    claimsLoading.value = true;
+
+    axios.get(`/api/claims/get`, {
+        params: {
+            skip: skip.value,
+            amount: amount.value,
+            ngdus: ngduFilters.value,
+            statuses: statusFilters.value
+        }
+    })
     .then((res) => {
-        claims.value = res.data;
+        res.data.forEach(item => {
+            claims.value.push(item)
+        });
+
         claimsLoading.value = false;
     })
     .catch((error) => {
-        console.error('Ошибка', error);
-    })
-    .finally(() => {
         claimsLoading.value = false;
     });
+}
+
+function loadMoreClaims() {
+    skip.value += amount.value;
+    loadClaims();
+}
+
+onMounted(() => {
+    loadClaims();
 });
+
+watch([ngduFilters, statusFilters], () => {
+    claims.value = [];
+    skip.value = SKIP_INIT;
+    loadClaims();
+}, { deep: true });
 </script>

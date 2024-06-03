@@ -304,13 +304,22 @@ class WellController extends Controller
         return response()->json($wells);
     }
 
-    public function get(int $amount) {
-        $wells = DB::table('Well as we')
+    public function get(Request $request) {
+        $query = DB::table('Well as we')
         ->join('Ngdu as n', 'we.Ngdu_Id', '=', 'n.Id')
-        ->select('we.Id as WellId', 'n.NgduName as NgduName', 'we.Name as WellName', 'we.Id as WellId')
-        ->paginate($amount);
+        ->select('we.Id as WellId', 'n.NgduName as NgduName', 'we.Name as WellName', 'we.Id as WellId');
 
-        return response()->json($wells);
+        if ($request->has('name') && isset($request->name)) {
+            $query->whereRaw('UPPER("we"."Name") LIKE UPPER(?)', ['%' . $request->name . '%']);
+        }
+
+        $query
+        ->skip($request->skip)
+        ->take($request->amount);
+
+        $well_data = $query->get();
+
+        return response()->json($well_data);
     }
 
     public function getByName(string $name) {

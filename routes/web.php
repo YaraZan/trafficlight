@@ -13,9 +13,11 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\ClaimsController;
+use App\Http\Controllers\ClaimStatusController;
 use App\Http\Controllers\Matrix\ControlController;
 use App\Http\Controllers\Matrix\DiagramController;
 use \App\Http\Controllers\Dinamograph\TrainingController;
+use App\Http\Controllers\Matrix\NgduController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -142,11 +144,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dnm/{public_id}', [DnmhController::class, 'show']);
 
         Route::get('/well/all', [WellController::class, 'all']);
-        Route::get('/well/get/{amount}', [WellController::class, 'get']);
+        Route::get('/well/get', [WellController::class, 'get']);
         Route::get('/well/get-by-name/{name}', [WellController::class, 'getByName']);
         Route::get('/well/{well_uuid}/diagrams/{category_uuid}', [DiagramController::class, 'show']);
 
-        Route::get('/claims/all', [ClaimsController::class, 'all']);
+        Route::get('/claims/get', [ClaimsController::class, 'get']);
+
+        Route::get('/ngdu/all', [NgduController::class, 'all']);
+
+        Route::get('/claim_statuses/all', [ClaimStatusController::class, 'all']);
     });
 });
 

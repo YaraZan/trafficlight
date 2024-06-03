@@ -27,12 +27,12 @@ window.onload = function() {
     const ctx = document.getElementById('totalClaimsCreatedChart').getContext("2d");
 
     const gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
-    gradientStroke.addColorStop(0, "#80b6f4");
-    gradientStroke.addColorStop(1, "#f49080");
+    gradientStroke.addColorStop(0, "#b6f016");
+    gradientStroke.addColorStop(1, "#00b53f");
 
     const gradientFill = ctx.createLinearGradient(500, 0, 100, 0);
-    gradientFill.addColorStop(0, "rgba(128, 182, 244, 0.6)");
-    gradientFill.addColorStop(1, "rgba(244, 144, 128, 0.6)");
+    gradientFill.addColorStop(0, "rgba(182, 240, 22, 0.2)");
+    gradientFill.addColorStop(1, "rgba(0, 181, 63, 0.2)");
 
 
     const myChart = new Chart(ctx, {
@@ -46,10 +46,10 @@ window.onload = function() {
                 pointBackgroundColor: gradientStroke,
                 pointHoverBackgroundColor: gradientStroke,
                 pointHoverBorderColor: gradientStroke,
-                pointBorderWidth: 10,
-                pointHoverRadius: 10,
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
                 pointHoverBorderWidth: 1,
-                pointRadius: 2,
+                pointRadius: 1,
                 fill: true,
                 backgroundColor: gradientFill,
                 borderWidth: 4,
@@ -57,6 +57,11 @@ window.onload = function() {
             }]
         },
         options: {
+            plugins: {
+                legend: {
+                    display: false
+                },
+            },
             animation: {
                 easing: "easeInOutBack"
             },
@@ -65,6 +70,12 @@ window.onload = function() {
                 display: false,
             },
             scales: {
+                x: {
+                display: false,
+            },
+            y: {
+                display: false,
+            },
                 yAxes: [{
                     ticks: {
                         fontColor: "rgba(0,0,0,0.5)",

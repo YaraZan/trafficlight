@@ -1,18 +1,28 @@
 <template>
-    <div class="w-1/3 overflow-y-scroll flex flex-col gap-[10px] h-full no-scrollbar">
-        <div class="p-10 flex flex-col gap-2 rounded-lg bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-900">
-            <span class="text-[92px] bg-gradient-to-r from-lime-300 to-green-400 font-bold bg-clip-text text-transparent w-max leading-[92px]">{{ totalClaims }}</span>
-            <span class="text-[22px] text-gray-800 dark:text-white font-semibold">Заявок создано</span>
-<!--             <TotalClaimsCreatedChart :claims="claims" /> -->
+    <div class="w-1/3 overflow-y-scroll flex flex-col gap-[10px] h-full no-scrollbar rounded-2xl bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+        <div class="p-10 flex flex-col gap-2 border-b border-gray-200 dark:border-gray-700">
+            <div class="w-full flex items-center gap-2">
+                <div class="flex flex-col gap-1">
+                    <span class="text-[52px] text-green-400 font-semibold leading-[92px]">{{ totalClaims }}</span>
+                    <span class="text-sm text-gray-800 dark:text-white font-semibold">Заявок создано</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-[52px] text-green-400 font-semibold leading-[92px]">{{ wellsWorked }}</span>
+                    <span class="text-sm text-gray-800 dark:text-white font-semibold">Скважин задействовано</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-[52px] text-green-400 font-semibold leading-[92px]">{{ usersWorked }}</span>
+                    <span class="text-sm text-gray-800 dark:text-white font-semibold">Человек задействовано</span>
+                </div>
+            </div>
+
+            <TotalClaimsCreatedChart :claims="claims" />
         </div>
-        <div class="p-10 flex flex-col gap-2 rounded-lg bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-900 justify-end">
-            <span class="text-[92px] bg-gradient-to-r from-lime-300 to-green-400 font-bold bg-clip-text text-transparent w-max leading-[92px]">{{ wellsWorked }}</span>
-            <span class="text-[22px] text-gray-800 dark:text-white font-semibold">Скважин задействовано</span>
+
+        <div class="p-10 flex flex-col gap-2 border-b border-gray-200 dark:border-gray-700">
+
         </div>
-        <div class="p-10 flex flex-col gap-2 rounded-lg bg-white border border-gray-200 dark:border-gray-700 dark:bg-gray-900 justify-end">
-            <span class="text-[92px] bg-gradient-to-r from-lime-300 to-green-400 font-bold bg-clip-text text-transparent w-max leading-[92px]">{{ usersWorked }}</span>
-            <span class="text-[22px] text-gray-800 dark:text-white font-semibold">Человек задействовано</span>
-        </div>
+
     </div>
 </template>
 
