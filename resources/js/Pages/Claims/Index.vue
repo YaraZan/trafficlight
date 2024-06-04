@@ -19,7 +19,7 @@
             </div>
 
             <!-- Claims body -->
-            <template v-if="!claimsLoading && claims.length > 0">
+            <template v-if="claims.length > 0">
                 <div class="p-4 w-full flex flex-col gap-4 items-center justify-center mt-24">
                     <div class="relative w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-[10px] pr-5 overflow-y-scroll no-scrollbar">
                         <NewClaimCard @click="showCreateNewClaimWindow = !showCreateNewClaimWindow" />
@@ -33,21 +33,23 @@
 
             <!-- No data -->
             <NoData v-else-if="!claimsLoading && claims.length === 0">
-                <NewClaimCard />
+                <NewClaimCard @click="showCreateNewClaimWindow = !showCreateNewClaimWindow" />
             </NoData>
 
             <!-- Loading -->
-            <div v-else class="p-10 w-full h-[calc(100%-50px)] flex items-center justify-center">
-                <Spinner class="fill-gray-400 w-10 h-10" />
+            <div v-if="claimsLoading" class="p-4 mt-24 w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-[10px] pr-5 overflow-y-scroll no-scrollbar">
+                <ClaimCardSkeleton/>
             </div>
         </div>
 
-        <Modal :custom-styles="'mt-10'" :show="showCreateNewClaimWindow" @close="showCreateNewClaimWindow = false">
+        <Modal :custom-styles="'mt-20'" :show="showCreateNewClaimWindow" @close="showCreateNewClaimWindow = false">
             <CreateNewClaimWindow />
         </Modal>
         <Modal :show="showEditClaimWindow" @close="showEditClaimWindow = false">
 
         </Modal>
+
+        <Banner :show="showAllClaimsLoadedWarn" text="Новых заявок нет." type="warn"/>
     </AuthorizedLayout>
 </template>
 
@@ -56,19 +58,21 @@ import {Head, Link} from '@inertiajs/vue3';
 import { Spinner } from 'flowbite-vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
-import LoadMoreClaims from './Partials/LoadMoreClaims.vue';
-import ClaimCard from './Partials/ClaimCard.vue';
+import LoadMoreClaims from './Partials/ClaimList/LoadMoreClaims.vue';
+import ClaimCard from './Partials/ClaimList/ClaimCard.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import axios from 'axios';
-import NewClaimCard from './Partials/NewClaimCard.vue';
-import NoData from './Partials/NoData.vue';
-import NgduFilter from './Partials/NgduFilter.vue';
-import StatusFilter from './Partials/StatusFilter.vue';
+import NewClaimCard from './Partials/ClaimList/NewClaimCard.vue';
+import NoData from './Partials/ClaimList/NoData.vue';
+import NgduFilter from './Partials/ClaimList/NgduFilter.vue';
+import StatusFilter from './Partials/ClaimList/StatusFilter.vue';
 import Modal from '@/Components/Modal.vue';
-import CreateNewClaimWindow from './Partials/CreateNewClaimWindow.vue';
+import CreateNewClaimWindow from './Partials/CreateNewClaimWindow/CreateNewClaimWindow.vue';
+import ClaimCardSkeleton from './Partials/ClaimList/ClaimCardSkeleton.vue';
+import Banner from '@/Components/Banners/Banner.vue';
 
 const SKIP_INIT = 0;
-const AMOUNT_INIT = 5;
+const AMOUNT_INIT = 10;
 
 const claims = ref([]);
 const skip = ref(SKIP_INIT);
@@ -76,6 +80,9 @@ const amount = ref(AMOUNT_INIT);
 const claimsLoading = ref(false);
 const showCreateNewClaimWindow = ref(false);
 const showEditClaimWindow = ref(false);
+
+/* Handle exceptions */
+const showAllClaimsLoadedWarn = ref(false);
 
 /* Filter refs */
 const ngduFilters = ref([]);
@@ -103,6 +110,17 @@ function loadClaims() {
         }
     })
     .then((res) => {
+
+        if (res.data.length === 0 && ngduFilters.value.length === 0 && statusFilters.value.length === 0) {
+            showAllClaimsLoadedWarn.value = true;
+            setTimeout(() => {
+                showAllClaimsLoadedWarn.value = false;
+            }, 7000);
+            claimsLoading.value = false;
+
+            return;
+        }
+
         res.data.forEach(item => {
             claims.value.push(item)
         });

@@ -307,7 +307,7 @@ class WellController extends Controller
     public function get(Request $request) {
         $query = DB::table('Well as we')
         ->join('Ngdu as n', 'we.Ngdu_Id', '=', 'n.Id')
-        ->select('we.Id as WellId', 'n.NgduName as NgduName', 'we.Name as WellName', 'we.Id as WellId');
+        ->select('we.Id as id', 'n.NgduName as ngduName', 'we.Name as name');
 
         if ($request->has('name') && isset($request->name)) {
             $query->whereRaw('UPPER("we"."Name") LIKE UPPER(?)', ['%' . $request->name . '%']);

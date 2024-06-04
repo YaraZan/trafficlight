@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Matrix\CategoryController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Matrix\DnmhController;
 use App\Http\Controllers\AlarmsController;
 use App\Http\Controllers\Matrix\AskStatsController;
@@ -153,6 +153,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/ngdu/all', [NgduController::class, 'all']);
 
         Route::get('/claim_statuses/all', [ClaimStatusController::class, 'all']);
+
+        Route::get('/category/all', [CategoryController::class, 'all']);
     });
 });
 
