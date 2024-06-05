@@ -25,12 +25,12 @@
         </div>
 
         <!-- Input value -->
-        <div class="p-5 w-full flex flex-col gap-3 border-y border-gray-200 dark:border-gray-700">
+        <div class="p-5 w-full flex flex-col gap-3 border-b border-gray-200 dark:border-gray-700">
             <span class="text-sm text-gray-800 dark:text-white font-semibold">Введите новое значение</span>
             <NewValueInput />
         </div>
 
-        <div class="p-5 w-full flex flex-col gap-3 border-y border-gray-200 dark:border-gray-700">
+        <div class="p-5 w-full flex flex-col gap-3">
             <button class="w-full text-center rounded-lg p-2 text-white font-semibold text-sm bg-green-600 border border-green-400 hover:bg-opacity-80 dark:hover:bg-opacity-80">
                 Создать
             </button>

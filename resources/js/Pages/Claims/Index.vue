@@ -16,6 +16,10 @@
             <div class="fixed p-4 shadow dark:border-b z-50 w-full border-t border-gray-200 dark:border-gray-700 flex items-center gap-4 bg-white dark:bg-gray-800">
                 <NgduFilter @change="handleChangeNgdu" />
                 <StatusFilter @change="handleChangeStatus" />
+                <ClaimsFilters
+                    @change-sorting="handleChangeSorting"
+                    @change-radio="handleChangeRadio"
+                    @change-date="handleChangeDate" />
             </div>
 
             <!-- Claims body -->
@@ -55,7 +59,6 @@
 
 <script setup>
 import {Head, Link} from '@inertiajs/vue3';
-import { Spinner } from 'flowbite-vue';
 import BreadCrumb from '@/Components/BreadCrumb.vue';
 import AuthorizedLayout from '@/Layouts/AuthorizedLayout.vue';
 import LoadMoreClaims from './Partials/ClaimList/LoadMoreClaims.vue';
@@ -70,6 +73,7 @@ import Modal from '@/Components/Modal.vue';
 import CreateNewClaimWindow from './Partials/CreateNewClaimWindow/CreateNewClaimWindow.vue';
 import ClaimCardSkeleton from './Partials/ClaimList/ClaimCardSkeleton.vue';
 import Banner from '@/Components/Banners/Banner.vue';
+import ClaimsFilters from './Partials/ClaimsFilters/ClaimsFilters.vue';
 
 const SKIP_INIT = 0;
 const AMOUNT_INIT = 10;
@@ -87,6 +91,9 @@ const showAllClaimsLoadedWarn = ref(false);
 /* Filter refs */
 const ngduFilters = ref([]);
 const statusFilters = ref([]);
+const sortingType = ref('');
+const radioType = ref('');
+const dateFilter = ref([]);
 
 /* Change handlers */
 function handleChangeNgdu(ngdus) {
@@ -95,6 +102,18 @@ function handleChangeNgdu(ngdus) {
 
 function handleChangeStatus(statuses) {
     statusFilters.value = statuses;
+}
+
+function handleChangeSorting(sorting) {
+    sortingType.value = sorting;
+}
+
+function handleChangeRadio(radio) {
+    radioType.value = radio;
+}
+
+function handleChangeDate(date) {
+    dateFilter.value = date;
 }
 
 /* Helper funcs */
@@ -106,16 +125,22 @@ function loadClaims() {
             skip: skip.value,
             amount: amount.value,
             ngdus: ngduFilters.value,
-            statuses: statusFilters.value
+            statuses: statusFilters.value,
+            sorting: sortingType.value.code,
+            radio: radioType.value.code,
+            dates: dateFilter.value,
         }
     })
     .then((res) => {
 
-        if (res.data.length === 0 && ngduFilters.value.length === 0 && statusFilters.value.length === 0) {
+        if (res.data.length === 0 && claims.value.length !== 0) {
+
             showAllClaimsLoadedWarn.value = true;
+
             setTimeout(() => {
                 showAllClaimsLoadedWarn.value = false;
             }, 7000);
+
             claimsLoading.value = false;
 
             return;
@@ -141,7 +166,7 @@ onMounted(() => {
     loadClaims();
 });
 
-watch([ngduFilters, statusFilters], () => {
+watch([ngduFilters, statusFilters, sortingType, radioType, dateFilter], () => {
     claims.value = [];
     skip.value = SKIP_INIT;
     loadClaims();
