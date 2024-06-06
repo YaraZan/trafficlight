@@ -27,12 +27,22 @@
         <!-- Input value -->
         <div class="p-5 w-full flex flex-col gap-3 border-b border-gray-200 dark:border-gray-700">
             <span class="text-sm text-gray-800 dark:text-white font-semibold">Введите новое значение</span>
-            <NewValueInput />
+            <NewValueInput v-model="form.new_value" />
+        </div>
+
+        <!-- Current values -->
+        <div class="p-5 w-full flex flex-col gap-3 border-b border-gray-200 dark:border-gray-700">
+            <span class="text-sm text-gray-800 dark:text-white font-semibold">Текущие значения</span>
+            <CurrentValues
+                @load="handleLoadCurrentValue"
+                v-model:well="form.well_id"
+                v-model:category="form.category_id" />
         </div>
 
         <div class="p-5 w-full flex flex-col gap-3">
-            <button class="w-full text-center rounded-lg p-2 text-white font-semibold text-sm bg-green-600 border border-green-400 hover:bg-opacity-80 dark:hover:bg-opacity-80">
-                Создать
+            <button @click.prevent="submit" class="flex w-full items-center justify-center rounded-lg p-2 bg-green-600 border border-green-400 hover:bg-opacity-80 dark:hover:bg-opacity-80">
+                <Spinner v-if="form.processing" color="white" />
+                <span v-else class="text-white font-semibold text-sm">Создать</span>
             </button>
         </div>
     </div>
@@ -42,16 +52,39 @@
 import WellsDropdown from './WellsDropdown.vue';
 import CategoryDropdown from './CategoryDropdown.vue';
 import NewValueInput from './NewValueInput.vue';
-import { ref } from 'vue';
+import CurrentValues from './CurrentValues.vue';
+import { useForm } from '@inertiajs/vue3';
+import { Spinner } from 'flowbite-vue';
 
-const selectedWell = ref(null);
-const selectedCategory = ref(null);
+const emit = defineEmits(['created', 'error']);
+
+const form = useForm({
+    well_id: null,
+    category_id: null,
+    old_value: null,
+    new_value: 1,
+})
+
+function submit() {
+    form.post(route('claims.create'), {
+        onSuccess: () => {
+            emit('created');
+        },
+        onError: () => {
+            emit('error');
+        }
+    });
+}
 
 function handleSelectWell(well) {
-    selectedWell.value = well;
+    form.well_id = well.id;
 };
 
-function handleSelectCategory(well) {
-    selectedCategory.value = well;
+function handleSelectCategory(category) {
+    form.category_id = category.id;
+};
+
+function handleLoadCurrentValue(currentValues) {
+    form.old_value = currentValues.CurrentValue;
 };
 </script>

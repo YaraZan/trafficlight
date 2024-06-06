@@ -1,5 +1,5 @@
 <template>
-    <div class="relative flex flex-col gap-2">
+    <div class="w-full sm:w-auto relative flex flex-col gap-2">
         <Button
             text="Статус"
             @click="showFilterWindow = !showFilterWindow"

@@ -19,7 +19,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 
-const inputValue = ref(1);
+const inputValue = defineModel({ default: 1 })
 const isFocused = ref(false);
 
 const validateValue = (value) => {

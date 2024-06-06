@@ -148,7 +148,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/well/get-by-name/{name}', [WellController::class, 'getByName']);
         Route::get('/well/{well_uuid}/diagrams/{category_uuid}', [DiagramController::class, 'show']);
 
-        Route::get('/claims/get', [ClaimsController::class, 'get']);
+        Route::get('/claims/get', [ClaimsController::class, 'get'])->name('claims.get');
+        Route::get('/claims/getCurrentValues', [ClaimsController::class, 'getCurrentValues'])->name('claims.getCurrentValues');
+        Route::get('/claims/getClaimDetails', [ClaimsController::class, 'getClaimDetails'])->name('claims.getClaimDetails');
+        Route::post('/claims/create', [ClaimsController::class, 'create'])->name('claims.create');
 
         Route::get('/ngdu/all', [NgduController::class, 'all']);
 

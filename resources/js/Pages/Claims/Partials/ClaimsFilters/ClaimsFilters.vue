@@ -1,5 +1,5 @@
 <template>
-    <div class="relative flex flex-col">
+    <div class="w-full sm:w-auto relative flex flex-col">
         <Button
             text="Фильтры"
             @click="showClaimFiltersDropdown = !showClaimFiltersDropdown"

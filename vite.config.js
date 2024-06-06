@@ -15,6 +15,11 @@ export default defineConfig({
                     includeAbsolute: false,
                 },
             },
+            // New 06-06-24
+            script: {
+                defineModel: true,
+                propsDestructure: true,
+            }
         }),
     ],
 });
