@@ -3,8 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\ClaimCreated;
-use App\Events\Login;
 use App\Models\Log;
+use App\Models\LogStatus;
 
 class ClaimCreatedListener
 {
@@ -16,8 +16,12 @@ class ClaimCreatedListener
         $log->domain = gethostbyaddr(request()->ip());
         $log->agent = request()->server('HTTP_USER_AGENT');
         $log->action = 'ИЗМЕНЕНИЕ: ' . $event->comment;
-        $log->save();
 
+        $status = LogStatus::where('name', '=', 'Изменение значений параметров')->firstOrFail();
+
+        $log->log_status_id = $status->id;
+
+        $log->save();
     }
 }
 

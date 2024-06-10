@@ -204,7 +204,7 @@ const closeModal = () => {
                 <div class="flex flex-col items-end h-full justify-between">
                     <div class="flex items-center gap-2">
                         <span class="text-[13px] font-normal text-gray-300 dark:text-gray-600">Факт</span>
-                        <code v-if="category.ArmitsValue"
+                        <code v-if="category.FactValue"
                               class="bg-gray-100 w-min dark:bg-gray-800 rounded-[10px] p-2 text-[14px] font-semibold">
                             {{ category.FactValue }}
                         </code>

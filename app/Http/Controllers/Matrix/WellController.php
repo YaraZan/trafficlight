@@ -296,7 +296,40 @@ class WellController extends Controller
         return Inertia::render('Errors/NotAuthorized');
     }
 
-    public function getAllWells() {
-        return Well::all();
+    public function all() {
+        $wells = DB::table('Well as we')
+        ->join('Ngdu as n', 'we.Ngdu_Id', '=', 'n.Id')
+        ->select('we.*', 'n.NgduName as NgduName', 'we.Name as WellName', 'we.Id as WellId')->get();
+
+        return response()->json($wells);
     }
+
+    public function get(Request $request) {
+        $query = DB::table('Well as we')
+        ->join('Ngdu as n', 'we.Ngdu_Id', '=', 'n.Id')
+        ->select('we.Id as id', 'n.NgduName as ngduName', 'we.Name as name');
+
+        if ($request->has('name') && isset($request->name)) {
+            $query->whereRaw('UPPER("we"."Name") LIKE UPPER(?)', ['%' . $request->name . '%']);
+        }
+
+        $query
+        ->skip($request->skip)
+        ->take($request->amount);
+
+        $well_data = $query->get();
+
+        return response()->json($well_data);
+    }
+
+    public function getByName(string $name) {
+        $wells = DB::table('Well as we')
+            ->join('Ngdu as n', 'we.Ngdu_Id', '=', 'n.Id')
+            ->select('we.Id as WellId', 'n.NgduName as NgduName', 'we.Name as WellName', 'we.Id as WellId')
+            ->whereRaw('UPPER("we"."Name") LIKE UPPER(?)', ['%' . $name . '%'])
+            ->get();
+
+        return response()->json($wells);
+    }
+
 }

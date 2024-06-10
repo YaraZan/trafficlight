@@ -12,4 +12,9 @@ class Well extends Model
     protected $table = 'Well';
 
     protected $primaryKey = 'Id';
+
+    public function ngdu()
+    {
+        return $this->belongsTo(Ngdu::class, 'Ngdu_Id');
+    }
 }

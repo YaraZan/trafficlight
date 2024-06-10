@@ -284,7 +284,6 @@ const extractWellNumber = (string) => {
 };
 
 watch(() => [searchFilter.value, perPage.value, ngduFilters.value, radioFilter.value], () => {
-
     if (props.data.ngdu_data && ngduFilters.value.length !== props.data.ngdu_data.length) {
         selectAllNgdus.value = false;
     } else {
@@ -312,8 +311,7 @@ const viewAll = computed(() => page.props.auth.viewWells);
         </template>
 
         <div v-if="data.matrix_data.length" class="bg-white dark:bg-gray-800 relative w-full">
-            <div class="fixed top-[51px] z-10 bg-white dark:bg-gray-800 flex flex-col items-start justify-between gap-3 p-4 w-[calc(100%-50px)] md:flex-row md:items-center md:gap-3">
-
+            <div class="fixed top-[71px] z-10 bg-white dark:bg-gray-800 flex flex-col items-start justify-between gap-3 p-4 w-[calc(100%-70px)] md:flex-row md:items-center md:gap-3">
 
                 <Dropdown align="bottom" width="48">
                     <template #trigger>
@@ -440,14 +438,14 @@ const viewAll = computed(() => page.props.auth.viewWells);
                     </ul>
             </div>
 
-            <div v-if="viewType === 'grid'" class="z-10 mt-[125px] w-full h-full overflow-x-auto p-4">
+            <div v-if="viewType === 'grid'" class="z-10 mt-[145px] w-full h-full overflow-x-auto p-4">
                 <OperationsGrid v-if="paginatedData.length" :data="paginatedData"/>
                 <div v-else class="flex flex-col gap-4 items-center justify-center w-full h-screen p-20 border border-gray-200 dark:border-gray-700 rounded-xl">
                     <NoDataIcon />
                     <span class="text-gray-500 text-lg font-semibold">Данных нет..</span>
                 </div>
             </div>
-            <div v-else class="mt-[120px] block h-[800px] overflow-y-auto">
+            <div v-else class="mt-[140px] block h-[800px] overflow-y-auto">
                 <MatrixTable
                     @sortByNumber="() => { numberSort = !numberSort }"
                     @sort-by-ngdu="() => { ngduSort = !ngduSort }"

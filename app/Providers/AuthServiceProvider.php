@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Ngdu;
+use App\Models\RefClaim;
 use App\Models\User;
 use App\Policies\WellPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -33,11 +34,19 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('control-wells', function (User $user) {
-            return $user->canEdit();
+            return $user->isAdmin() || $user->canEdit();
         });
 
         Gate::define('view-well', function (User $user, Well $well) {
             return $user->isAdmin() || $user->ngdu_id == $well->Ngdu_Id;
+        });
+
+        Gate::define('delete-claim', function (User $user, RefClaim $claim) {
+            return $user->isAdmin() || ($user->id == $claim->User_Id && $claim->isOnConsideration());
+        });
+
+        Gate::define('consider-claim', function (User $user, RefClaim $claim) {
+            return $user->isAdmin() || ($user->isClaimModerator() && $claim->isOnConsideration());
         });
 
         Gate::define('training', function (User $user) {

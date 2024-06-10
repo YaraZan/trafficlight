@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Matrix\CategoryController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Matrix\DnmhController;
 use App\Http\Controllers\AlarmsController;
 use App\Http\Controllers\Matrix\AskStatsController;
@@ -12,9 +12,12 @@ use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\ClaimsController;
+use App\Http\Controllers\ClaimStatusController;
 use App\Http\Controllers\Matrix\ControlController;
 use App\Http\Controllers\Matrix\DiagramController;
 use \App\Http\Controllers\Dinamograph\TrainingController;
+use App\Http\Controllers\Matrix\NgduController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -32,16 +35,23 @@ use Inertia\Inertia;
 */
 
 /**
- * [->] Redirects
+ * [->] Redirect from home.
  */
 Route::get('/', function () {
     return redirect('/matrix');
 })->name('home');
-/**
- * Matrix routes
- */
 
+/**
+ * ------------------ WEB ROUTES ---------------------------------
+ */
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    /**
+     * Matrix routes
+     *
+     * Routes for matrix page and its subpages containing
+     * detail well page, archieves, etc.
+     */
     Route::get('/matrix', [WellController::class, 'index'])->name('matrix');
     Route::get('/matrix/{well_uuid}', [WellController::class, 'show'])->name('matrix.detail');
     Route::get('/matrix/{well_uuid}/hourarch', [HeadHourController::class, 'index'])->name('matrix.hourarch');
@@ -51,26 +61,48 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/matrix/{well_uuid}/diagrams', [DiagramController::class, 'index'])->name('matrix.diagrams');
     Route::get('/matrix/{well_uuid}/control', [ControlController::class, 'index'])->name('matrix.control');
 
+    /**
+     * Alarms routes
+     *
+     * Routes for alarm page.
+     */
     Route::get('/alarms', [AlarmsController::class, 'index'])->name('alarms');
 
+    /**
+     * Claims routes
+     *
+     * Routes for claims page.
+     */
+    Route::get('/claims', [ClaimsController::class, 'view'])->name('claims');
+
+    /**
+     * Settings routes
+     *
+     * Routes for settings page and its subpages as profile and data.
+     */
     Route::get('/settings', function () { return redirect('/settings/profile'); })->name('settings');
     Route::get('/settings/profile', [ProfileController::class, 'index'])->name('settings.profile');
     Route::get('/settings/data', function () {
         return Inertia::render('Errors/Developing');
     })->name('settings.data');
 
-    Route::get('/analytics', function () {
-        return Inertia::render('Errors/Developing');
-    })->name('analytics');
-
+    /**
+     * Dinamograph routes
+     *
+     * Routes for ai training page, allowing trusted users to "train" it.
+     */
     Route::get('/dinamograph', function () { return redirect('/dinamograph/training'); })->name('dinamograph');
     Route::get('/dinamograph/training', [TrainingController::class, 'index'])->name('dinamograph.training');
 
-
-    Route::get('/docs/matrix', function () { return redirect('/docs/matrix/table'); })->name('docs.matrix');
-    Route::get('/docs/well', function () { return redirect('/docs/well/dinamograms'); })->name('docs.well');
-
+    /**
+     * Docs routes
+     *
+     * Routes for documentation pages.
+     */
     Route::prefix('/docs')->group(function () {
+        Route::get('/matrix', function () { return redirect('/docs/matrix/table'); })->name('docs.matrix');
+        Route::get('/well', function () { return redirect('/docs/well/dinamograms'); })->name('docs.well');
+
         Route::prefix('/matrix')->group(function () {
             Route::get('/table', function () { return Inertia::render('Docs/MatrixPage/Table');})->name('docs.matrix.table');
             Route::get('/filters', function () { return Inertia::render('Docs/MatrixPage/Filters');})->name('docs.matrix.filters');
@@ -87,6 +119,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+/**
+ * ------------------ API ROUTES ---------------------------------
+ */
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/api')->group(function () {
 
@@ -108,12 +143,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dnmh/{public_id}', [DnmhController::class, 'index']);
         Route::get('/dnm/{public_id}', [DnmhController::class, 'show']);
 
+        Route::get('/well/all', [WellController::class, 'all']);
+        Route::get('/well/get', [WellController::class, 'get']);
+        Route::get('/well/get-by-name/{name}', [WellController::class, 'getByName']);
         Route::get('/well/{well_uuid}/diagrams/{category_uuid}', [DiagramController::class, 'show']);
+
+        Route::get('/claims/get', [ClaimsController::class, 'get'])->name('claims.get');
+        Route::get('/claims/getCurrentValues', [ClaimsController::class, 'getCurrentValues'])->name('claims.getCurrentValues');
+        Route::get('/claims/getClaimDetails', [ClaimsController::class, 'getClaimDetails'])->name('claims.getClaimDetails');
+        Route::post('/claims/create', [ClaimsController::class, 'create'])->name('claims.create');
+        Route::delete('/claims/delete', [ClaimsController::class, 'delete'])->name('claims.delete');
+        Route::post('/claims/consider', [ClaimsController::class, 'consider'])->name('claims.consider');
+        Route::post('/claims/decline', [ClaimsController::class, 'decline'])->name('claims.decline');
+
+        Route::get('/ngdu/all', [NgduController::class, 'all']);
+
+        Route::get('/claim_statuses/all', [ClaimStatusController::class, 'all']);
+
+        Route::get('/category/all', [CategoryController::class, 'all']);
     });
 });
 
 /**
- * !!! Admin routes !!!
+ * ------------------ ADMIN ROUTES ---------------------------------
  */
 Route::middleware(['admin', 'auth', 'verified'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users');

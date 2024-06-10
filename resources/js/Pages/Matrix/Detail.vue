@@ -435,7 +435,9 @@ const changePaginationSource = (val) => {
                 <DetailMoveWellUser v-if="paginationSource === 'Перемещение'  && currentMoveWellClaimType === 'Мои'"
                     :item="item"
                 >
-                    <DetailNavigationTabMenu :pagination-source-types="paginationSourceTypes" :current-source-type="paginationSource" @select="changePaginationSource" />
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-900 rounded-lg p-1 gap-2">
+                        <DetailNavigationTabMenu :pagination-source-types="paginationSourceTypes" :current-source-type="paginationSource" @select="changePaginationSource" />
+                    </div>
                     <template #claims-switcher>
                         <div class="flex items-center gap-3">
                             <div v-for="(claimType, index) in moveWellClaimTypes"

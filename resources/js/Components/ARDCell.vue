@@ -60,7 +60,7 @@ const getFontColor = (val) => {
             </div>
 
             <span v-if="arm" :class="{ 'text-gray-300 dark:text-gray-600' : arm === '0.00' }">{{ arm }}</span>
-            <span v-else class="text-red-500">Пусто</span>
+            <span v-else class="text-gray-300 dark:text-gray-600">Пусто</span>
         </div>
     </td>
     <td v-if="withSetpoint" class="px-3 py-1 text-[13px] font-semibold text-center border-gray-200 dark:border-gray-700 border-l">
