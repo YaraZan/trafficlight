@@ -52,7 +52,14 @@
                 @error="handleClaimError" />
         </Modal>
         <Modal :custom-styles="'mt-20'" :show="showViewClaimWindow" @close="showViewClaimWindow = false">
-            <ViewClaimWindow :claim="viewingClaim" />
+            <ViewClaimWindow
+                @claim-deleted-success="handleClaimDeleted"
+                @claim-deleted-error="handleClaimNotDeleted"
+                @claim-considered-success="handleClaimConsidered"
+                @claim-considered-error="handleClaimNotConsidered"
+                @claim-declined-success="handleClaimDeclined"
+                @claim-declined-error="handleClaimNotDeclined"
+            :claim="viewingClaim" />
         </Modal>
 
         <Banners v-model="bannersState" />
@@ -108,7 +115,7 @@ function viewClaim(claim) {
 }
 
 /* Create and delete handers */
-function handleClaimCreated() {
+function handleClaimCreated() { // 200
     showCreateNewClaimWindow.value = false;
     bannersState.value = 'claims:claim-created';
 
@@ -118,6 +125,42 @@ function handleClaimCreated() {
 function handleClaimError() {
     showCreateNewClaimWindow.value = false;
     bannersState.value = 'claims:claim-not-created';
+}
+
+function handleClaimDeleted() { // 200
+    showViewClaimWindow.value = false;
+    bannersState.value = 'claims:claim-deleted';
+
+    handleUpdates();
+}
+
+function handleClaimNotDeleted() {
+    showViewClaimWindow.value = false;
+    bannersState.value = 'claims:claim-not-deleted';
+}
+
+function handleClaimConsidered() { // 200
+    showViewClaimWindow.value = false;
+    bannersState.value = 'claims:claim-considered';
+
+    handleUpdates();
+}
+
+function handleClaimNotConsidered() {
+    showViewClaimWindow.value = false;
+    bannersState.value = 'claims:claim-not-considered';
+}
+
+function handleClaimDeclined() { // 200
+    showViewClaimWindow.value = false;
+    bannersState.value = 'claims:claim-declined';
+
+    handleUpdates();
+}
+
+function handleClaimNotDeclined() {
+    showViewClaimWindow.value = false;
+    bannersState.value = 'claims:claim-not-declined';
 }
 
 /* Change handlers */

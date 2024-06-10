@@ -152,6 +152,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/claims/getCurrentValues', [ClaimsController::class, 'getCurrentValues'])->name('claims.getCurrentValues');
         Route::get('/claims/getClaimDetails', [ClaimsController::class, 'getClaimDetails'])->name('claims.getClaimDetails');
         Route::post('/claims/create', [ClaimsController::class, 'create'])->name('claims.create');
+        Route::delete('/claims/delete', [ClaimsController::class, 'delete'])->name('claims.delete');
+        Route::post('/claims/consider', [ClaimsController::class, 'consider'])->name('claims.consider');
+        Route::post('/claims/decline', [ClaimsController::class, 'decline'])->name('claims.decline');
 
         Route::get('/ngdu/all', [NgduController::class, 'all']);
 

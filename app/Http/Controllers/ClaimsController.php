@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ClaimConsidered;
 use App\Events\ClaimCreated;
+use App\Events\ClaimDeclined;
 use App\Models\RefClaim;
+use App\Models\RefClaimStatus;
 use App\Models\Well;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,7 +18,7 @@ class ClaimsController extends Controller
 {
     public function view()
     {
-        if (Gate::allows('view-wells') || Gate::allows('control-wells')) {
+        if (Gate::allows('control-wells')) {
             return Inertia::render('Claims/Index');
         }
         return Inertia::render('Errors/NotAuthorized');
@@ -139,6 +142,56 @@ class ClaimsController extends Controller
         event(new ClaimCreated($comment));
     }
 
+    public function delete(Request $request) {
+        $request->validate([
+            'claim_id' => ['required', 'integer'],
+        ]);
+
+        $claim_id = $request->input('claim_id');
+
+        $claim = RefClaim::where('Id', '=', $claim_id)->first();
+
+        $claim->delete();
+    }
+
+    public function consider(Request $request) {
+
+        $request->validate([
+            'claim_id' => ['required', 'integer'],
+        ]);
+
+        $claim_id = $request->input('claim_id');
+
+        $claim = RefClaim::where('Id', '=', $claim_id)->first();
+
+        $status = RefClaimStatus::where('RCStatusName', '=', 'Утверждено')->first();
+
+        $claim->RefClaimStatus_Id = $status->Id;
+
+        $claim->save();
+
+        event(new ClaimConsidered($claim->Comment));
+    }
+
+    public function decline(Request $request) {
+
+        $request->validate([
+            'claim_id' => ['required', 'integer'],
+        ]);
+
+        $claim_id = $request->input('claim_id');
+
+        $claim = RefClaim::where('Id', '=', $claim_id)->first();
+
+        $status = RefClaimStatus::where('RCStatusName', '=', 'Отклонено')->first();
+
+        $claim->RefClaimStatus_Id = $status->Id;
+
+        $claim->save();
+
+        event(new ClaimDeclined($claim->Comment));
+    }
+
     public function getCurrentValues(Request $request) {
         $values = DB::table('ControlRef as cr')
         ->join('Well as we', 'cr.Well_Id', '=', 'we.Id')
@@ -162,31 +215,41 @@ class ClaimsController extends Controller
         return response()->json($values);
     }
 
-    public function getClaimDetails(Request $request) {
-        $claim = DB::table('RefClaim as rc')
-        ->join('Well as we', 'rc.Well_Id', '=', 'we.Id')
-        ->join('users as us', 'rc.User_Id', '=', 'us.id')
-        ->join('Ngdu as ng', 'we.Ngdu_Id', '=', 'ng.Id')
-        ->join('Ngdu as ngd', 'us.ngdu_id', '=', 'ngd.Id')
-        ->join('Category as ct', 'rc.Category_Id', '=', 'ct.Id')
-        ->join('RefClaimStatus as rcs', 'rc.RefClaimStatus_Id', '=', 'rcs.Id')
-        ->select(
-            'we.Name as WellName',
-            'we.public_id as WellPublicId',
-            'ng.NgduName as NgduName',
-            'us.name as UserName',
-            'ngd.NgduName as UserNgduName',
-            'rc.OldValue',
-            'rc.Value',
-            'rc.Dat',
-            'ct.CatNameShorted as CategoryNameShorted',
-            'ct.CatName as CategoryName',
-            'rcs.RCStatusName as StatusName',
-            'rcs.Color as StatusColor'
-            )
-        ->where('rc.Id', '=', $request->claim_id)
-        ->first();
+    public function getClaimDetails(Request $request)
+    {
+        $claim = RefClaim::with([
+                'well',
+                'well.ngdu',
+                'user',
+                'user.ngdu',
+                'category',
+                'status'
+            ])
+            ->where('Id', $request->claim_id)
+            ->first();
 
-        return response()->json($claim);
+        $response = [
+            'claim' => [
+                'Id' => $claim->Id,
+                'WellName' => $claim->well->Name,
+                'WellPublicId' => $claim->well->public_id,
+                'NgduName' => $claim->well->ngdu->NgduName,
+                'UserName' => $claim->user->name,
+                'UserNgduName' => $claim->user->ngdu->NgduName,
+                'OldValue' => $claim->OldValue,
+                'Value' => $claim->Value,
+                'Dat' => $claim->Dat,
+                'CategoryNameShorted' => $claim->category->CatNameShorted,
+                'CategoryName' => $claim->category->CatName,
+                'StatusName' => $claim->status->RCStatusName,
+                'StatusColor' => $claim->status->Color
+            ],
+            'permissions' => [
+                'canDelete' => Gate::allows('delete-claim', $claim),
+                'canConsider' => Gate::allows('consider-claim', $claim)
+            ]
+        ];
+
+        return response()->json($response);
     }
 }

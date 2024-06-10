@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\ClaimConsidered;
 use App\Events\ClaimCreated;
+use App\Events\ClaimDeclined;
 use App\Events\ClaimTracked;
 use App\Listeners\ClaimCreatedListener;
 use Illuminate\Auth\Events\Registered;
@@ -13,6 +15,8 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use App\Events\UserAction;
 use App\Listeners\ClaimTrackedListener;
+use App\Listeners\ClaimConsideredListener;
+use App\Listeners\ClaimDeclinedListener;
 use App\Listeners\LoginSuccessfull;
 use App\Listeners\LogoutSuccessfull;
 
@@ -36,8 +40,11 @@ class EventServiceProvider extends ServiceProvider
         ClaimCreated::class => [
             ClaimCreatedListener::class,
         ],
-        ClaimTracked::class => [
-            ClaimTrackedListener::class,
+        ClaimConsidered::class => [
+            ClaimConsideredListener::class,
+        ],
+        ClaimDeclined::class => [
+            ClaimDeclinedListener::class,
         ]
     ];
 

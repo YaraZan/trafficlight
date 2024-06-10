@@ -75,7 +75,7 @@ class User extends Authenticatable
 
     public function ngdu()
     {
-        return $this->belongsTo(Ngdu::class);
+        return $this->belongsTo(Ngdu::class, 'ngdu_id');
     }
 
     public function viewAllWells(): bool

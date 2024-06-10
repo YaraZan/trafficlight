@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-6 bg-white rounded-xl shadow border border-gray-200 dark:border-gray-700 dark:bg-gray-900 hover:border-green-400 dark:hover:border-green-400">
+    <div class="flex flex-col gap-6 bg-white rounded-xl shadow border border-gray-200 dark:border-gray-700 dark:bg-gray-900 hover:border-green-400 dark:hover:border-green-400 cursor-pointer">
 
         <div class="p-5 w-full flex flex-col gap-2">
             <div class="flex items-center gap-2">

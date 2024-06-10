@@ -5,16 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Well extends Model
+class Category extends Model
 {
     use HasFactory;
 
-    protected $table = 'Well';
+    protected $table = 'Category';
 
     protected $primaryKey = 'Id';
-
-    public function ngdu()
-    {
-        return $this->belongsTo(Ngdu::class, 'Ngdu_Id');
-    }
 }
