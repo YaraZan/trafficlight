@@ -125,7 +125,7 @@ onUnmounted(() => {
 })
 
 const currentPage = ref(1);
-const perPage = ref(6);
+const perPage = ref(10);
 
 const totalPages = computed(() => {
 
@@ -289,17 +289,17 @@ const findDnmItem = (dnmItem) => {
 
         </div>
 
-        <div v-if="!dnmhDataLoading && paginatedData.length > 0" class="w-full grid grid-cols-6 grid-rows-1 gap-[5px]">
+        <div v-if="!dnmhDataLoading && paginatedData.length > 0" class="w-full grid grid-cols-5 grid-rows-2 gap-[5px]">
             <div v-for="(dnm, index) in paginatedData" :key="index"
                 @click="() => selectDinamogram(dnm.public_id)"
                 :style="{ 'border-color': findDnmItem(dnm)?.color }"
                 :class="{ 'border-[3px]' : findDnmItem(dnm) }"
-                class="relative min-h-[200px] flex flex-col bg-white dark:bg-gray-900 shadow-sm p-4 rounded-2xl gap-8 border border-gray-200
+                class="relative flex flex-col justify-between bg-white dark:bg-gray-900 shadow-md p-4 rounded-lg gap-4 border border-gray-200
                 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 select-none">
 
                 <span v-if="findDnmItem(dnm)"
                     :style="{ 'background-color': findDnmItem(dnm)?.color }"
-                    class="absolute top-2 right-2 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold text-white">
+                    class="absolute bottom-2 right-2 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold text-white">
                     {{ dnmData.indexOf(findDnmItem(dnm)) + 1 }}
                 </span>
                 <span class="text-sm text-gray-800 dark:text-white font-semibold">{{ dnm.DnmAdress }}</span>

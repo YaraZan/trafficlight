@@ -6,6 +6,8 @@
         <NavLink v-if="isAdmin" :href="route('logs')" :active="$page.component.includes('Logs/')"><LogsIcon></LogsIcon></NavLink>
         <NavLink v-if="isTrainer || isAdmin" :href="route('dinamograph')" :active="$page.component.includes('Dinamograph/')"><Dinamograph></Dinamograph></NavLink>
 
+        <AdminPanelIcon v-if="isAdmin" :href="route('admin.view')" :active="$page.component.includes('Admin/')"></AdminPanelIcon>
+
         <!-- Regular routes -->
         <MatrixIcon :href="route('matrix')" :active="$page.component.includes('Matrix/')"></MatrixIcon>
         <ClaimsIcon v-if="isAdmin || controlWells || isClaimModerator" :href="route('claims')" :active="$page.component.includes('Claims/')"></ClaimsIcon>
@@ -29,6 +31,7 @@ import LogsIcon from '@/Components/Icons/LogsIcon.vue';
 import {computed, onMounted, ref} from 'vue';
 import { useDark, useToggle } from '@vueuse/core';
 import ClaimsIcon from '@/Components/Icons/ClaimsIcon.vue';
+import AdminPanelIcon from '@/Components/Icons/AdminPanelIcon.vue';
 
 const page = usePage();
 const isDark = useDark();

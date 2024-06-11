@@ -75,7 +75,6 @@ function getDefaultDateFilters() {
   return [startDate, endDate];
 }
 
-
 const currentPage = ref(1);
 const perPage = ref(20);
 const searchFilter = ref('');

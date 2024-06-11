@@ -10,11 +10,15 @@ use Inertia\Inertia;
 class CategoryController extends Controller
 {
 
-    public function all() {
-        $claim_statuses_data = DB::table('Category as c')
-        ->select('c.Id as id', 'c.CatName as name', 'c.CatNameShorted as shortName')
-        ->where('c.is_writable', '=', 'true')
-        ->get();
+    public function get(Request $request) {
+        $query = DB::table('Category as c')
+        ->select('c.Id as id', 'c.CatName as name', 'c.CatNameShorted as shortName');
+
+        if ($request->has('writable') && $request->writable) {
+            $query->where('c.is_writable', '=', 'true');
+        }
+
+        $claim_statuses_data = $query->get();
 
         return response()->json($claim_statuses_data);
     }
