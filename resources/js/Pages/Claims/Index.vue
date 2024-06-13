@@ -14,7 +14,7 @@
 
             <!-- Filters -->
             <div class="fixed p-4 shadow dark:border-b z-50 w-full gap-1 sm:gap-4 border-t border-gray-200 dark:border-gray-700 flex items-center bg-white dark:bg-gray-800">
-                <NgduFilter @change="handleChangeNgdu" />
+                <NgduFilter v-if="canViewNgdu" @change="handleChangeNgdu" />
                 <StatusFilter @change="handleChangeStatus" />
                 <ClaimsFilters
                     @change-sorting="handleChangeSorting"
@@ -84,6 +84,12 @@ import ViewClaimWindow from './Partials/ViewClaimWindow/ViewClaimWindow.vue';
 import ClaimCardSkeleton from './Partials/ClaimList/ClaimCardSkeleton.vue';
 import Banners from './Partials/Banners.vue';
 import ClaimsFilters from './Partials/ClaimsFilters/ClaimsFilters.vue';
+
+const props = defineProps({
+    canViewNgdu: {
+        type: Boolean
+    }
+})
 
 const SKIP_INIT = 0;
 const AMOUNT_INIT = 10;

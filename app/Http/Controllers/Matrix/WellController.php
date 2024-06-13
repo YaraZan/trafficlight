@@ -253,6 +253,10 @@ class WellController extends Controller
             $query->whereRaw('UPPER("we"."Name") LIKE UPPER(?)', ['%' . $request->name . '%']);
         }
 
+        if (!Gate::allows('view-wells')) {
+            $query->where('we.Ngdu_Id', '=', $request->user()->ngdu_id);
+        }
+
         $query
         ->skip($request->skip)
         ->take($request->amount);

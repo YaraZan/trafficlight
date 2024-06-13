@@ -1,12 +1,10 @@
 <template>
     <div class="relative py-[10px] px-[5px] flex flex-col items-center gap-6 w-full h-full">
         <!-- Admin routes -->
-        <NavLink v-if="isAdmin" :href="route('users')" :active="$page.component.includes('Users/')"><UsersIcon></UsersIcon></NavLink>
-        <NavLink v-if="isAdmin" :href="route('roles')" :active="$page.component.includes('Roles/')"><RolesIcon></RolesIcon></NavLink>
-        <NavLink v-if="isAdmin" :href="route('logs')" :active="$page.component.includes('Logs/')"><LogsIcon></LogsIcon></NavLink>
-        <NavLink v-if="isTrainer || isAdmin" :href="route('dinamograph')" :active="$page.component.includes('Dinamograph/')"><Dinamograph></Dinamograph></NavLink>
-
-        <AdminPanelIcon v-if="isAdmin" :href="route('admin.view')" :active="$page.component.includes('Admin/')"></AdminPanelIcon>
+        <UsersIcon v-if="isAdmin" :href="route('users')" :active="$page.component.includes('Users/')"></UsersIcon>
+        <RolesIcon v-if="isAdmin" :href="route('roles')" :active="$page.component.includes('Roles/')"></RolesIcon>
+        <LogsIcon v-if="isAdmin" :href="route('logs')" :active="$page.component.includes('Logs/')"></LogsIcon>
+        <Dinamograph v-if="isTrainer || isAdmin" :href="route('dinamograph')" :active="$page.component.includes('Dinamograph/')"></Dinamograph>
 
         <!-- Regular routes -->
         <MatrixIcon :href="route('matrix')" :active="$page.component.includes('Matrix/')"></MatrixIcon>
