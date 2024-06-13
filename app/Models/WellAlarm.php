@@ -30,6 +30,6 @@ class WellAlarm extends Model
 
     public function state()
     {
-        return $this->belongsTo(WellState::class, 'WellState_Id');
+        return $this->belongsTo(WellState::class, 'WState_Id');
     }
 }

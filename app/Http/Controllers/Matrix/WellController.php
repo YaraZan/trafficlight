@@ -44,6 +44,7 @@ class WellController extends Controller
             ->map(function ($item) {
                 return [
                     'WellState_Id' => $item->WState_Id,
+                    'WellState' => optional($item->state)->Name,
                     'public_id' => optional($item->well)->public_id,
                     'Ngdu_Id' => $item->Ngdu_Id,
                     'Well_Id' => $item->Well_Id,
