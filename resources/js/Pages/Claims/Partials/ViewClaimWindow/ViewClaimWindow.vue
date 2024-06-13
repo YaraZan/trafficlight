@@ -7,7 +7,7 @@
 
         <template v-if="detailClaim && !detailClaimLodaing">
             <div class="p-5 flex flex-col items-center justify-center gap-5 border-b border-gray-200 dark:border-gray-700">
-                <span class=" text-xl text-gray-800 dark:text-white font-semibold">Просмотр заявки от {{ detailClaim.Dat }}</span>
+                <span class=" text-xl text-gray-800 dark:text-white font-semibold">Просмотр заявки от {{ detailClaim.claim.Dat }}</span>
             </div>
 
             <!-- Well -->

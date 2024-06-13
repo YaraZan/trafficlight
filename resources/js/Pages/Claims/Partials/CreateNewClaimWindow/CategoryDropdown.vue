@@ -54,7 +54,11 @@ const nameInput = ref('');
 function fetchCategories() {
     categoriesLoading.value = true;
 
-    axios.get(`/api/category/all`)
+    axios.get(`/api/category/get`, {
+        params: {
+            writable: true
+        }
+    })
     .then(res => {
         const data = res.data;
         data.forEach(item => {

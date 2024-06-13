@@ -5,27 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Well extends Model
+class WellAlarm extends Model
 {
     use HasFactory;
 
-    protected $table = 'Well';
+    protected $table = 'WellAlarm';
 
     protected $primaryKey = 'Id';
+
+    public function well()
+    {
+        return $this->belongsTo(Well::class, 'Well_Id');
+    }
 
     public function ngdu()
     {
         return $this->belongsTo(Ngdu::class, 'Ngdu_Id');
     }
 
-    public function plc()
+    public function shop()
     {
-        return $this->belongsTo(Plc::class, 'Plc_Id');
-    }
-
-    public function hd()
-    {
-        return $this->belongsTo(Hd::class, 'Hd_Id');
+        return $this->belongsTo(Shop::class, 'Shop_Id');
     }
 
     public function state()

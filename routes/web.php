@@ -12,6 +12,7 @@ use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClaimsController;
 use App\Http\Controllers\ClaimStatusController;
 use App\Http\Controllers\Matrix\ControlController;
@@ -112,9 +113,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/alarms', function () { return Inertia::render('Docs/Well/Alarms');})->name('docs.well.alarms');
             Route::get('/archive', function () { return Inertia::render('Docs/Well/Archive');})->name('docs.well.archive');
             Route::get('/parameters', function () { return Inertia::render('Docs/Well/Parameters');})->name('docs.well.parameters');
-            Route::get('/claims', function () { return Inertia::render('Docs/Well/Claims');})->name('docs.well.claims');
             Route::get('/diagrams', function () { return Inertia::render('Docs/Well/Diagrams'); })->name('docs.well.diagrams');
             Route::get('/asklong', function () { return Inertia::render('Docs/Well/AskLong');})->name('docs.well.asklong');
+        });
+        Route::prefix('/claims')->group(function () {
+            Route::get('/creation', function () { return Inertia::render('Docs/ClaimsPage/Creation');})->name('docs.claims.creation');
+            Route::get('/actions', function () { return Inertia::render('Docs/ClaimsPage/Actions');})->name('docs.claims.actions');
+            Route::get('/filters', function () { return Inertia::render('Docs/ClaimsPage/Filters');})->name('docs.claims.filters');
         });
     });
 });
@@ -160,7 +165,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/claim_statuses/all', [ClaimStatusController::class, 'all']);
 
-        Route::get('/category/all', [CategoryController::class, 'all']);
+        Route::get('/category/get', [CategoryController::class, 'get']);
     });
 });
 
@@ -168,6 +173,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
  * ------------------ ADMIN ROUTES ---------------------------------
  */
 Route::middleware(['admin', 'auth', 'verified'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'view'])->name('admin.view');
+    Route::get('/admin/get-users', [AdminController::class, 'getUsers'])->name('admin.getUsers');
+    Route::get('/admin/get-roles', [AdminController::class, 'getRoles'])->name('admin.getRoles');
+    Route::get('/admin/get-logs', [AdminController::class, 'getLogs'])->name('admin.getLogs');
+
+
     Route::get('/users', [UserController::class, 'index'])->name('users');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::patch('/users', [UserController::class, 'update'])->name('users.update');

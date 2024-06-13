@@ -188,8 +188,6 @@ const closeModal = () => {
             <div
                 v-for="(category, index) in paginatedData"
                 :key="index"
-                @click="category.IsWritable && isControl ? openChangingWindow(category.CurrentValue, category.CategoryId) : {}"
-                :class="{ 'hover:outline hover:outline-1 hover:outline-green-400' : category.IsWritable && isControl }"
                 class="flex h-[150px] items-center justify-between bg-white border border-gray-100 dark:bg-gray-900
                          shadow-md p-4 rounded-lg dark:border-gray-700">
                 <div class="flex flex-col h-full justify-between">
@@ -242,26 +240,5 @@ const closeModal = () => {
                 <OilWellAnimatedIcon class="w-[100px] h-[100px]"/>
             </div>
         </div>
-
-        <Modal :show="showCreatingClaimWindow" @close="closeModal">
-            <div class="select-none flex flex-col p-5 w-[400px] items-center gap-4">
-                <span class="text-[18px] text-gray-800 dark:text-white font-semibold">Изменение параметров</span>
-                <p class="p-4 bg-gray-100 dark:bg-gray-900 rounded-md text-[14px] text-normal text-gray-400">
-                    * Примечание: Отправленные вами данные будут сформированы в заявку, и, по возможности
-                    приняты или отклонены оператором.
-                </p>
-                <Input v-model="form.new_value" size="sm" min="0"
-                       class="w-full focus:ring-green-600 focus:border-green-500 ring-green-600 h-9" type="number" placeholder="Значение">
-                </Input>
-
-                <button
-                    @click="creteNewClaim"
-                    :disabled="form.processing"
-                    class="w-full flex justify-center items-center h-[32px] gap-2 bg-green-600 px-4 py-2 border border-green-500 rounded-lg hover:bg-opacity-80">
-                    <Spinner v-if="form.processing"/>
-                    <span v-else class="text-white text-sm font-semibold">Отправить</span>
-                </button>
-            </div>
-        </Modal>
     </div>
 </template>

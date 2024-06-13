@@ -19,7 +19,9 @@ class ClaimsController extends Controller
     public function view()
     {
         if (Gate::allows('control-wells')) {
-            return Inertia::render('Claims/Index');
+            return Inertia::render('Claims/Index', [
+                'canViewNgdu' => Gate::allows('view-wells'),
+            ]);
         }
         return Inertia::render('Errors/NotAuthorized');
     }
