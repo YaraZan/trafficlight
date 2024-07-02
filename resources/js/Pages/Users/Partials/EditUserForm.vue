@@ -40,8 +40,8 @@ const form = useForm({
     email: props.user.email,
     role_id: props.user.role_id,
     ngdu_id: props.user.ngdu_id,
-    password: '',
-    confirm_password: ''
+    password: null,
+    confirm_password: null
 });
 
 const deleteUser = () => {
@@ -59,6 +59,8 @@ const deleteUser = () => {
 };
 
 const updateUser = () => {
+    console.log(form.data());
+
     form.patch(route('users.update'), {
         preserveScroll: true,
         onSuccess: () => {
@@ -94,7 +96,7 @@ const closeModal = () => {
             <Input v-model="form.name" ref="nameInput" size="sm" class="focus:ring-green-500 focus:border-green-500 w-1/2 ring-green-600 " type="text"  placeholder="ФИО" />
             <span v-if="form.errors.name" class="text-red-600">{{ form.errors.name }}</span>
         </th>
-        <th v-else scope="row" class="font-semibold text-gray-800 dark:text-gray-400 px-6 py-3 text-left">{{ user.name }}</th>
+        <th v-else scope="row" class="text-sm font-semibold text-gray-800 dark:text-white px-6 py-3 text-left">{{ user.name }}</th>
 
         <!-- Пароль -->
         <td v-if="editing" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
@@ -114,7 +116,7 @@ const closeModal = () => {
             </select>
         </td>
         <td v-else class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
-            <span class="py-1 px-2 bg-blue-200 text-blue-800 font-semibold rounded-3xl">{{ user.roleName }}</span>
+            <span class="text-sm py-1 px-2 bg-blue-200 text-blue-800 font-semibold rounded-3xl">{{ user.roleName }}</span>
         </td>
 
         <!-- Роль -->
@@ -122,7 +124,7 @@ const closeModal = () => {
             <Input v-model="form.email" ref="emailInput" size="sm" class="focus:ring-green-500 focus:border-green-500 w-1/2 ring-green-600 " type="text"  placeholder="ФИО" />
             <span v-if="form.errors.email" class="text-red-600">{{ form.errors.email }}</span>
         </td>
-        <td v-else class="font-semibold text-gray-800 dark:text-gray-400 px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
+        <td v-else class="text-sm font-semibold text-gray-800 dark:text-white px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
             {{ user.email }}
         </td>
 
@@ -135,7 +137,7 @@ const closeModal = () => {
             </select>
         </td>
         <td v-else class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
-            <span class="py-1 px-2 bg-orange-200 text-orange-800  font-semibold rounded-3xl">{{ user.ngduName }}</span>
+            <span class="text-sm py-1 px-2 bg-orange-200 text-orange-800  font-semibold rounded-3xl">{{ user.ngduName }}</span>
         </td>
 
         <!-- Действия -->

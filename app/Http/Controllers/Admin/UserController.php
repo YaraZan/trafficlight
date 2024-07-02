@@ -81,8 +81,13 @@ class UserController extends Controller
         $user->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
-            'password' => $request->input('password'),
         ]);
+
+        if ($request->has('password') && isset($request->password)) {
+            $user->update([
+                'password' => $request->input('password'),
+            ]);
+        }
 
         $user->role_id = $new_role->id;
         $user->ngdu_id = $new_ngdu->Id;

@@ -15,6 +15,6 @@ class WellState extends Model
 
     public function wells()
     {
-        return $this->hasMany(Well::class);
+        return $this->hasMany(WellAlarm::class);
     }
 }

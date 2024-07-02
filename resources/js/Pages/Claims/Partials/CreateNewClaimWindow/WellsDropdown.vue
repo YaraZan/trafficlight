@@ -22,7 +22,7 @@
         rounded-lg placeholder:text-sm placeholder:text-gray-400 placeholder:font-semibold focus:border-gray-500 focus:ring-0 ring-0
         dark:bg-gray-800 dark:border-gray-600 dark:focus:border-gray-500 dark:text-white">
 
-        <div class="flex flex-col gap-1 max-h-[300px] overflow-y-scroll no-scrollbar">
+        <div class="relative flex flex-col gap-1 max-h-[300px] overflow-y-scroll no-scrollbar">
             <div
                 @click="selectWell(well)"
                 v-for="(well, index) in wells" :key="index"
@@ -42,6 +42,11 @@
                 </svg>
                 <Spinner color="green" v-else />
                 <span class="text-sm text-gray-800 dark:text-white font-semibold">Смотреть ещё</span>
+            </div>
+
+            <!-- Cover -->
+            <div class="sticky w-full bottom-0">
+                <div class="w-full h-14 bg-gradient-to-t from-white to-transparent dark:from-gray-900 dark:to-transparent"></div>
             </div>
         </div>
     </div>

@@ -29,9 +29,16 @@
             </div>
 
             <!-- Values -->
-            <div class="p-5 w-full flex flex-col gap-3">
+            <div class="p-5 w-full flex flex-col gap-3 border-b border-gray-200 dark:border-gray-700">
                 <span class="text-sm text-gray-800 dark:text-white font-semibold">Изменение</span>
                 <ValuesTab :data="detailClaim.claim" />
+            </div>
+
+            <div class="p-5 w-full flex flex-col gap-3">
+                <span class="text-sm text-gray-800 dark:text-white font-semibold">Комментарий</span>
+                <div class="flex items-center justify-center gap-4 p-5 bg-gray-100 dark:bg-gray-900 rounded-md">
+                    <span class="text-sm text-normal text-gray-400">{{ detailClaim.claim.Comment }}</span>
+                </div>
             </div>
 
             <!-- Action -->

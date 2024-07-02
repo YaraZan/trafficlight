@@ -33,6 +33,11 @@ class RefClaim extends Model
         return $this->belongsTo(RefClaimStatus::class, 'RefClaimStatus_Id');
     }
 
+    public function claimsExecuting()
+    {
+        return $this->hasMany(RefClaimExecuting::class);
+    }
+
     public function isOnConsideration(): bool
     {
         return optional($this->status)->RCStatusName === 'На рассмотрении';

@@ -37,13 +37,13 @@ const props = defineProps({
                         :text="'Профиль'"
                         :active="$page.component.includes('Settings/Profile')"
                         />
-                    </link>
+                    </Link>
                     <Link :href="route('settings.data')">
                         <SubAsideLink
                         :text="'Данные'"
                         :active="$page.component.includes('Settings/Data')"
                         />
-                    </link>
+                    </Link>
                 </div>
             </div>
         </template>
