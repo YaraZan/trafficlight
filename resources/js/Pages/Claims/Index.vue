@@ -3,7 +3,7 @@
 
     <AuthorizedLayout>
         <template #nav>
-            <Link :href="route('dinamograph.training')">
+            <Link :href="route('claims')">
                 <BreadCrumb
                     :name="'Заявки'"
                 ></BreadCrumb>
@@ -13,21 +13,24 @@
         <div class="w-full relative flex flex-col h-[calc(100vh-90px)]">
 
             <!-- Filters -->
-            <div class="fixed p-4 shadow dark:border-b z-50 w-full gap-1 sm:gap-4 border-t border-gray-200 dark:border-gray-700 flex items-center bg-white dark:bg-gray-800">
+            <div class="fixed p-4 pr-[91px] shadow dark:border-b z-30 w-full h-max gap-2 border-t border-gray-200 dark:border-gray-700 flex items-center bg-white dark:bg-gray-800">
                 <NgduFilter v-if="canViewNgdu" @change="handleChangeNgdu" />
                 <StatusFilter @change="handleChangeStatus" />
                 <ClaimsFilters
                     @change-sorting="handleChangeSorting"
                     @change-radio="handleChangeRadio"
                     @change-date="handleChangeDate" />
+                <button @click="showCreateNewClaimWindow = !showCreateNewClaimWindow" class="ml-auto px-3 py-1 self-stretch bg-green-600 border border-green-400 dark:hover:bg-opacity-80 hover:bg-green-700 text-sm text-white font-semibold rounded-lg">
+                    Новая
+                </button>
             </div>
 
             <!-- Claims body -->
             <template v-if="claims.length > 0">
                 <div class="p-4 w-full flex flex-col gap-4 items-center justify-center mt-24">
-                    <div class="relative w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-[10px] pr-5 overflow-y-scroll no-scrollbar">
+                    <div class="relative w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-[10px] pr-5 overflow-y-scroll no-scrollbar">
                         <NewClaimCard @click="showCreateNewClaimWindow = !showCreateNewClaimWindow" />
-                        <ClaimCard v-for="(claim, index) in claims" @click="viewClaim(claim)" :key="index" :claim="claim" />
+                        <ClaimCard v-for="(claim, index) in claims" :key="index" @click="viewClaim(claim)" :claim="claim" />
                     </div>
                     <div class="w-full flex flex-col py-10 items-center justify-center">
                         <LoadMoreClaims @click="loadMoreClaims" />
@@ -51,7 +54,7 @@
                 @created="handleClaimCreated"
                 @error="handleClaimError" />
         </Modal>
-        <Modal :custom-styles="'mt-20'" :show="showViewClaimWindow" @close="showViewClaimWindow = false">
+        <Modal :custom-styles="'mt-14'" :show="showViewClaimWindow" @close="showViewClaimWindow = false">
             <ViewClaimWindow
                 @claim-deleted-success="handleClaimDeleted"
                 @claim-deleted-error="handleClaimNotDeleted"

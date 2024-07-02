@@ -23,7 +23,7 @@ class ClaimsController extends Controller
                 'canViewNgdu' => Gate::allows('view-wells'),
             ]);
         }
-        return Inertia::render('Errors/NotAuthorized');
+        abort(403);
     }
 
     public function get(Request $request) {
@@ -179,6 +179,7 @@ class ClaimsController extends Controller
 
         $request->validate([
             'claim_id' => ['required', 'integer'],
+            'comment' => ['required', 'string'],
         ]);
 
         $claim_id = $request->input('claim_id');
@@ -188,6 +189,7 @@ class ClaimsController extends Controller
         $status = RefClaimStatus::where('RCStatusName', '=', 'Отклонено')->first();
 
         $claim->RefClaimStatus_Id = $status->Id;
+        $claim->Comment = 'Отклонено: ' . $request->comment;
 
         $claim->save();
 
@@ -241,6 +243,7 @@ class ClaimsController extends Controller
                 'OldValue' => $claim->OldValue,
                 'Value' => $claim->Value,
                 'Dat' => $claim->Dat,
+                'Comment' => $claim->Comment,
                 'CategoryNameShorted' => $claim->category->CatNameShorted,
                 'CategoryName' => $claim->category->CatName,
                 'StatusName' => $claim->status->RCStatusName,

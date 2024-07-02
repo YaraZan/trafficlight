@@ -21,7 +21,6 @@ class UserUpdateRequest extends FormRequest
             'email' => ['required', 'string', 'max:255', Rule::unique(User::class)->ignore(User::where('public_id', '=', $this->public_id)->first())],
             'role_id' => ['required', 'integer'],
             'ngdu_id' => ['required', 'integer'],
-            'password' => 'required',
         ];
     }
 }

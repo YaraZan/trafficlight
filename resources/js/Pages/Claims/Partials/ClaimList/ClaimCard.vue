@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-6 bg-white rounded-xl shadow border border-gray-200 dark:border-gray-700 dark:bg-gray-900 hover:border-green-400 dark:hover:border-green-400 cursor-pointer">
+    <div class="flex flex-col gap-2 bg-white rounded-xl shadow border border-gray-100 dark:border-gray-700 dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-500 cursor-pointer">
 
         <div class="p-5 w-full flex flex-col gap-2">
             <div class="flex items-center gap-2">
@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <div class="w-full p-5 flex items-center justify-center border-t border-gray-200 dark:border-gray-700">
+        <div class="w-full mt-auto p-5 flex items-center justify-center border-t border-gray-200 dark:border-gray-700">
             <span :class="`text-${claim.StatusColor}-500`" class="text-sm font-semibold">{{ claim.StatusName }}</span>
         </div>
     </div>

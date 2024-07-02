@@ -169,22 +169,22 @@ watch(() => [searchFilter.value], () => {
                     <thead>
                         <tr class="border-y bg-gray-50 dark:bg-gray-900 dark:bg-opacity-40 dark:border-gray-700 border-gray-200">
                             <th scope="col" class="px-6 py-3 text-left">
-                                <span class="text font-semibold text-gray-800 dark:text-gray-300">Ф.И.О</span>
+                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Ф.И.О</span>
                             </th>
                             <th scope="col" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
-                                <span class="text font-semibold text-gray-800 dark:text-gray-300">Пароль</span>
+                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Пароль</span>
                             </th>
                             <th scope="col" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
-                                <span class="text font-semibold text-gray-800 dark:text-gray-300">Роль</span>
+                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Роль</span>
                             </th>
                             <th scope="col" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
-                                <span class="text font-semibold text-gray-800 dark:text-gray-300">Почта</span>
+                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Почта</span>
                             </th>
                             <th scope="col" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
-                                <span class="text font-semibold text-gray-800 dark:text-gray-300">НГДУ</span>
+                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">НГДУ</span>
                             </th>
                             <th scope="col" class="px-6 py-3 text-left border-l border-gray-200 dark:border-gray-700">
-                                <span class="text font-semibold text-gray-800 dark:text-gray-300">Действие</span>
+                                <span class="text-sm font-semibold text-gray-800 dark:text-gray-300">Действие</span>
                             </th>
                         </tr>
                     </thead>
