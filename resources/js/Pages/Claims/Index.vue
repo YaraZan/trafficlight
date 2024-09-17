@@ -97,7 +97,7 @@ const props = defineProps({
 })
 
 const SKIP_INIT = 0;
-const AMOUNT_INIT = 10;
+const AMOUNT_INIT = 30;
 
 const claims = ref([]);
 const skip = ref(SKIP_INIT);
