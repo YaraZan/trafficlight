@@ -17,7 +17,7 @@ defineProps({
     defaultClasses: {
         type: String,
         required: false,
-        default: 'w-full items-center justify-center px-3 py-1'
+        default: 'items-center justify-center px-3 py-1'
     },
     isActive: {
         type: Boolean,

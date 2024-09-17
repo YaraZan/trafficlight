@@ -20,6 +20,7 @@
                     @change-sorting="handleChangeSorting"
                     @change-radio="handleChangeRadio"
                     @change-date="handleChangeDate" />
+                <ExportCsv :claims="claims" />
                 <button @click="showCreateNewClaimWindow = !showCreateNewClaimWindow" class="ml-auto px-3 py-1 self-stretch bg-green-600 border border-green-400 dark:hover:bg-opacity-80 hover:bg-green-700 text-sm text-white font-semibold rounded-lg">
                     Новая
                 </button>
@@ -87,6 +88,7 @@ import ViewClaimWindow from './Partials/ViewClaimWindow/ViewClaimWindow.vue';
 import ClaimCardSkeleton from './Partials/ClaimList/ClaimCardSkeleton.vue';
 import Banners from './Partials/Banners.vue';
 import ClaimsFilters from './Partials/ClaimsFilters/ClaimsFilters.vue';
+import ExportCsv from './Partials/ExportCsv.vue';
 
 const props = defineProps({
     canViewNgdu: {
